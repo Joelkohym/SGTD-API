@@ -8,7 +8,7 @@ app = Flask(__name__)
 gc = pygsheets.authorize(service_account_file='creds.json')
 print(gc.spreadsheet_titles())
 sh = gc.open('SGTD Received APIs')
-worksheet_replit = sh.worksheet("replit")
+worksheet_replit = sh.worksheet_by_title("replit")
 
 
 @app.route("/api/sgtd")
