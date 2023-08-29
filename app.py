@@ -5,10 +5,7 @@ import pygsheets
 
 app = Flask(__name__)
 
-gc = pygsheets.authorize(service_account_file='creds.json')
-print(gc.spreadsheet_titles())
-sh = gc.open('SGTD Received APIs')
-worksheet_replit = sh.worksheet_by_title("replit")
+
 
 
 @app.route("/api/sgtd")
@@ -76,7 +73,7 @@ def Vessel_movement():
 def Vessel_movement_receive(formName=None):
   try:
     data = request.data  # Get the raw data from the request body
-    print(data)
+    #print(data)
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
     # Convert the JSON string to a Python dictionary
     data_dict = json.loads(data_str)
@@ -111,8 +108,13 @@ def Vessel_movement_receive(formName=None):
 
     # Append the data to the worksheet
     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
+    gc = pygsheets.authorize(service_account_file='creds.json')
+    print(gc.spreadsheet_titles())
+    sh = gc.open('SGTD Received APIs')
+    worksheet_replit = sh.worksheet_by_title("replit")
     worksheet_replit.append_table(
       values=[list(row_data_vessel_movement.values())])
+    print([list(row_data_vessel_movement.values())])
     return "Data saved to Google Sheets."
   except Exception as e:
     # Handle the error gracefully and log it
