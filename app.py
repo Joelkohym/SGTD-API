@@ -155,6 +155,7 @@ def Vessel_movement_receive():
       start='A1',  # You can specify the starting cell here
       end=None,  # You can specify the ending cell if needed
       values=list(row_data_vessel_movement.values()))
+    worksheet_replit.delete_rows(1)
     print([list(row_data_vessel_movement.values())])
     return "Gsheet row_data_vessel_movement appended"
   except Exception as e:
@@ -198,6 +199,7 @@ def Vessel_movement_current_position():
       start='A1',  # You can specify the starting cell here
       end=None,  # You can specify the ending cell if needed
       values=list(row_data_vessel_current_position.values()))
+    worksheet_replit.delete_rows(1)
     return "Vessel Current Location Data saved to Google Sheets."
   except Exception as e:
     # Handle the error gracefully and log it
