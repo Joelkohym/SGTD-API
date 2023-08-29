@@ -15,6 +15,8 @@ colors = [
 ]
 
 
+
+#========================Vessel data GET===========================
 @app.route("/api/sgtd")
 def SGTD():
   system_ids_names = []
@@ -38,6 +40,10 @@ def SGTD():
   return system_ids_names
 
 
+
+
+
+#========================Vessel data PULL===========================
 @app.route("/api/vessel")
 def Vessel_data_pull():
   API_Key = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
@@ -74,7 +80,6 @@ def Vessel_data_pull():
       f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
     )
     #print(response_vessel_movement.text)
-    
   response_vessel_current_location = requests.post(
     url_vessel_current_location, json=data, headers={'SGTRADEX-API-KEY': API_Key})
   if response_vessel_current_location.status_code == 200:
@@ -88,6 +93,10 @@ def Vessel_data_pull():
   return render_template('mymap.html')
 
 
+
+
+
+#====================Vessel Movement Receive========================
 @app.route("/api/vessel_movement/receive", methods=['POST'])
 def Vessel_movement_receive(formName=None):
   try:
@@ -124,7 +133,6 @@ def Vessel_movement_receive(formName=None):
       "vm_vessel_movement_draft":
       last_payload_item['vm_vessel_movement_draft']
     }
-
     # Append the data to the worksheet
     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
     # Add the current date and time to your data dictionary
@@ -134,14 +142,11 @@ def Vessel_movement_receive(formName=None):
     print(gc.spreadsheet_titles())
     sh = gc.open('SGTD Received APIs')
     worksheet_replit = sh.worksheet_by_title("replit_vessel_movement")
-
     #clear
     worksheet_replit.clear()
-
     # Write the headers as the first row
-    worksheet_replit.insert_rows(row=1,
-                                 number=1,
-                                 values=list(row_data_vessel_movement.keys()))
+    worksheet_replit.insert_rows(
+row=1,number=1,values=list(row_data_vessel_movement.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
       start='A1',  # You can specify the starting cell here
@@ -149,13 +154,17 @@ def Vessel_movement_receive(formName=None):
       values=list(row_data_vessel_movement.values()))
     print([list(row_data_vessel_movement.values())])
     return "Gsheet row_data_vessel_movement appended"
-    
   except Exception as e:
     # Handle the error gracefully and log it
     print("An error occurred:", str(e))
     return f"An error occurred: {str(e)}", 500  # Return a 500
 
 
+
+
+
+
+#=============Vessel Current Location Receive========================
 @app.route("/api/vessel_current_location/receive", methods=['POST'])
 def Vessel_movement_current_location(formName=None):
   try:
@@ -196,6 +205,9 @@ def Vessel_movement_current_location(formName=None):
     return f"An error occurred: {str(e)}", 500  # Return a 500
 
 
+
+
+#============================MAP=========================
 @app.route("/api/vessel_map", methods=['POST'])
 def Vessel_map(formName=None):
   # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
