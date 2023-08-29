@@ -118,7 +118,7 @@ def Vessel_movement_receive(formName=None):
     
     # Append the data as a new row
     worksheet_replit.append_table(
-        start='A1',  # You can specify the starting cell here
+        start='A2',  # You can specify the starting cell here
         end=None,    # You can specify the ending cell if needed
         values=list(row_data_vessel_movement.values())
     )
