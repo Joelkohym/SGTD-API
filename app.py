@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request
 import requests
 import json
 import pygsheets
@@ -73,7 +73,7 @@ def Vessel_movement():
       f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
     )
     print(response_vessel_movement.text)
-  return redirect(url_for('Vessel_map'))
+  return render_template('mymap.html')
 
 
 @app.route("/api/vessel_movement/receive", methods=['POST'])

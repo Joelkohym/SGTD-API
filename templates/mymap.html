@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_9a5c87ffadf302c86537a235b42835d6 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.css"/>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"/>
+    
+                    <style>
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+            
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_9a5c87ffadf302c86537a235b42835d6" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_9a5c87ffadf302c86537a235b42835d6 = L.map(
+                "map_9a5c87ffadf302c86537a235b42835d6",
+                {
+                    center: [1.257167, 103.897],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                    drawExport: false,
+                    layersControl: true,
+                }
+            );
+            L.control.scale().addTo(map_9a5c87ffadf302c86537a235b42835d6);
+
+            
+
+        
+    
+            var tile_layer_afac3d61c55468cd4e427774bcb38bb8 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca target=\"_blank\" href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 24, "maxZoom": 24, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_9a5c87ffadf302c86537a235b42835d6);
+        
+    
+            L.control.fullscreen(
+                {"forceSeparateButton": false, "position": "topleft", "title": "Full Screen", "titleCancel": "Exit Full Screen"}
+            ).addTo(map_9a5c87ffadf302c86537a235b42835d6);
+        
+    
+            var options = {
+              position: "topleft",
+              draw: {},
+              edit: {},
+            }
+            // FeatureGroup is to store editable layers.
+            var drawnItems = new L.featureGroup().addTo(
+                map_9a5c87ffadf302c86537a235b42835d6
+            );
+            options.edit.featureGroup = drawnItems;
+            var draw_control_4d14d443a5d66a4106ddecb642f71d24 = new L.Control.Draw(
+                options
+            ).addTo( map_9a5c87ffadf302c86537a235b42835d6 );
+            map_9a5c87ffadf302c86537a235b42835d6.on(L.Draw.Event.CREATED, function(e) {
+                var layer = e.layer,
+                    type = e.layerType;
+                var coords = JSON.stringify(layer.toGeoJSON());
+                layer.on('click', function() {
+                    alert(coords);
+                    console.log(coords);
+                });
+                drawnItems.addLayer(layer);
+             });
+            map_9a5c87ffadf302c86537a235b42835d6.on('draw:created', function(e) {
+                drawnItems.addLayer(e.layer);
+            });
+            
+        
+    
+            var measure_control_7e9cae0e6746949df70efb8a7e322790 = new L.Control.Measure(
+                {"position": "bottomleft", "primaryAreaUnit": "sqmeters", "primaryLengthUnit": "meters", "secondaryAreaUnit": "acres", "secondaryLengthUnit": "miles"});
+            map_9a5c87ffadf302c86537a235b42835d6.addControl(measure_control_7e9cae0e6746949df70efb8a7e322790);
+
+        
+    
+            L.Control.geocoder(
+                {"collapsed": true, "defaultMarkGeocode": true, "position": "topleft"}
+            ).on('markgeocode', function(e) {
+                map_9a5c87ffadf302c86537a235b42835d6.setView(e.geocode.center, 11);
+            }).addTo(map_9a5c87ffadf302c86537a235b42835d6);
+
+        
+    
+            map_9a5c87ffadf302c86537a235b42835d6.fitBounds(
+                [[1.257167, 103.897], [1.257167, 103.897]],
+                {"maxZoom": 12}
+            );
+        
+    
+        function geo_json_1ec2fb968df02a3e897c201cc3ae6de2_styler(feature) {
+            switch(feature.properties.NAME) {
+                default:
+                    return {"color": "orange", "fill": true, "fillOpacity": 0.05, "weight": 2};
+            }
+        }
+        function geo_json_1ec2fb968df02a3e897c201cc3ae6de2_highlighter(feature) {
+            switch(feature.properties.NAME) {
+                default:
+                    return {"fillOpacity": 0, "weight": 4};
+            }
+        }
+
+        function geo_json_1ec2fb968df02a3e897c201cc3ae6de2_onEachFeature(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                        geo_json_1ec2fb968df02a3e897c201cc3ae6de2.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                        const highlightStyle = geo_json_1ec2fb968df02a3e897c201cc3ae6de2_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+        var geo_json_1ec2fb968df02a3e897c201cc3ae6de2 = L.geoJson(null, {
+                onEachFeature: geo_json_1ec2fb968df02a3e897c201cc3ae6de2_onEachFeature,
+            
+                style: geo_json_1ec2fb968df02a3e897c201cc3ae6de2_styler,
+        });
+
+        function geo_json_1ec2fb968df02a3e897c201cc3ae6de2_add (data) {
+            geo_json_1ec2fb968df02a3e897c201cc3ae6de2
+                .addData(data)
+                .addTo(map_9a5c87ffadf302c86537a235b42835d6);
+        }
+            geo_json_1ec2fb968df02a3e897c201cc3ae6de2_add({"features": [{"geometry": {"coordinates": [[[104.050567, 1.347583], [104.062233, 1.336117], [104.049983, 1.336083], [104.046667, 1.339667], [104.050567, 1.347583]]], "type": "Polygon"}, "properties": {"NAME": "Changi Barge Temporary Holding Anchorage (Abbreviated Code: ACBTH)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[104.052517, 1.333267], [104.060033, 1.333267], [104.0786, 1.314617], [104.069617, 1.314617], [104.052517, 1.333267]]], "type": "Polygon"}, "properties": {"NAME": "Changi General Purposes Anchorage (Abbreviated Code: ACGP)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[104.059233, 1.314717], [104.069617, 1.314617], [104.078683, 1.306517], [104.059233, 1.306167], [104.059233, 1.314717]]], "type": "Polygon"}, "properties": {"NAME": "Man-of-War Anchorage (Abbreviated Code: AMOW)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[104.046567, 1.3059], [104.086433, 1.3067], [104.0957, 1.2974], [104.046567, 1.288833], [104.046567, 1.3059]]], "type": "Polygon"}, "properties": {"NAME": "Eastern Bunkering A Anchorage (Abbreviated Code: AEBA)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.982967, 1.30495], [103.99755, 1.30495], [104.007, 1.3], [103.982967, 1.3], [103.982967, 1.30495]]], "type": "Polygon"}, "properties": {"NAME": "Small Craft B Anchorage (Abbreviated Code: ASCB)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.982967, 1.3], [104.007, 1.3], [104.01825, 1.29475], [103.974967, 1.291617], [103.982967, 1.3]]], "type": "Polygon"}, "properties": {"NAME": "Eastern Petroleum C Anchorage (Abbreviated Code: AEPBC)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.982967, 1.299633], [104.01825, 1.284117], [104.027667, 1.286067], [103.982967, 1.291617], [103.982967, 1.299633]]], "type": "Polygon"}, "properties": {"NAME": "Eastern Bunkering B Anchorage (Abbreviated Code: AEBB)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.95555, 1.30495], [103.9785, 1.30495], [103.9785, 1.3], [103.942883, 1.3], [103.95555, 1.30495]]], "type": "Polygon"}, "properties": {"NAME": "Small Craft A Anchorage (Abbreviated Code: ASCA)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.942883, 1.3], [103.9785, 1.3], [103.9785, 1.291633], [103.933333, 1.291633], [103.933333, 1.296267], [103.942883, 1.3]]], "type": "Polygon"}, "properties": {"NAME": "Eastern Petroleum B Anchorage (Abbreviated Code: AEPBB)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.933333, 1.296267], [103.933333, 1.291633], [103.9785, 1.291633], [103.977167, 1.277167], [103.921433, 1.277167], [103.907817, 1.287067], [103.933333, 1.296267]]], "type": "Polygon"}, "properties": {"NAME": "Eastern Special Purposes A Anchorage (Abbreviated Code:AESPA)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.921433, 1.277167], [103.977167, 1.277167], [103.961367, 1.26845], [103.961367, 1.267], [103.921433, 1.277167]]], "type": "Polygon"}, "properties": {"NAME": "Eastern Bunkering C Anchorage (Abbreviated Code: AEBC)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.862767, 1.250633], [103.862117, 1.256817], [103.867, 1.262733], [103.867033, 1.267117], [103.867367, 1.268883], [103.867183, 1.272217], [103.874783, 1.275383], [103.874883, 1.276017], [103.877267, 1.277], [103.877133, 1.277333], [103.885167, 1.283], [103.892017, 1.293517], [103.9146, 1.281867], [103.914583, 1.281167], [103.918233, 1.2511], [103.918183, 1.251233], [103.918567, 1.252433], [103.91865, 1.253967], [103.91855, 1.255217], [103.862767, 1.250633]]], "type": "Polygon"}, "properties": {"NAME": "Eastern Anchorage (Abbreviated Code: AEW)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.86325, 1.250217], [103.86465, 1.252983], [103.8649, 1.2529], [103.86465, 1.252983], [103.86325, 1.250217]]], "type": "Polygon"}, "properties": {"NAME": "Eastern Holding C Anchorage (Abbreviated Code: AEHC)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.897167, 1.257167], [103.9146, 1.281867], [103.929, 1.255233], [103.922833, 1.244733], [103.897167, 1.257167]]], "type": "Polygon"}, "properties": {"NAME": "Eastern Petroleum A Anchorage (Abbreviated Code: AEPA)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.922833, 1.244733], [103.929, 1.255233], [103.934167, 1.250717], [103.926, 1.248933], [103.922833, 1.244733]]], "type": "Polygon"}, "properties": {"NAME": "Eastern Holding A Anchorage (Abbreviated Code: AEHA)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.877233, 1.244667], [103.888917, 1.252583], [103.901033, 1.240783], [103.887, 1.238], [103.877233, 1.244667]]], "type": "Polygon"}, "properties": {"NAME": "Eastern Holding B Anchorage (Abbreviated Code: AEHB)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.809667, 1.218833], [103.826533, 1.226533], [103.83215, 1.219117], [103.8291, 1.21245], [103.81715, 1.21245], [103.809667, 1.218833]]], "type": "Polygon"}, "properties": {"NAME": "Western Quarantine \u0026 Immigration Anchorage (Abbreviated Code: AWQI)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.796767, 1.250333], [103.804533, 1.255983], [103.812633, 1.242733], [103.826533, 1.226533], [103.8218, 1.2388], [103.796767, 1.250333]]], "type": "Polygon"}, "properties": {"NAME": "Western Anchorage (Abbreviated Code: AWW)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.788717, 1.248083], [103.796767, 1.250333], [103.806383, 1.239717], [103.7992, 1.246917], [103.788717, 1.248083]]], "type": "Polygon"}, "properties": {"NAME": "Western Petroleum A Anchorage (Abbreviated Code: AWPA)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.7853, 1.239083], [103.788717, 1.248083], [103.7992, 1.246917], [103.795933, 1.230383], [103.800583, 1.237267], [103.7853, 1.239083]]], "type": "Polygon"}, "properties": {"NAME": "Western Holding Anchorage (Abbreviated Code: AWH)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.795933, 1.230383], [103.806383, 1.239717], [103.8218, 1.2388], [103.817767, 1.213017], [103.795933, 1.230383]]], "type": "Polygon"}, "properties": {"NAME": "Western Petroleum B Anchorage (Abbreviated Code: AWPB)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.714717, 1.227733], [103.71745, 1.229117], [103.724117, 1.2308], [103.748567, 1.2219], [103.757717, 1.223567], [103.758583, 1.221333], [103.74745, 1.204233], [103.74355, 1.204233], [103.7405, 1.2047], [103.744767, 1.2051], [103.714717, 1.227733]]], "type": "Polygon"}, "properties": {"NAME": "Selat Pauh Anchorage (Abbreviated Code: ASPLU)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.714717, 1.227733], [103.744767, 1.2051], [103.7405, 1.2047], [103.74545, 1.2155], [103.745433, 1.214767], [103.721267, 1.2256]]], "type": "Polygon"}, "properties": {"NAME": "Selat Pauh Petroleum Anchorage (Abbreviated Code: ASPP)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.7362, 1.200767], [103.74015, 1.20415], [103.750633, 1.2073], [103.758617, 1.204217], [103.7362, 1.200767]]], "type": "Polygon"}, "properties": {"NAME": "Raffles Petroleum Anchorage (Abbreviated Code: ARP)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.741883, 1.189467], [103.750633, 1.2073], [103.761167, 1.194117], [103.75, 1.173333], [103.741883, 1.189467]]], "type": "Polygon"}, "properties": {"NAME": "Raffles Reserved Anchorage (Abbreviated Code: ARAFR)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.719517, 1.16775], [103.715567, 1.157367], [103.716883, 1.155217], [103.722567, 1.1659], [103.719517, 1.16775]]], "type": "Polygon"}, "properties": {"NAME": "Sudong Petroleum Holding Anchorage (Abbreviated Code:ASPH)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.711, 1.178033], [103.719517, 1.16775], [103.722567, 1.1659], [103.708367, 1.173367], [103.711, 1.178033]]], "type": "Polygon"}, "properties": {"NAME": "Sudong Explosive Anchorage (Abbreviated Code: ASUEX)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.707033, 1.173667], [103.711, 1.178033], [103.7184, 1.190733], [103.675233, 1.202633], [103.6727, 1.196467], [103.675033, 1.1961], [103.707033, 1.173667]]], "type": "Polygon"}, "properties": {"NAME": "Sudong Special Purpose Anchorage (Abbreviated Code: ASSPU)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.671167, 1.204617], [103.670867, 1.2052], [103.66805, 1.197167], [103.671067, 1.19875], [103.671167, 1.204617]]], "type": "Polygon"}, "properties": {"NAME": "Sudong Holding Anchorage (Abbreviated Code: ASH)"}, "type": "Feature"}, {"geometry": {"coordinates": [[[103.641333, 1.221483], [103.657517, 1.22835], [103.656283, 1.207833], [103.647, 1.197667], [103.641333, 1.221483]]], "type": "Polygon"}, "properties": {"NAME": "Very Large Crude Carrier Anchorage (Abbreviated Code: AVLCC)"}, "type": "Feature"}], "name": "SG Anchorages", "properties": {}, "type": "FeatureCollection"});
+
+        
+    
+    geo_json_1ec2fb968df02a3e897c201cc3ae6de2.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature=>typeof(feature)=='object' ? JSON.stringify(feature) : feature;
+    let fields = ["NAME"];
+    let aliases = ["NAME"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i]}</th>
+            
+            <td>${handleObject(layer.feature.properties[v])}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{"className": "foliumtooltip", "sticky": true});
+                     
+    
+            var layer_control_ea156e303e8b22afebb2af2f1b815ab2 = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_afac3d61c55468cd4e427774bcb38bb8,
+                },
+                overlays :  {
+                    "SG Anchorages" : geo_json_1ec2fb968df02a3e897c201cc3ae6de2,
+                },
+            };
+            L.control.layers(
+                layer_control_ea156e303e8b22afebb2af2f1b815ab2.base_layers,
+                layer_control_ea156e303e8b22afebb2af2f1b815ab2.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_9a5c87ffadf302c86537a235b42835d6);
+        
+</script>
+</html>
