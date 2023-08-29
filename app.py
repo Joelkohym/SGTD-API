@@ -197,7 +197,7 @@ def Vessel_map(formName=None):
   # Read data from 'Sheet2' into another DataFrame
   df2 = pd.DataFrame(sheet2.get_all_records())
   # Assuming 'imo_no' is the common column
-  merged_df = pd.merge(df1, df2, on='imo_no', how='inner')
+  merged_df = pd.merge(df1, df2, left_on='vessel_particulars.vessel_imo_no', right_on='vm_vessel_particulars.vessel_imo_no', how='inner')
 
 
 
