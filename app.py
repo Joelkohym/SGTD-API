@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request
 import requests
 import json
 import pygsheets
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -108,6 +109,9 @@ def Vessel_movement_receive(formName=None):
 
     # Append the data to the worksheet
     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
+    # Add the current date and time to your data dictionary
+    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    row_data_vessel_movement['Timestamp'] = current_datetime
     gc = pygsheets.authorize(service_account_file='creds.json')
     print(gc.spreadsheet_titles())
     sh = gc.open('SGTD Received APIs')
@@ -135,12 +139,16 @@ def Vessel_movement_receive(formName=None):
 @app.route("/api/vessel_current_location/receive", methods=['POST'])
 def Vessel_movement_current_location(formName=None):
   try:
+
     data = request.data  # Get the raw data from the request body
     print(data)
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
     # Convert the JSON string to a Python dictionary
     data_dict = json.loads(data_str)
     row_data_vessel_current_location = data_dict['payload'][-1]
+    # Add the current date and time to your data dictionary
+    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    row_data_vessel_current_location['Timestamp'] = current_datetime
     print(
       f"row_data_vessel_current_location: {row_data_vessel_current_location}")
     gc = pygsheets.authorize(service_account_file='creds.json')
