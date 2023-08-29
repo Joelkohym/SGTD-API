@@ -218,9 +218,10 @@ def Vessel_map(formName=None):
   sheet2 = sh.worksheet_by_title('replit_vessel_current_position')
   # Read data from 'Sheet1' into a DataFrame
   df1 = pd.DataFrame(sheet1.get_all_records())
-
+  print(f"df1 = {df1}")
   # Read data from 'Sheet2' into another DataFrame
   df2 = pd.DataFrame(sheet2.get_all_records())
+  print(f"df1 = {df2}")
   # Assuming 'imo_no' is the common column
   merged_df = pd.merge(df1,
                        df2,
