@@ -111,11 +111,13 @@ def Vessel_movement_receive(formName=None):
     gc = pygsheets.authorize(service_account_file='creds.json')
     print(gc.spreadsheet_titles())
     sh = gc.open('SGTD Received APIs')
-    worksheet_replit = sh.worksheet_by_title("replit")
+    worksheet_replit = sh.worksheet_by_title("replit_vessel_movement")
 
     #clear
     worksheet_replit.clear()
-    
+
+    # Write the headers as the first row
+    worksheet_replit.insert_rows(row=1, number=1, values=list(row_data_vessel_movement.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
         start='A2',  # You can specify the starting cell here
@@ -141,6 +143,22 @@ def Vessel_movement_current_location(formName=None):
     row_data_vessel_current_location = data_dict['payload'][-1]
     print(
       f"row_data_vessel_current_location: {row_data_vessel_current_location}")
+    gc = pygsheets.authorize(service_account_file='creds.json')
+    print(gc.spreadsheet_titles())
+    sh = gc.open('SGTD Received APIs')
+    worksheet_replit = sh.worksheet_by_title("replit_vessel_current_location")
+
+    #clear
+    worksheet_replit.clear()
+
+    # Write the headers as the first row
+    worksheet_replit.insert_rows(row=1, number=1, values=list(row_data_vessel_current_location.keys()))
+    # Append the data as a new row
+    worksheet_replit.append_table(
+        start='A2',  # You can specify the starting cell here
+        end=None,    # You can specify the ending cell if needed
+        values=list(row_data_vessel_current_location.values())
+    )
     return "Vessel Current Location Data saved to Google Sheets."
   except Exception as e:
     # Handle the error gracefully and log it
