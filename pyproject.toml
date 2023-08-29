@@ -10,6 +10,8 @@ requests = "^2.31.0"
 Flask = "^2.3.3"
 pygsheets = "^2.0.6"
 pandas = "^2.0.3"
+leafmap = "0.23.3"
+geopandas = "0.13.2"
 
 [tool.poetry.dev-dependencies]
 

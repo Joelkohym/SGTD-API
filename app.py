@@ -212,6 +212,15 @@ def Vessel_map(formName=None):
                   "fill": True,
                   "fillOpacity": 0.05
                 })
+  m.add_points_from_xy(
+    merged_df,
+    x="vessel_longitude_degrees",
+    y="vessel_latitude_degrees",
+    color_column='vessel_particulars.vessel_imo_no',
+    icon_names=['gear', 'map', 'leaf', 'globe'],
+    spin=True,
+    add_legend=True,
+)
   m.to_html("templates/mymap.html")
   #m.to_html("mymap.html")
   return render_template('mymap.html')
