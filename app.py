@@ -39,10 +39,11 @@ def SGTD():
 
 
 @app.route("/api/vessel")
-def Vessel_movement():
+def Vessel_data_pull():
   API_Key = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
   vessel_imo = "9702699"
   url_vessel_movement = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_movement"
+  url_vessel_current_location = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_current_location"
   on_behalf_of_id = "49f04a6f-f157-479b-b211-18931fad4ca4"
   payload = {
     "participants": [{
@@ -66,13 +67,24 @@ def Vessel_movement():
   response_vessel_movement = requests.post(
     url_vessel_movement, json=data, headers={'SGTRADEX-API-KEY': API_Key})
   if response_vessel_movement.status_code == 200:
-    print(f"Response JSON = {response_vessel_movement.json()}")
+    #print(f"Response JSON = {response_vessel_movement.json()}")
     print("Pull vessel_movement success.")
   else:
     print(
       f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
     )
-    print(response_vessel_movement.text)
+    #print(response_vessel_movement.text)
+    
+  response_vessel_current_location = requests.post(
+    url_vessel_current_location, json=data, headers={'SGTRADEX-API-KEY': API_Key})
+  if response_vessel_current_location.status_code == 200:
+    print(f"Response JSON = {response_vessel_current_location.json()}")
+    print("Pull vessel_current_location success.")
+  else:
+    print(
+      f"Failed to PULL vessel_current_location data. Status code: {response_vessel_current_location.status_code}"
+    )
+    #print(response_vessel_current_location.text)
   return render_template('mymap.html')
 
 
@@ -132,7 +144,7 @@ def Vessel_movement_receive(formName=None):
                                  values=list(row_data_vessel_movement.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
-      start='A2',  # You can specify the starting cell here
+      start='A1',  # You can specify the starting cell here
       end=None,  # You can specify the ending cell if needed
       values=list(row_data_vessel_movement.values()))
     print([list(row_data_vessel_movement.values())])
@@ -174,7 +186,7 @@ def Vessel_movement_current_location(formName=None):
                                    row_data_vessel_current_location.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
-      start='A2',  # You can specify the starting cell here
+      start='A1',  # You can specify the starting cell here
       end=None,  # You can specify the ending cell if needed
       values=list(row_data_vessel_current_location.values()))
     return "Vessel Current Location Data saved to Google Sheets."
