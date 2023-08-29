@@ -3,3 +3,5 @@ gunicorn
 requests
 pygsheets
 pandas
+leafmap
+geopandas
