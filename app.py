@@ -145,9 +145,15 @@ def Vessel_movement_receive(formName=None):
     worksheet_replit = sh.worksheet_by_title("replit_vessel_movement")
     #clear
     worksheet_replit.clear()
-    # Write the headers as the first row
-    worksheet_replit.insert_rows(
-row=1,number=1,values=list(row_data_vessel_movement.keys()))
+#     # Write the headers as the first row
+#     worksheet_replit.insert_rows(
+# row=1,number=1,values=list(row_data_vessel_movement.keys()))
+
+
+    worksheet_replit.append_table(
+      start='A1',  # You can specify the starting cell here
+      end=None,  # You can specify the ending cell if needed
+      values=list(row_data_vessel_movement.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
       start='A2',  # You can specify the starting cell here
@@ -169,9 +175,8 @@ row=1,number=1,values=list(row_data_vessel_movement.keys()))
 @app.route("/api/vessel_current_position/receive", methods=['POST'])
 def Vessel_movement_current_position(formName=None):
   try:
-
     data = request.data  # Get the raw data from the request body
-    print(data)
+    print(f"Vessel_movement_current_position = {data}")
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
     # Convert the JSON string to a Python dictionary
     data_dict = json.loads(data_str)
@@ -190,10 +195,13 @@ def Vessel_movement_current_position(formName=None):
     worksheet_replit.clear()
 
     # Write the headers as the first row
-    worksheet_replit.insert_rows(row=1,
-                                 number=1,
-                                 values=list(
-                                   row_data_vessel_current_position.keys()))
+    # worksheet_replit.insert_rows(row=1, number=1,values=list(row_data_vessel_current_position.keys()))
+
+    
+    worksheet_replit.append_table(
+      start='A1',  # You can specify the starting cell here
+      end=None,  # You can specify the ending cell if needed
+      values=list(row_data_vessel_current_position.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
       start='A2',  # You can specify the starting cell here
