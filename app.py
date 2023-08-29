@@ -112,8 +112,16 @@ def Vessel_movement_receive(formName=None):
     print(gc.spreadsheet_titles())
     sh = gc.open('SGTD Received APIs')
     worksheet_replit = sh.worksheet_by_title("replit")
+
+    #clear
+    worksheet_replit.clear()
+    
+    # Append the data as a new row
     worksheet_replit.append_table(
-      values=[list(row_data_vessel_movement.values())])
+        start='A1',  # You can specify the starting cell here
+        end=None,    # You can specify the ending cell if needed
+        values=list(row_data_vessel_movement.values())
+    )
     print([list(row_data_vessel_movement.values())])
     return "Data saved to Google Sheets."
   except Exception as e:
