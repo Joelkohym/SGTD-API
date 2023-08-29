@@ -73,7 +73,7 @@ def Vessel_movement():
       f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
     )
     print(response_vessel_movement.text)
-  return response_vessel_movement.text
+  return redirect(url_for('Vessel_map'))
 
 
 @app.route("/api/vessel_movement/receive", methods=['POST'])
@@ -136,7 +136,8 @@ def Vessel_movement_receive(formName=None):
       end=None,  # You can specify the ending cell if needed
       values=list(row_data_vessel_movement.values()))
     print([list(row_data_vessel_movement.values())])
-    return "Data saved to Google Sheets."
+    return "Gsheet row_data_vessel_movement appended"
+    
   except Exception as e:
     # Handle the error gracefully and log it
     print("An error occurred:", str(e))
