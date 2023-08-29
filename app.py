@@ -2,21 +2,13 @@ from flask import Flask, render_template, jsonify, request
 import requests
 import json
 import pygsheets
-import os
-global row_data_vessel_movement
-global row_data_vessel_current_location
-app = Flask(__name__)
-#my_secret = os.environ['GSHEET_API_CREDENTIALS']
-#print(my_secret)
-#service_account_info = json.loads(my_secret)
-# my_credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
-#gc = pygsheets.authorize(service_account_json=my_secret)
 
-# Set up OAuth2 credentials using your JSON credentials file
-scope = [
-  "https://spreadsheets.google.com/feeds",
-  "https://www.googleapis.com/auth/drive"
-]
+app = Flask(__name__)
+
+gc = pygsheets.authorize(service_account_file='creds.json')
+print(gc.spreadsheet_titles())
+sh = gc.open('SGTD Received APIs')
+worksheet_replit = sh.worksheet("replit")
 
 
 @app.route("/api/sgtd")
@@ -90,14 +82,6 @@ def Vessel_movement_receive(formName=None):
     data_dict = json.loads(data_str)
     # Extract the last item from the "payload" array
     last_payload_item = data_dict['payload'][-1]
-    # # Open the Google Sheets spreadsheet by title or URL
-    # spreadsheet = gc.open(
-    #   "https://docs.google.com/spreadsheets/d/1yvUCUCfZsTPSMf88i9JoZocSsSm7iyclVCimCGpuTEk/edit#gid=0"
-    # )
-    # # Select a specific worksheet within the spreadsheet
-    # worksheet = spreadsheet.worksheet(
-    #   "replit")  # Change the sheet name if needed
-    # Create a dictionary to map column names to values
     row_data_vessel_movement = {
       "vm_vessel_particulars.vessel_nm":
       last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
@@ -127,7 +111,8 @@ def Vessel_movement_receive(formName=None):
 
     # Append the data to the worksheet
     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
-    #worksheet.append_table(values=[list(row_data.values())])
+    worksheet_replit.append_table(
+      values=[list(row_data_vessel_movement.values())])
     return "Data saved to Google Sheets."
   except Exception as e:
     # Handle the error gracefully and log it
