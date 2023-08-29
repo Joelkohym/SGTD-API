@@ -212,8 +212,8 @@ def Vessel_map(formName=None):
   gc = pygsheets.authorize(service_account_file='creds.json')
   print(gc.spreadsheet_titles())
   sh = gc.open('SGTD Received APIs')
-  sheet1 = sh.worksheet_by_title('Sheet1')
-  sheet2 = sh.worksheet_by_title('Sheet2')
+  sheet1 = sh.worksheet_by_title('replit_vessel_movement')
+  sheet2 = sh.worksheet_by_title('replit_vessel_current_position')
   # Read data from 'Sheet1' into a DataFrame
   df1 = pd.DataFrame(sheet1.get_all_records())
 
