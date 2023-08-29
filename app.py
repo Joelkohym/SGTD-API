@@ -225,8 +225,8 @@ def Vessel_map(formName=None):
   # Assuming 'imo_no' is the common column
   merged_df = pd.merge(df1,
                        df2,
-                       left_on='vessel_particulars.vessel_imo_no',
-                       right_on='vm_vessel_particulars.vessel_imo_no',
+                       left_on='vm_vessel_particulars.vessel_imo_no',
+                       right_on='vessel_particulars.vessel_imo_no',
                        how='inner')
   print(f"Merged_df == {merged_df}")
 
