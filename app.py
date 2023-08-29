@@ -3,7 +3,8 @@ import requests
 import json
 import pygsheets
 import os
-
+global row_data_vessel_movement
+global row_data_vessel_current_location
 app = Flask(__name__)
 #my_secret = os.environ['GSHEET_API_CREDENTIALS']
 #print(my_secret)
@@ -16,6 +17,7 @@ scope = [
   "https://spreadsheets.google.com/feeds",
   "https://www.googleapis.com/auth/drive"
 ]
+
 
 @app.route("/api/sgtd")
 def SGTD():
@@ -38,10 +40,6 @@ def SGTD():
       for from_item in from_list:
         system_ids_names.append((from_item['id'], from_item['name']))
   return system_ids_names
-
-
-
-
 
 
 @app.route("/api/vessel")
@@ -82,11 +80,7 @@ def Vessel_movement():
   return response_vessel_movement.text
 
 
-
-
-
-
-@app.route("/api/vessel/receive", methods=['POST'])
+@app.route("/api/vessel_movement/receive", methods=['POST'])
 def Vessel_movement_receive(formName=None):
   try:
     data = request.data  # Get the raw data from the request body
@@ -104,29 +98,60 @@ def Vessel_movement_receive(formName=None):
     # worksheet = spreadsheet.worksheet(
     #   "replit")  # Change the sheet name if needed
     # Create a dictionary to map column names to values
-    row_data = {
-            "vm_vessel_particulars.vessel_nm": last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
-            "vm_vessel_particulars.vessel_imo_no": last_payload_item['vm_vessel_particulars'][0]['vessel_imo_no'],
-            "vm_vessel_particulars.vessel_flag": last_payload_item['vm_vessel_particulars'][0]['vessel_flag'],
-            "vm_vessel_particulars.vessel_call_sign": last_payload_item['vm_vessel_particulars'][0]['vessel_call_sign'],
-            "vm_vessel_location_from": last_payload_item['vm_vessel_location_from'],
-            "vm_vessel_location_to": last_payload_item['vm_vessel_location_to'],
-            "vm_vessel_movement_height": last_payload_item['vm_vessel_movement_height'],
-            "vm_vessel_movement_type": last_payload_item['vm_vessel_movement_type'],
-            "vm_vessel_movement_start_dt": last_payload_item['vm_vessel_movement_start_dt'],
-            "vm_vessel_movement_end_dt": last_payload_item['vm_vessel_movement_end_dt'],
-            "vm_vessel_movement_status": last_payload_item['vm_vessel_movement_status'],
-            "vm_vessel_movement_draft": last_payload_item['vm_vessel_movement_draft']
-        }
+    row_data_vessel_movement = {
+      "vm_vessel_particulars.vessel_nm":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
+      "vm_vessel_particulars.vessel_imo_no":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_imo_no'],
+      "vm_vessel_particulars.vessel_flag":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_flag'],
+      "vm_vessel_particulars.vessel_call_sign":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_call_sign'],
+      "vm_vessel_location_from":
+      last_payload_item['vm_vessel_location_from'],
+      "vm_vessel_location_to":
+      last_payload_item['vm_vessel_location_to'],
+      "vm_vessel_movement_height":
+      last_payload_item['vm_vessel_movement_height'],
+      "vm_vessel_movement_type":
+      last_payload_item['vm_vessel_movement_type'],
+      "vm_vessel_movement_start_dt":
+      last_payload_item['vm_vessel_movement_start_dt'],
+      "vm_vessel_movement_end_dt":
+      last_payload_item['vm_vessel_movement_end_dt'],
+      "vm_vessel_movement_status":
+      last_payload_item['vm_vessel_movement_status'],
+      "vm_vessel_movement_draft":
+      last_payload_item['vm_vessel_movement_draft']
+    }
 
-        # Append the data to the worksheet
-    print(row_data)
+    # Append the data to the worksheet
+    print(f"row_data_vessel_movement: {row_data_vessel_movement}")
     #worksheet.append_table(values=[list(row_data.values())])
     return "Data saved to Google Sheets."
   except Exception as e:
     # Handle the error gracefully and log it
     print("An error occurred:", str(e))
-    return f"An error occurred: {str(e)}", 500  # Return a 500 
+    return f"An error occurred: {str(e)}", 500  # Return a 500
+
+
+@app.route("/api/vessel_current_location/receive", methods=['POST'])
+def Vessel_movement_current_location(formName=None):
+  try:
+    data = request.data  # Get the raw data from the request body
+    print(data)
+    data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
+    # Convert the JSON string to a Python dictionary
+    data_dict = json.loads(data_str)
+    row_data_vessel_current_location = data_dict['payload'][-1]
+    print(
+      f"row_data_vessel_current_location: {row_data_vessel_current_location}")
+    return "Vessel Current Location Data saved to Google Sheets."
+  except Exception as e:
+    # Handle the error gracefully and log it
+    print("An error occurred:", str(e))
+    return f"An error occurred: {str(e)}", 500  # Return a 500
+
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=True)
