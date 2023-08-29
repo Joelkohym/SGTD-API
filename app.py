@@ -96,13 +96,13 @@ def Vessel_movement_receive(formName=None):
     data_dict = json.loads(data_str)
     # Extract the last item from the "payload" array
     last_payload_item = data_dict['payload'][-1]
-    # Open the Google Sheets spreadsheet by title or URL
-    spreadsheet = gc.open(
-      "https://docs.google.com/spreadsheets/d/1yvUCUCfZsTPSMf88i9JoZocSsSm7iyclVCimCGpuTEk/edit#gid=0"
-    )
-    # Select a specific worksheet within the spreadsheet
-    worksheet = spreadsheet.worksheet(
-      "replit")  # Change the sheet name if needed
+    # # Open the Google Sheets spreadsheet by title or URL
+    # spreadsheet = gc.open(
+    #   "https://docs.google.com/spreadsheets/d/1yvUCUCfZsTPSMf88i9JoZocSsSm7iyclVCimCGpuTEk/edit#gid=0"
+    # )
+    # # Select a specific worksheet within the spreadsheet
+    # worksheet = spreadsheet.worksheet(
+    #   "replit")  # Change the sheet name if needed
     # Create a dictionary to map column names to values
     row_data = {
             "vm_vessel_particulars.vessel_nm": last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
@@ -120,7 +120,8 @@ def Vessel_movement_receive(formName=None):
         }
 
         # Append the data to the worksheet
-    worksheet.append_table(values=[list(row_data.values())])
+    print(row_data)
+    #worksheet.append_table(values=[list(row_data.values())])
     return "Data saved to Google Sheets."
   except Exception as e:
     # Handle the error gracefully and log it
