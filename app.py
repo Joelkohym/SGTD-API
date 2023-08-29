@@ -66,6 +66,22 @@ def Vessel_data_pull():
     payload, indent=4)  # Convert payload dictionary to JSON string
   # Rest of the code to send the JSON payload to the API
   data = json.loads(json_string)
+  response_vessel_current_position = requests.post(
+url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_Key})
+  if response_vessel_current_position.status_code == 200:
+    print(f"Response JSON = {response_vessel_current_position.json()}")
+    print("Pull vessel_current_position success.")
+  else:
+    print(
+      f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
+    )
+
+
+
+
+
+
+  
   response_vessel_movement = requests.post(
     url_vessel_movement, json=data, headers={'SGTRADEX-API-KEY': API_Key})
   if response_vessel_movement.status_code == 200:
@@ -77,24 +93,14 @@ def Vessel_data_pull():
     )
     #print(response_vessel_movement.text)
 
-  response_vessel_current_position = requests.post(
-    url_vessel_current_position,
-    json=data,
-    headers={'SGTRADEX-API-KEY': API_Key})
-  if response_vessel_current_position.status_code == 200:
-    print(f"Response JSON = {response_vessel_current_position.json()}")
-    print("Pull vessel_current_position success.")
-  else:
-    print(
-      f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
-    )
+
     #print(response_vessel_current_position.text)
   return redirect(url_for('Vessel_map'))
 
 
 #====================Vessel Movement Receive========================
 @app.route("/api/vessel_movement/receive", methods=['POST'])
-def Vessel_movement_receive(formName=None):
+def Vessel_movement_receive():
   try:
     data = request.data  # Get the raw data from the request body
     #print(data)
@@ -140,17 +146,13 @@ def Vessel_movement_receive(formName=None):
     worksheet_replit = sh.worksheet_by_title("replit_vessel_movement")
     #clear
     worksheet_replit.clear()
-    #     # Write the headers as the first row
-    #     worksheet_replit.insert_rows(
-    # row=1,number=1,values=list(row_data_vessel_movement.keys()))
+    # Write the headers as the first row
+    worksheet_replit.insert_rows(
+    row=1,number=1,values=list(row_data_vessel_movement.keys()))
 
-    worksheet_replit.append_table(
-      start='A1',  # You can specify the starting cell here
-      end=None,  # You can specify the ending cell if needed
-      values=list(row_data_vessel_movement.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
-      start='A2',  # You can specify the starting cell here
+      start='A1',  # You can specify the starting cell here
       end=None,  # You can specify the ending cell if needed
       values=list(row_data_vessel_movement.values()))
     print([list(row_data_vessel_movement.values())])
@@ -163,7 +165,7 @@ def Vessel_movement_receive(formName=None):
 
 #=============Vessel Current Location Receive========================
 @app.route("/api/vessel_current_position/receive", methods=['POST'])
-def Vessel_movement_current_position(formName=None):
+def Vessel_movement_current_position():
   try:
     data = request.data  # Get the raw data from the request body
     print(f"Vessel_movement_current_position = {data}")
@@ -185,15 +187,15 @@ def Vessel_movement_current_position(formName=None):
     worksheet_replit.clear()
 
     # Write the headers as the first row
-    # worksheet_replit.insert_rows(row=1, number=1,values=list(row_data_vessel_current_position.keys()))
+    worksheet_replit.insert_rows(row=1, number=1,values=list(row_data_vessel_current_position.keys()))
 
-    worksheet_replit.append_table(
-      start='A1',  # You can specify the starting cell here
-      end=None,  # You can specify the ending cell if needed
-      values=list(row_data_vessel_current_position.keys()))
+    # worksheet_replit.append_table(
+    #   start='A1',  # You can specify the starting cell here
+    #   end=None,  # You can specify the ending cell if needed
+    #   values=list(row_data_vessel_current_position.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
-      start='A2',  # You can specify the starting cell here
+      start='A1',  # You can specify the starting cell here
       end=None,  # You can specify the ending cell if needed
       values=list(row_data_vessel_current_position.values()))
     return "Vessel Current Location Data saved to Google Sheets."
@@ -204,7 +206,7 @@ def Vessel_movement_current_position(formName=None):
 
 
 #============================MAP=========================
-@app.route("/api/vessel_map", methods=['POST'])
+@app.route("/api/vessel_map")
 def Vessel_map(formName=None):
   # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
   gc = pygsheets.authorize(service_account_file='creds.json')
