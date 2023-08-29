@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import requests
 import json
 import pygsheets
@@ -13,7 +13,6 @@ colors = [
   "red", "green", "blue", "yellow", "violet", "indigo", "orange", "black",
   "purple", "grey", "silver", "gold"
 ]
-
 
 
 #========================Vessel data GET===========================
@@ -38,9 +37,6 @@ def SGTD():
       for from_item in from_list:
         system_ids_names.append((from_item['id'], from_item['name']))
   return system_ids_names
-
-
-
 
 
 #========================Vessel data PULL===========================
@@ -80,9 +76,11 @@ def Vessel_data_pull():
       f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
     )
     #print(response_vessel_movement.text)
-  
+
   response_vessel_current_position = requests.post(
-    url_vessel_current_position, json=data, headers={'SGTRADEX-API-KEY': API_Key})
+    url_vessel_current_position,
+    json=data,
+    headers={'SGTRADEX-API-KEY': API_Key})
   if response_vessel_current_position.status_code == 200:
     print(f"Response JSON = {response_vessel_current_position.json()}")
     print("Pull vessel_current_position success.")
@@ -91,10 +89,7 @@ def Vessel_data_pull():
       f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
     )
     #print(response_vessel_current_position.text)
-  return render_template('mymap.html')
-
-
-
+  return redirect(url_for('Vessel_map'))
 
 
 #====================Vessel Movement Receive========================
@@ -145,10 +140,9 @@ def Vessel_movement_receive(formName=None):
     worksheet_replit = sh.worksheet_by_title("replit_vessel_movement")
     #clear
     worksheet_replit.clear()
-#     # Write the headers as the first row
-#     worksheet_replit.insert_rows(
-# row=1,number=1,values=list(row_data_vessel_movement.keys()))
-
+    #     # Write the headers as the first row
+    #     worksheet_replit.insert_rows(
+    # row=1,number=1,values=list(row_data_vessel_movement.keys()))
 
     worksheet_replit.append_table(
       start='A1',  # You can specify the starting cell here
@@ -165,10 +159,6 @@ def Vessel_movement_receive(formName=None):
     # Handle the error gracefully and log it
     print("An error occurred:", str(e))
     return f"An error occurred: {str(e)}", 500  # Return a 500
-
-
-
-
 
 
 #=============Vessel Current Location Receive========================
@@ -197,7 +187,6 @@ def Vessel_movement_current_position(formName=None):
     # Write the headers as the first row
     # worksheet_replit.insert_rows(row=1, number=1,values=list(row_data_vessel_current_position.keys()))
 
-    
     worksheet_replit.append_table(
       start='A1',  # You can specify the starting cell here
       end=None,  # You can specify the ending cell if needed
@@ -212,8 +201,6 @@ def Vessel_movement_current_position(formName=None):
     # Handle the error gracefully and log it
     print("An error occurred:", str(e))
     return f"An error occurred: {str(e)}", 500  # Return a 500
-
-
 
 
 #============================MAP=========================
@@ -231,12 +218,13 @@ def Vessel_map(formName=None):
   # Read data from 'Sheet2' into another DataFrame
   df2 = pd.DataFrame(sheet2.get_all_records())
   # Assuming 'imo_no' is the common column
-  merged_df = pd.merge(df1, df2, left_on='vessel_particulars.vessel_imo_no', right_on='vm_vessel_particulars.vessel_imo_no', how='inner')
+  merged_df = pd.merge(df1,
+                       df2,
+                       left_on='vessel_particulars.vessel_imo_no',
+                       right_on='vm_vessel_particulars.vessel_imo_no',
+                       how='inner')
   print(f"Merged_df == {merged_df}")
 
-
-
-  
   m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
   regions = 'static/SG_anchorages.geojson'
   m.add_geojson(regions,
@@ -254,7 +242,7 @@ def Vessel_map(formName=None):
     icon_names=['gear', 'map', 'leaf', 'globe'],
     spin=True,
     add_legend=True,
-)
+  )
   m.to_html("templates/mymap.html")
   #m.to_html("mymap.html")
   return render_template('mymap.html')
