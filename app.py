@@ -49,7 +49,7 @@ def Vessel_data_pull():
   API_Key = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
   vessel_imo = "9702699"
   url_vessel_movement = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_movement"
-  url_vessel_current_location = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_current_location"
+  url_vessel_current_position = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_current_position"
   on_behalf_of_id = "49f04a6f-f157-479b-b211-18931fad4ca4"
   payload = {
     "participants": [{
@@ -80,16 +80,17 @@ def Vessel_data_pull():
       f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
     )
     #print(response_vessel_movement.text)
-  response_vessel_current_location = requests.post(
-    url_vessel_current_location, json=data, headers={'SGTRADEX-API-KEY': API_Key})
-  if response_vessel_current_location.status_code == 200:
-    print(f"Response JSON = {response_vessel_current_location.json()}")
-    print("Pull vessel_current_location success.")
+  
+  response_vessel_current_position = requests.post(
+    url_vessel_current_position, json=data, headers={'SGTRADEX-API-KEY': API_Key})
+  if response_vessel_current_position.status_code == 200:
+    print(f"Response JSON = {response_vessel_current_position.json()}")
+    print("Pull vessel_current_position success.")
   else:
     print(
-      f"Failed to PULL vessel_current_location data. Status code: {response_vessel_current_location.status_code}"
+      f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
     )
-    #print(response_vessel_current_location.text)
+    #print(response_vessel_current_position.text)
   return render_template('mymap.html')
 
 
@@ -149,7 +150,7 @@ def Vessel_movement_receive(formName=None):
 row=1,number=1,values=list(row_data_vessel_movement.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
-      start='A1',  # You can specify the starting cell here
+      start='A2',  # You can specify the starting cell here
       end=None,  # You can specify the ending cell if needed
       values=list(row_data_vessel_movement.values()))
     print([list(row_data_vessel_movement.values())])
@@ -165,8 +166,8 @@ row=1,number=1,values=list(row_data_vessel_movement.keys()))
 
 
 #=============Vessel Current Location Receive========================
-@app.route("/api/vessel_current_location/receive", methods=['POST'])
-def Vessel_movement_current_location(formName=None):
+@app.route("/api/vessel_current_position/receive", methods=['POST'])
+def Vessel_movement_current_position(formName=None):
   try:
 
     data = request.data  # Get the raw data from the request body
@@ -174,16 +175,16 @@ def Vessel_movement_current_location(formName=None):
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
     # Convert the JSON string to a Python dictionary
     data_dict = json.loads(data_str)
-    row_data_vessel_current_location = data_dict['payload'][-1]
+    row_data_vessel_current_position = data_dict['payload'][-1]
     # Add the current date and time to your data dictionary
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    row_data_vessel_current_location['Timestamp'] = current_datetime
+    row_data_vessel_current_position['Timestamp'] = current_datetime
     print(
-      f"row_data_vessel_current_location: {row_data_vessel_current_location}")
+      f"row_data_vessel_current_position: {row_data_vessel_current_position}")
     gc = pygsheets.authorize(service_account_file='creds.json')
     print(gc.spreadsheet_titles())
     sh = gc.open('SGTD Received APIs')
-    worksheet_replit = sh.worksheet_by_title("replit_vessel_current_location")
+    worksheet_replit = sh.worksheet_by_title("replit_vessel_current_position")
 
     #clear
     worksheet_replit.clear()
@@ -192,12 +193,12 @@ def Vessel_movement_current_location(formName=None):
     worksheet_replit.insert_rows(row=1,
                                  number=1,
                                  values=list(
-                                   row_data_vessel_current_location.keys()))
+                                   row_data_vessel_current_position.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
-      start='A1',  # You can specify the starting cell here
+      start='A2',  # You can specify the starting cell here
       end=None,  # You can specify the ending cell if needed
-      values=list(row_data_vessel_current_location.values()))
+      values=list(row_data_vessel_current_position.values()))
     return "Vessel Current Location Data saved to Google Sheets."
   except Exception as e:
     # Handle the error gracefully and log it
@@ -223,7 +224,7 @@ def Vessel_map(formName=None):
   df2 = pd.DataFrame(sheet2.get_all_records())
   # Assuming 'imo_no' is the common column
   merged_df = pd.merge(df1, df2, left_on='vessel_particulars.vessel_imo_no', right_on='vm_vessel_particulars.vessel_imo_no', how='inner')
-
+  print(f"Merged_df == {merged_df}")
 
 
 
