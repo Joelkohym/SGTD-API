@@ -5,10 +5,11 @@ import pygsheets
 import os
 
 app = Flask(__name__)
-my_secret = os.environ['GSHEET_API_CREDENTIALS']
-service_account_info = json.loads(my_secret)
+#my_secret = os.environ['GSHEET_API_CREDENTIALS']
+#print(my_secret)
+#service_account_info = json.loads(my_secret)
 # my_credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
-gc = pygsheets.authorize(service_account_json=my_secret)
+#gc = pygsheets.authorize(service_account_json=my_secret)
 
 # Set up OAuth2 credentials using your JSON credentials file
 scope = [
@@ -37,6 +38,10 @@ def SGTD():
       for from_item in from_list:
         system_ids_names.append((from_item['id'], from_item['name']))
   return system_ids_names
+
+
+
+
 
 
 @app.route("/api/vessel")
@@ -75,6 +80,10 @@ def Vessel_movement():
     )
     print(response_vessel_movement.text)
   return response_vessel_movement.text
+
+
+
+
 
 
 @app.route("/api/vessel/receive", methods=['POST'])
