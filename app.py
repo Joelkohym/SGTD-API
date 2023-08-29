@@ -3,10 +3,16 @@ import requests
 import json
 import pygsheets
 from datetime import datetime
+import pandas as pd
+import leafmap.foliumap as leafmap
+import random
 
 app = Flask(__name__)
 
-
+colors = [
+  "red", "green", "blue", "yellow", "violet", "indigo", "orange", "black",
+  "purple", "grey", "silver", "gold"
+]
 
 
 @app.route("/api/sgtd")
@@ -121,13 +127,14 @@ def Vessel_movement_receive(formName=None):
     worksheet_replit.clear()
 
     # Write the headers as the first row
-    worksheet_replit.insert_rows(row=1, number=1, values=list(row_data_vessel_movement.keys()))
+    worksheet_replit.insert_rows(row=1,
+                                 number=1,
+                                 values=list(row_data_vessel_movement.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
-        start='A2',  # You can specify the starting cell here
-        end=None,    # You can specify the ending cell if needed
-        values=list(row_data_vessel_movement.values())
-    )
+      start='A2',  # You can specify the starting cell here
+      end=None,  # You can specify the ending cell if needed
+      values=list(row_data_vessel_movement.values()))
     print([list(row_data_vessel_movement.values())])
     return "Data saved to Google Sheets."
   except Exception as e:
@@ -160,18 +167,54 @@ def Vessel_movement_current_location(formName=None):
     worksheet_replit.clear()
 
     # Write the headers as the first row
-    worksheet_replit.insert_rows(row=1, number=1, values=list(row_data_vessel_current_location.keys()))
+    worksheet_replit.insert_rows(row=1,
+                                 number=1,
+                                 values=list(
+                                   row_data_vessel_current_location.keys()))
     # Append the data as a new row
     worksheet_replit.append_table(
-        start='A2',  # You can specify the starting cell here
-        end=None,    # You can specify the ending cell if needed
-        values=list(row_data_vessel_current_location.values())
-    )
+      start='A2',  # You can specify the starting cell here
+      end=None,  # You can specify the ending cell if needed
+      values=list(row_data_vessel_current_location.values()))
     return "Vessel Current Location Data saved to Google Sheets."
   except Exception as e:
     # Handle the error gracefully and log it
     print("An error occurred:", str(e))
     return f"An error occurred: {str(e)}", 500  # Return a 500
+
+
+@app.route("/api/vessel_map", methods=['POST'])
+def Vessel_map(formName=None):
+  # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
+  gc = pygsheets.authorize(service_account_file='creds.json')
+  print(gc.spreadsheet_titles())
+  sh = gc.open('SGTD Received APIs')
+  sheet1 = sh.worksheet_by_title('Sheet1')
+  sheet2 = sh.worksheet_by_title('Sheet2')
+  # Read data from 'Sheet1' into a DataFrame
+  df1 = pd.DataFrame(sheet1.get_all_records())
+
+  # Read data from 'Sheet2' into another DataFrame
+  df2 = pd.DataFrame(sheet2.get_all_records())
+  # Assuming 'imo_no' is the common column
+  merged_df = pd.merge(df1, df2, on='imo_no', how='inner')
+
+
+
+
+  
+  m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
+  regions = 'static/SG_anchorages.geojson'
+  m.add_geojson(regions,
+                layer_name='SG Anchorages',
+                style={
+                  "color": (random.choice(colors)),
+                  "fill": True,
+                  "fillOpacity": 0.05
+                })
+  m.to_html("templates/mymap.html")
+  #m.to_html("mymap.html")
+  return render_template('mymap.html')
 
 
 if __name__ == '__main__':

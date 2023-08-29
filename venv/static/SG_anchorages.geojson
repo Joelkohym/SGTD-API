@@ -1,0 +1,577 @@
+{
+  "type": "FeatureCollection",
+  "name": "SG Anchorages",
+  "properties": {},
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Changi Barge Temporary Holding Anchorage (Abbreviated Code: ACBTH)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [104.050567, 1.347583],
+            [104.062233, 1.336117],
+            [104.049983, 1.336083],
+            [104.046667, 1.339667],
+            [104.050567, 1.347583]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Changi General Purposes Anchorage (Abbreviated Code: ACGP)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [104.052517, 1.333267],
+            [104.060033, 1.333267],
+            [104.0786, 1.314617],
+            [104.069617, 1.314617],
+            [104.052517, 1.333267]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Man-of-War Anchorage (Abbreviated Code: AMOW)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [104.059233, 1.314717],
+            [104.069617, 1.314617],
+            [104.078683, 1.306517],
+            [104.059233, 1.306167],
+            [104.059233, 1.314717]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Eastern Bunkering A Anchorage (Abbreviated Code: AEBA)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [104.046567, 1.3059],
+            [104.086433, 1.3067],
+            [104.0957, 1.2974],
+            [104.046567, 1.288833],
+            [104.046567, 1.3059]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Small Craft B Anchorage (Abbreviated Code: ASCB)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.982967, 1.30495],
+            [103.99755, 1.30495],
+            [104.007, 1.3],
+            [103.982967, 1.3],
+            [103.982967, 1.30495]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Eastern Petroleum C Anchorage (Abbreviated Code: AEPBC)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.982967, 1.3],
+            [104.007, 1.3],
+            [104.01825, 1.29475],
+            [103.974967, 1.291617],
+            [103.982967, 1.3]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Eastern Bunkering B Anchorage (Abbreviated Code: AEBB)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.982967, 1.299633],
+  [104.01825, 1.284117],
+  [104.027667, 1.286067],
+  [103.982967, 1.291617],
+  [103.982967, 1.299633]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Small Craft A Anchorage (Abbreviated Code: ASCA)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.95555, 1.30495],
+            [103.9785, 1.30495],
+            [103.9785, 1.3],
+            [103.942883, 1.3],
+            [103.95555, 1.30495]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Eastern Petroleum B Anchorage (Abbreviated Code: AEPBB)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.942883, 1.3],
+            [103.9785, 1.3],
+            [103.9785, 1.291633],
+            [103.933333, 1.291633],
+            [103.933333, 1.296267],
+            [103.942883, 1.3]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Eastern Special Purposes A Anchorage (Abbreviated Code:AESPA)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.933333, 1.296267],
+            [103.933333, 1.291633],
+            [103.9785, 1.291633],
+            [103.977167, 1.277167],
+            [103.921433, 1.277167],
+            [103.907817, 1.287067],
+            [103.933333, 1.296267]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Eastern Bunkering C Anchorage (Abbreviated Code: AEBC)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.921433, 1.277167],
+            [103.977167, 1.277167],
+            [103.961367, 1.26845],
+            [103.961367, 1.267],
+            [103.921433, 1.277167]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Eastern Anchorage (Abbreviated Code: AEW)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.862767, 1.250633],
+            [103.862117, 1.256817],
+            [103.867, 1.262733],
+            [103.867033, 1.267117],
+            [103.867367, 1.268883],
+            [103.867183, 1.272217],
+            [103.874783, 1.275383],
+            [103.874883, 1.276017],
+            [103.877267, 1.277],
+            [103.877133, 1.277333],
+            [103.885167, 1.283],
+            [103.892017, 1.293517],
+            [103.9146, 1.281867],
+            [103.914583, 1.281167],
+            [103.918233, 1.2511],
+            [103.918183, 1.251233],
+            [103.918567, 1.252433],
+            [103.91865, 1.253967],
+            [103.91855, 1.255217],
+            [103.862767, 1.250633]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Eastern Holding C Anchorage (Abbreviated Code: AEHC)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.86325, 1.250217],
+            [103.86465, 1.252983],
+            [103.8649, 1.2529],
+            [103.86465, 1.252983],
+            [103.86325, 1.250217]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Eastern Petroleum A Anchorage (Abbreviated Code: AEPA)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.897167, 1.257167],
+            [103.9146, 1.281867],
+            [103.929, 1.255233],
+            [103.922833, 1.244733],
+            [103.897167, 1.257167]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Eastern Holding A Anchorage (Abbreviated Code: AEHA)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.922833, 1.244733],
+            [103.929, 1.255233],
+            [103.934167, 1.250717],
+            [103.926, 1.248933],
+            [103.922833, 1.244733]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "NAME": "Eastern Holding B Anchorage (Abbreviated Code: AEHB)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.877233, 1.244667],
+            [103.888917, 1.252583],
+            [103.901033, 1.240783],
+            [103.887, 1.238],
+            [103.877233, 1.244667]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Western Quarantine & Immigration Anchorage (Abbreviated Code: AWQI)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [103.809667, 1.218833],
+            [103.826533, 1.226533],
+            [103.83215, 1.219117],
+            [103.8291, 1.21245],
+            [103.81715, 1.21245],
+            [103.809667, 1.218833]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Western Anchorage (Abbreviated Code: AWW)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.796767, 1.250333],
+  [103.804533, 1.255983],
+  [103.812633, 1.242733],
+  [103.826533, 1.226533],
+  [103.8218, 1.2388],
+  [103.796767, 1.250333]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Western Petroleum A Anchorage (Abbreviated Code: AWPA)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.788717, 1.248083],
+  [103.796767, 1.250333],
+  [103.806383, 1.239717],
+  [103.7992, 1.246917],
+  [103.788717, 1.248083]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Western Holding Anchorage (Abbreviated Code: AWH)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.7853, 1.239083],
+  [103.788717, 1.248083],
+  [103.7992, 1.246917],
+  [103.795933, 1.230383],
+  [103.800583, 1.237267],
+  [103.7853, 1.239083]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Western Petroleum B Anchorage (Abbreviated Code: AWPB)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.795933, 1.230383],
+  [103.806383, 1.239717],
+  [103.8218, 1.2388],
+  [103.817767, 1.213017],
+  [103.795933, 1.230383]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Selat Pauh Anchorage (Abbreviated Code: ASPLU)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.714717, 1.227733],
+  [103.71745, 1.229117],
+  [103.724117, 1.2308],
+  [103.748567, 1.2219],
+  [103.757717, 1.223567],
+  [103.758583, 1.221333],
+  [103.74745, 1.204233],
+  [103.74355, 1.204233],
+  [103.7405, 1.2047],
+  [103.744767, 1.2051],
+  [103.714717, 1.227733]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Selat Pauh Petroleum Anchorage (Abbreviated Code: ASPP)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.714717, 1.227733],
+  [103.744767, 1.2051],
+  [103.7405, 1.2047],
+  [103.74545, 1.2155],
+  [103.745433, 1.214767],
+  [103.721267, 1.2256]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Raffles Petroleum Anchorage (Abbreviated Code: ARP)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.7362, 1.200767],
+  [103.74015, 1.20415],
+  [103.750633, 1.2073],
+  [103.758617, 1.204217],
+  [103.7362, 1.200767]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Raffles Reserved Anchorage (Abbreviated Code: ARAFR)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.741883, 1.189467],
+  [103.750633, 1.2073],
+  [103.761167, 1.194117],
+  [103.750, 1.173333],
+  [103.741883, 1.189467]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Sudong Petroleum Holding Anchorage (Abbreviated Code:ASPH)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.719517, 1.16775],
+  [103.715567, 1.157367],
+  [103.716883, 1.155217],
+  [103.722567, 1.1659],
+  [103.719517, 1.16775]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Sudong Explosive Anchorage (Abbreviated Code: ASUEX)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.711, 1.178033],
+  [103.719517, 1.16775],
+  [103.722567, 1.1659],
+  [103.708367, 1.173367],
+  [103.711, 1.178033]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Sudong Special Purpose Anchorage (Abbreviated Code: ASSPU)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.707033, 1.173667],
+  [103.711, 1.178033],
+  [103.7184, 1.190733],
+  [103.675233, 1.202633],
+  [103.6727, 1.196467],
+  [103.675033, 1.1961],
+  [103.707033, 1.173667]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Sudong Holding Anchorage (Abbreviated Code: ASH)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.671167, 1.204617],
+  [103.670867, 1.2052],
+  [103.66805, 1.197167],
+  [103.671067, 1.19875],
+  [103.671167, 1.204617]
+          ]
+        ]
+      }
+    },
+{
+      "type": "Feature",
+      "properties": {
+        "NAME": "Very Large Crude Carrier Anchorage (Abbreviated Code: AVLCC)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+  [103.641333, 1.221483],
+  [103.657517, 1.22835],
+  [103.656283, 1.207833],
+  [103.647, 1.197667],
+  [103.641333, 1.221483]
+          ]
+        ]
+      }
+    }
+  ]
+}
