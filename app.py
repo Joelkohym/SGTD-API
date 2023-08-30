@@ -204,7 +204,8 @@ def Vessel_map(formName=None):
                        right_on='vessel_particulars.vessel_imo_no',
                        how='inner')
   print(f"Merged_df == {merged_df}")
-
+  final_df = merged_df.drop['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_particulars.vessel_movement_type', 'vm_vessel_particulars.vessel_movement_height', 'vessel_particulars.vessel_call_sign', 'vessel_year_built', 'vessel_length','vessel_depth','vessel_course', 'vessel_deadweight', 'vessel_longitude', 'vessel_latitude', 'vm_vessel_movement_draft', 'vessel_particulars.vessel_nm', 'vessel_particulars.vessel_imo_no']
+  print(f"Final df = {final_df}")
   m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
   regions = 'templates/SG_anchorages.geojson'
   m.add_geojson(regions,
@@ -215,7 +216,7 @@ def Vessel_map(formName=None):
                   "fillOpacity": 0.05
                 })
   m.add_points_from_xy(
-    merged_df,
+    final_df,
     x="vessel_longitude_degrees",
     y="vessel_latitude_degrees",
     icon_names=['gear', 'map', 'leaf', 'globe'],
