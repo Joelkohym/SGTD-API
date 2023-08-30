@@ -231,7 +231,7 @@ def Vessel_map(formName=None):
   print(f"Merged_df == {merged_df}")
 
   m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
-  regions = 'static/SG_anchorages.geojson'
+  regions = 'templates/SG_anchorages.geojson'
   m.add_geojson(regions,
                 layer_name='SG Anchorages',
                 style={
