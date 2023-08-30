@@ -17,8 +17,9 @@ colors = [
 #========================Vessel data PULL===========================
 @app.route("/api/vessel")
 def Vessel_data_pull():
+  vessel_imo = request.args.get('imo')
   API_Key = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
-  vessel_imo = "9702699"
+  #vessel_imo = "9702699"
   url_vessel_movement = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_movement"
   url_vessel_current_position = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_current_position"
   on_behalf_of_id = "49f04a6f-f157-479b-b211-18931fad4ca4"
