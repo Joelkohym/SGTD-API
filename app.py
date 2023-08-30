@@ -38,7 +38,7 @@ def Vessel_data_pull(vessel_imo):
       "id": on_behalf_of_id
     }]
   }
-  print(f"IMO Number = {vessel_imo})
+  print(f"IMO Number = {vessel_imo}")
   json_string = json.dumps(
     payload, indent=4)  # Convert payload dictionary to JSON string
   # Rest of the code to send the JSON payload to the API
