@@ -87,7 +87,8 @@ def Vessel_movement_receive():
     data_dict = json.loads(data_str)
     # Extract the last item from the "payload" array
     last_payload_item = data_dict['payload'][-1]
-    if len(last_payload_item['vm_vessel_movement_end_dt'])>0:
+    try:
+      print(f"Length of vessel movement end date = {len(last_payload_item['vm_vessel_movement_end_dt'])}")
       row_data_vessel_movement = {
       "vm_vessel_particulars.vessel_nm":
       last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
@@ -114,7 +115,8 @@ def Vessel_movement_receive():
       "vm_vessel_movement_draft":
       last_payload_item['vm_vessel_movement_draft']
     }
-    else:
+    except:
+      print("================no movement end date, printing exception===============")
       row_data_vessel_movement = {
       "vm_vessel_particulars.vessel_nm":
       last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
