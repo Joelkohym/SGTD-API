@@ -12,6 +12,7 @@ pygsheets = "^2.0.6"
 pandas = "^2.0.3"
 leafmap = "0.23.3"
 geopandas = "0.13.2"
+Flask-SQLAlchemy = "^3.0.5"
 
 [tool.poetry.dev-dependencies]
 
