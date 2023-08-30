@@ -6,6 +6,7 @@ from datetime import datetime
 import pandas as pd
 import leafmap.foliumap as leafmap
 import random
+import time
 
 app = Flask(__name__)
 
@@ -68,7 +69,7 @@ url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_Key})
     )
     #print(response_vessel_movement.text)
 
-
+  time.sleep(5)
     #print(response_vessel_current_position.text)
   return redirect(url_for('Vessel_map'))
 
