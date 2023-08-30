@@ -10,12 +10,11 @@ import random
 app = Flask(__name__)
 
 colors = [
-  "red", "green", "blue", "yellow", "violet", "indigo", "orange", "black",
-  "purple", "grey", "silver", "gold"
+"red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
 
 
-#========================Vessel data GET===========================
+#========================Vesseldata GET===========================
 @app.route("/api/sgtd")
 def SGTD():
   system_ids_names = []
