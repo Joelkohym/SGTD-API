@@ -87,7 +87,8 @@ def Vessel_movement_receive():
     data_dict = json.loads(data_str)
     # Extract the last item from the "payload" array
     last_payload_item = data_dict['payload'][-1]
-    row_data_vessel_movement = {
+    if len(last_payload_item['vm_vessel_movement_end_dt'])>0:
+      row_data_vessel_movement = {
       "vm_vessel_particulars.vessel_nm":
       last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
       "vm_vessel_particulars.vessel_imo_no":
@@ -108,6 +109,33 @@ def Vessel_movement_receive():
       last_payload_item['vm_vessel_movement_start_dt'],
       "vm_vessel_movement_end_dt":
       last_payload_item['vm_vessel_movement_end_dt'],
+      "vm_vessel_movement_status":
+      last_payload_item['vm_vessel_movement_status'],
+      "vm_vessel_movement_draft":
+      last_payload_item['vm_vessel_movement_draft']
+    }
+    else:
+      row_data_vessel_movement = {
+      "vm_vessel_particulars.vessel_nm":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
+      "vm_vessel_particulars.vessel_imo_no":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_imo_no'],
+      "vm_vessel_particulars.vessel_flag":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_flag'],
+      "vm_vessel_particulars.vessel_call_sign":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_call_sign'],
+      "vm_vessel_location_from":
+      last_payload_item['vm_vessel_location_from'],
+      "vm_vessel_location_to":
+      last_payload_item['vm_vessel_location_to'],
+      "vm_vessel_movement_height":
+      last_payload_item['vm_vessel_movement_height'],
+      "vm_vessel_movement_type":
+      last_payload_item['vm_vessel_movement_type'],
+      "vm_vessel_movement_start_dt":
+      last_payload_item['vm_vessel_movement_start_dt'],
+      "vm_vessel_movement_end_dt":
+      "",
       "vm_vessel_movement_status":
       last_payload_item['vm_vessel_movement_status'],
       "vm_vessel_movement_draft":
@@ -209,8 +237,6 @@ def Vessel_map():
   print(f"Merged_df == {merged_df}")
   merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_particulars.vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
  
-#'vm_vessel_particulars.vessel_imo_no'], inplace=True)
-  # print(f"Final df = {final_df}")
   m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
   regions = 'templates/SG_anchorages.geojson'
   m.add_geojson(regions,
