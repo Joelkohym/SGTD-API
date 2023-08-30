@@ -13,31 +13,6 @@ colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
 
-
-#========================Vesseldata GET===========================
-@app.route("/api/sgtd")
-def SGTD():
-  system_ids_names = []
-  API_Key = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
-  # Make the GET request
-  url = 'https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/config'
-  r_GET = requests.get(url, headers={'SGTRADEX-API-KEY': API_Key})
-  consumes_list = r_GET.json()['data']['consumes']
-  # Check the response
-  if r_GET.status_code == 200:
-    print("Config Data retrieved successfully!")
-  else:
-    print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
-    print(r_GET.text
-          )  # Print the response content if the request was not successful
-  for consume in consumes_list:
-    if consume['id'] == 'vessel_current_position':
-      from_list = consume['from']
-      for from_item in from_list:
-        system_ids_names.append((from_item['id'], from_item['name']))
-  return system_ids_names
-
-
 #========================Vessel data PULL===========================
 @app.route("/api/vessel")
 def Vessel_data_pull():
@@ -65,6 +40,7 @@ def Vessel_data_pull():
     payload, indent=4)  # Convert payload dictionary to JSON string
   # Rest of the code to send the JSON payload to the API
   data = json.loads(json_string)
+#========================PULL vessel_current_position===========================
   response_vessel_current_position = requests.post(
 url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_Key})
   if response_vessel_current_position.status_code == 200:
@@ -80,7 +56,7 @@ url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_Key})
 
 
 
-  
+#========================PULL vessel_movement=====================================
   response_vessel_movement = requests.post(
     url_vessel_movement, json=data, headers={'SGTRADEX-API-KEY': API_Key})
   if response_vessel_movement.status_code == 200:
@@ -97,7 +73,7 @@ url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_Key})
   return redirect(url_for('Vessel_map'))
 
 
-#====================Vessel Movement Receive========================
+#==========================RECEIVE vessel_movement===============================
 @app.route("/api/vessel_movement/receive", methods=['POST'])
 def Vessel_movement_receive():
   try:
@@ -163,7 +139,7 @@ def Vessel_movement_receive():
     return f"An error occurred: {str(e)}", 500  # Return a 500
 
 
-#=============Vessel Current Location Receive========================
+#==========================RECEIVE vessel_current_position===============================
 @app.route("/api/vessel_current_position/receive", methods=['POST'])
 def Vessel_movement_current_position():
   try:
@@ -242,7 +218,6 @@ def Vessel_map(formName=None):
     merged_df,
     x="vessel_longitude_degrees",
     y="vessel_latitude_degrees",
-    color_column=random.choice(colors),
     icon_names=['gear', 'map', 'leaf', 'globe'],
     spin=True,
     add_legend=True,
@@ -250,6 +225,44 @@ def Vessel_map(formName=None):
   m.to_html("templates/mymap.html")
   #m.to_html("mymap.html")
   return render_template('mymap.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#========================Vesseldata GET===========================
+@app.route("/api/sgtd")
+def SGTD():
+  system_ids_names = []
+  API_Key = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
+  # Make the GET request
+  url = 'https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/config'
+  r_GET = requests.get(url, headers={'SGTRADEX-API-KEY': API_Key})
+  consumes_list = r_GET.json()['data']['consumes']
+  # Check the response
+  if r_GET.status_code == 200:
+    print("Config Data retrieved successfully!")
+  else:
+    print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
+    print(r_GET.text
+          )  # Print the response content if the request was not successful
+  for consume in consumes_list:
+    if consume['id'] == 'vessel_current_position':
+      from_list = consume['from']
+      for from_item in from_list:
+        system_ids_names.append((from_item['id'], from_item['name']))
+  return system_ids_names
+
 
 
 if __name__ == '__main__':
