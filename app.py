@@ -68,7 +68,7 @@ url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_Key})
       f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
     )
     #print(response_vessel_movement.text)
-
+  print("Sleep 5 seconds")
   time.sleep(5)
     #print(response_vessel_current_position.text)
   return redirect(url_for('Vessel_map'))
@@ -185,7 +185,7 @@ def Vessel_movement_current_position():
 
 #============================MAP=========================
 @app.route("/api/vessel_map")
-def Vessel_map(formName=None):
+def Vessel_map():
   # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
   gc = pygsheets.authorize(service_account_file='creds.json')
   print(gc.spreadsheet_titles())
@@ -205,8 +205,9 @@ def Vessel_map(formName=None):
                        right_on='vm_vessel_particulars.vessel_imo_no',
                        how='inner')
   print(f"Merged_df == {merged_df}")
-  final_df = merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height', 'vessel_particulars.vessel_call_sign', 'vessel_year_built', 'vessel_length','vessel_depth','vessel_course', 'vessel_deadweight', 'vessel_longitude', 'vessel_latitude', 'vm_vessel_movement_draft', 'vm_vessel_particulars.vessel_nm', 'vm_vessel_particulars.vessel_imo_no'], inplace=True)
-  print(f"Final df = {final_df}")
+  final_df = merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height'], inplace=True)
+  #'vessel_particulars.vessel_call_sign', 'vessel_year_built', 'vessel_length','vessel_depth','vessel_course', 'vessel_deadweight', 'vessel_longitude', 'vessel_latitude', 'vm_vessel_movement_draft', 'vm_vessel_particulars.vessel_nm', 'vm_vessel_particulars.vessel_imo_no'], inplace=True)
+  # print(f"Final df = {final_df}")
   m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
   regions = 'templates/SG_anchorages.geojson'
   m.add_geojson(regions,
