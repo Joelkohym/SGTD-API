@@ -189,8 +189,8 @@ def Vessel_map(formName=None):
   gc = pygsheets.authorize(service_account_file='creds.json')
   print(gc.spreadsheet_titles())
   sh = gc.open('SGTD Received APIs')
-  sheet1 = sh.worksheet_by_title('replit_vessel_movement')
-  sheet2 = sh.worksheet_by_title('replit_vessel_current_position')
+  sheet1 = sh.worksheet_by_title('replit_vessel_current_position')
+  sheet2 = sh.worksheet_by_title('replit_vessel_movement')
   # Read data from 'Sheet1' into a DataFrame
   df1 = pd.DataFrame(sheet1.get_all_records())
   print(f"df1 = {df1}")
@@ -200,11 +200,11 @@ def Vessel_map(formName=None):
   # Assuming 'imo_no' is the common column
   merged_df = pd.merge(df1,
                        df2,
-                       left_on='vm_vessel_particulars.vessel_imo_no',
-                       right_on='vessel_particulars.vessel_imo_no',
+                       left_on='vessel_particulars.vessel_imo_no',
+                       right_on='vm_vessel_particulars.vessel_imo_no',
                        how='inner')
   print(f"Merged_df == {merged_df}")
-  final_df = merged_df.drop['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_particulars.vessel_movement_type', 'vm_vessel_particulars.vessel_movement_height', 'vessel_particulars.vessel_call_sign', 'vessel_year_built', 'vessel_length','vessel_depth','vessel_course', 'vessel_deadweight', 'vessel_longitude', 'vessel_latitude', 'vm_vessel_movement_draft', 'vessel_particulars.vessel_nm', 'vessel_particulars.vessel_imo_no']
+  final_df = merged_df.drop['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_particulars.vessel_movement_type', 'vm_vessel_particulars.vessel_movement_height', 'vessel_particulars.vessel_call_sign', 'vessel_year_built', 'vessel_length','vessel_depth','vessel_course', 'vessel_deadweight', 'vessel_longitude', 'vessel_latitude', 'vm_vessel_movement_draft', 'vm_vessel_particulars.vessel_nm', 'vm_vessel_particulars.vessel_imo_no']
   print(f"Final df = {final_df}")
   m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
   regions = 'templates/SG_anchorages.geojson'
