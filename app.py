@@ -243,7 +243,7 @@ def Vessel_map(formName=None):
     merged_df,
     x="vessel_longitude_degrees",
     y="vessel_latitude_degrees",
-    color_column='vessel_particulars.vessel_imo_no',
+    color_column=random.choice(colors),
     icon_names=['gear', 'map', 'leaf', 'globe'],
     spin=True,
     add_legend=True,
