@@ -266,7 +266,7 @@ def Vessel_current_position():
 
 
 
-
+#9490820 / 9929297
 #====================================MAP========================================
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
@@ -309,8 +309,6 @@ def Vessel_map():
     add_legend=True,
   )
   m.to_html("templates/mymap.html")
-  html_final = m.to_html("templates/mymap.html")
-  print(html_final)
   
   return render_template('mymap.html')
 
