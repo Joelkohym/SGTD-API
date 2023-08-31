@@ -196,30 +196,23 @@ def Vessel_current_position():
     worksheet_replit.clear()
 
     # Extract specific keys from 'vessel_particulars' for column headers
-    columns = data['vessel_particulars'][0].keys()
-    print(f"Columns VCP = {columns}")
-    # Create a list of values to be written to the sheet
-    values_to_write = []
-    for key in columns:
-        values_to_write.append(key)
-        values_to_write.append(data['vessel_particulars'][0][key])
-    for key, value in data.items():
-        if key != 'vessel_particulars':
-            values_to_write.append(key)
-            values_to_write.append(value)
-    print(f"values_to_write VCP = {values_to_write}")
-    # Write the data to the worksheet
-    worksheet.insert_rows(row=1, values=values_to_write, number=1)
-    # # Write the headers as the first row
-    # print(f"Keys of vessel_current_position = {row_data_vessel_current_position.keys()}")
-    # worksheet_replit.insert_rows(row=1, number=1,values=list(row_data_vessel_current_position.keys()))
+    # Extract the payload data
+    payload_data = data['payload'][0]
+    
+    # Combine the vessel particulars dictionary with the payload data
+    combined_data = {**payload_data, **payload_data['vessel_particulars']}
+    del combined_data['vessel_particulars']
+    
+    # Write the JSON payload to a cell in the worksheet
+    worksheet_replit.set_dataframe(combined_data, start='A1')
+
+    # worksheet_replit.append_table(
+    #   start='A1',  # You can specify the starting cell here
+    #   end=None,  # You can specify the ending cell if needed
+    #   values=list(row_data_vessel_current_position.values()))
+    # worksheet_replit.delete_rows(1)
 
 
-    worksheet_replit.append_table(
-      start='A1',  # You can specify the starting cell here
-      end=None,  # You can specify the ending cell if needed
-      values=list(row_data_vessel_current_position.values()))
-    worksheet_replit.delete_rows(1)
     return "Vessel Current Location Data saved to Google Sheets."
   except Exception as e:
     # Handle the error gracefully and log it
