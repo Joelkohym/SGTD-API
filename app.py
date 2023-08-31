@@ -243,6 +243,7 @@ def Vessel_current_position():
     # Append the 'Timestamp' value
     #row_values.append(current_datetime)
     print(f"row_values = {row_values}")
+
     # Append the data as a new row
     worksheet_replit.append_table(values=row_values, start='A2')
     worksheet_replit.delete_rows(1)
@@ -291,6 +292,7 @@ def Vessel_map():
   
   merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
   print(f"Merged_df == {merged_df}")
+  print(f"Merged_df IMO No == {merged_df['vessel_imo_no']}")
   m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
   regions = 'templates/SG_anchorages.geojson'
   m.add_geojson(regions,
