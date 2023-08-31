@@ -282,6 +282,7 @@ def Vessel_map():
   # Read data from 'Sheet2' into another DataFrame
   df2 = pd.DataFrame(sheet2.get_all_records())
   print(f"df2 = {df2}")
+  
   # Assuming 'imo_no' is the common column
   merged_df = pd.merge(df1,
                        df2,
@@ -309,6 +310,8 @@ def Vessel_map():
     spin=True,
     add_legend=True,
   )
+  print(f"vessel_latitude_degrees = {merged_df["vessel_longitude_degrees"]}")
+  print(f"merged_df["vessel_latitude_degrees"] = {merged_df["vessel_longitude_degrees"]}")
   os.remove("templates/mymap.html")
   m.to_html("templates/mymap.html")
   
