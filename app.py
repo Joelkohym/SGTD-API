@@ -223,9 +223,6 @@ def Vessel_current_position():
     worksheet_replit.insert_rows(
     row=1,number=1,values=column_headers)
 
-
-
-    
     # Extract the payload data
     payload_data = data_dict['payload'][0]
     print(f"payload_data: {payload_data}")
@@ -243,7 +240,7 @@ def Vessel_current_position():
     print(f"row_values = {row_values}")
     # Append the data as a new row
     worksheet_replit.append_table(values=row_values, start='A2')
-
+    worksheet_replit.delete_rows(1)
     return "Vessel Current Location Data saved to Google Sheets."
   except Exception as e:
     # Handle the error gracefully and log it
