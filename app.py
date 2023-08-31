@@ -213,19 +213,27 @@ def Vessel_current_position():
     
     # Append a 'Timestamp' column
     column_headers.append('Timestamp')
-
+    print(f"column_headers final: {column_headers}")
     # Append the column headers as the first row
-    worksheet_replit.append_table(values=[column_headers], start='A1')
+    worksheet_replit.append_table(values=column_headers, start='A1')
+
+
+    #     # Write the headers as the first row
+    # worksheet_replit.insert_rows(
+    # row=1,number=1,values=list(row_data_vessel_movement.keys()))
+
+
+
     
     # Extract the payload data
     payload_data = data_dict['payload'][0]
-
+    print(f"payload_data: {payload_data}")
     # Extract all the values from the payload data
     payload_values = [payload_data[key] for key in payload_keys if key != 'vessel_particulars']
-    
+    print(f"payload_values: {payload_data}")
     # Create a list of values corresponding to the keys
     vessel_particulars_values = list(vessel_particulars.values())
-    
+    print(f"vessel_particulars_values: {vessel_particulars_values}")
     # Extend row_values with payload_values
     row_values = vessel_particulars_values + payload_values
     
@@ -233,7 +241,7 @@ def Vessel_current_position():
     row_values.append(current_datetime)
     print(row_values)
     # Append the data as a new row
-    worksheet_replit.append_table(values=[row_values], start='A2')
+    worksheet_replit.append_table(values=row_values, start='A2')
 
     return "Vessel Current Location Data saved to Google Sheets."
   except Exception as e:
@@ -270,7 +278,7 @@ def Vessel_map():
   print(f"df1 = {df1}")
   # Read data from 'Sheet2' into another DataFrame
   df2 = pd.DataFrame(sheet2.get_all_records())
-  print(f"df1 = {df2}")
+  print(f"df2 = {df2}")
   # Assuming 'imo_no' is the common column
   merged_df = pd.merge(df1,
                        df2,
