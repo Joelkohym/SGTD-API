@@ -310,7 +310,7 @@ def Vessel_map():
     spin=True,
     add_legend=True,
   )
-  print(f"Merged_df IMO No == {merged_df['vessel_imo_no']}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees']}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees']}")
+  print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
   for f in os.listdir("templates\\"):
     print(f)
     if "mymap.html" in f:
