@@ -267,8 +267,8 @@ def Vessel_current_position():
 
 
 
-#============================MAP=========================
-@app.route("/api/vessel_map")
+#====================================MAP========================================
+@app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
   # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
   gc = pygsheets.authorize(service_account_file='creds.json')
@@ -288,9 +288,9 @@ def Vessel_map():
                        left_on='vessel_imo_no',
                        right_on='vm_vessel_particulars.vessel_imo_no',
                        how='inner')
-  print(f"Merged_df == {merged_df}")
+  
   merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
- 
+  print(f"Merged_df == {merged_df}")
   m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
   regions = 'templates/SG_anchorages.geojson'
   m.add_geojson(regions,
@@ -309,7 +309,9 @@ def Vessel_map():
     add_legend=True,
   )
   m.to_html("templates/mymap.html")
-  #m.to_html("mymap.html")
+  html_final = m.to_html("templates/mymap.html")
+  print(html_final)
+  
   return render_template('mymap.html')
 
 
