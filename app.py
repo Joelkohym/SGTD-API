@@ -313,9 +313,10 @@ def Vessel_map():
   print(f"vessel_latitude_degrees = {merged_df['vessel_latitude_degrees']}")
   print(f"vessel_longitude_degrees = {merged_df['vessel_longitude_degrees']}")
   os.remove("templates/mymap.html")
-  m.to_html("templates/mymap.html")
+  newHTML = f"templates/{merged_df['vessel_latitude_degrees']}{merged_df['vessel_longitude_degrees']}mymap.html"
+  m.to_html(newHTML)
   
-  return render_template('mymap.html')
+  return render_template(newHTML)
 
 
 
