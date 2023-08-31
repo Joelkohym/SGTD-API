@@ -311,11 +311,11 @@ def Vessel_map():
     add_legend=True,
   )
   print(f"Merged_df IMO No == {merged_df['vessel_imo_no']}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees']}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees']}")
-  for f in os.listdir(".\\templates\\"):
+  for f in os.listdir("templates\\"):
     print(f)
     if "mymap.html" in f:
         print(f"*mymap.html file to be removed = {f}")
-        os.remove(f".\\templates\\{f}")
+        os.remove(f"templates\\{f}")
   current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
   newHTML = f"templates\\{current_datetime}mymap.html"
   newHTMLwotemp = f"{current_datetime}mymap.html"
