@@ -71,8 +71,8 @@ url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_Key})
       f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
     )
     #print(response_vessel_movement.text)
-  print("Sleep 5 seconds")
-  time.sleep(10)
+  print("Sleep 7 seconds")
+  time.sleep(7)
     #print(response_vessel_current_position.text)
   return redirect(url_for('Vessel_map'))
 
