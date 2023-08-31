@@ -292,6 +292,18 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-login"
+version = "0.6.2"
+description = "User authentication and session management for Flask."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Flask = ">=1.0.4"
+Werkzeug = ">=1.0.1"
+
+[[package]]
 name = "flask-sqlalchemy"
 version = "3.0.5"
 description = "Add SQLAlchemy support to your Flask application."
@@ -1358,7 +1370,7 @@ python-versions = ">=3.8"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "be4b5c77cb67fcceb23e8186952587b3452f5ae144040dd6cd7f5989f8704ef9"
+content-hash = "7af9905bb00fee207fa715192ead83d234742b349350a4aa749ad2afebe870bf"
 
 [metadata.files]
 appnope = []
@@ -1385,6 +1397,7 @@ executing = []
 filelock = []
 fiona = []
 flask = []
+flask-login = []
 flask-sqlalchemy = []
 folium = []
 fonttools = []

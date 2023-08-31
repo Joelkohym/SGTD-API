@@ -174,10 +174,10 @@ def Vessel_movement_receive():
 
 #==========================RECEIVE vessel_current_position===============================
 @app.route("/api/vessel_current_position/receive", methods=['POST'])
-def Vessel_movement_current_position():
+def Vessel_current_position():
   try:
     data = request.data  # Get the raw data from the request body
-    print(f"Vessel_movement_current_position = {data}")
+    print(f"Vessel_current_position = {data}")
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
     # Convert the JSON string to a Python dictionary
     data_dict = json.loads(data_str)
@@ -195,14 +195,26 @@ def Vessel_movement_current_position():
     #clear
     worksheet_replit.clear()
 
-    # Write the headers as the first row
-    worksheet_replit.insert_rows(row=1, number=1,values=list(row_data_vessel_current_position.keys()))
+    # Extract specific keys from 'vessel_particulars' for column headers
+    columns = data['vessel_particulars'][0].keys()
+    
+    # Create a list of values to be written to the sheet
+    values_to_write = []
+    for key in columns:
+        values_to_write.append(key)
+        values_to_write.append(data['vessel_particulars'][0][key])
+    for key, value in data.items():
+        if key != 'vessel_particulars':
+            values_to_write.append(key)
+            values_to_write.append(value)
+        
+    # Write the data to the worksheet
+    worksheet.insert_rows(row=1, values=values_to_write, number=1)
+    # # Write the headers as the first row
+    # print(f"Keys of vessel_current_position = {row_data_vessel_current_position.keys()}")
+    # worksheet_replit.insert_rows(row=1, number=1,values=list(row_data_vessel_current_position.keys()))
 
-    # worksheet_replit.append_table(
-    #   start='A1',  # You can specify the starting cell here
-    #   end=None,  # You can specify the ending cell if needed
-    #   values=list(row_data_vessel_current_position.keys()))
-    # Append the data as a new row
+
     worksheet_replit.append_table(
       start='A1',  # You can specify the starting cell here
       end=None,  # You can specify the ending cell if needed
