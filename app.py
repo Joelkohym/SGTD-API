@@ -195,16 +195,21 @@ def Vessel_current_position():
     #clear
     worksheet_replit.clear()
 
-    # Extract specific keys from 'vessel_particulars' for column headers
-    # Extract the payload data
-    # payload_data = data['payload'][0]
 
+    
 
 
     # Extract specific keys from 'vessel_particulars' for column headers
     vessel_particulars = data_dict['payload'][0]['vessel_particulars']
     # Create column headers from the keys in 'vessel_particulars'
     column_headers = list(vessel_particulars.keys())
+    
+    # Extract all the keys from the payload data
+    payload_keys = list(data_dict['payload'][0].keys())
+    
+    # Append the payload keys (excluding 'vessel_particulars') to column_headers
+    column_headers.extend(payload_keys)
+    
     # Append a 'Timestamp' column
     column_headers.append('Timestamp')
 
@@ -214,23 +219,20 @@ def Vessel_current_position():
     # Extract the payload data
     payload_data = data_dict['payload'][0]
 
-    # Extract all the keys from the payload
-    all_keys = list(payload_data.keys())
+    # Extract all the values from the payload data
+    payload_values = [payload_data[key] for key in payload_keys]
     
     # Create a list of values corresponding to the keys
-    row_values = [payload_data[key] for key in all_keys]
+    row_values = [payload_data['vessel_particulars'][key] for key in vessel_particulars.keys()]
+    
+    # Extend row_values with payload_values
+    row_values.extend(payload_values)
+    
     # Append the 'Timestamp' value
     row_values.append(current_datetime)
 
     # Append the data as a new row
-    worksheet_replit.append_table(values=[row_values], start='A2')
-
-    # worksheet_replit.append_table(
-    #   start='A1',  # You can specify the starting cell here
-    #   end=None,  # You can specify the ending cell if needed
-    #   values=list(row_data_vessel_current_position.values()))
-    # worksheet_replit.delete_rows(1)
-
+    worksheet_replit.append_table(values=[row_values], start='A2'
 
     return "Vessel Current Location Data saved to Google Sheets."
   except Exception as e:
