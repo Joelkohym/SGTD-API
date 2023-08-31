@@ -200,7 +200,7 @@ def Vessel_current_position():
 
 
     # Extract specific keys from 'vessel_particulars' for column headers
-    vessel_particulars = data_dict['payload'][0]['vessel_particulars']
+    vessel_particulars = data_dict['payload'][0]['vessel_particulars'][0]
     print(f"vessel_particulars: {vessel_particulars}")
     # Create column headers from the keys in 'vessel_particulars'
     column_headers = list(vessel_particulars.keys())
