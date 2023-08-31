@@ -155,6 +155,7 @@ def Vessel_movement_receive():
     #clear
     worksheet_replit.clear()
     # Write the headers as the first row
+    print(f"row_data_vessel_movement.keys: {row_data_vessel_movement.keys()}")
     worksheet_replit.insert_rows(
     row=1,number=1,values=list(row_data_vessel_movement.keys()))
 
@@ -212,15 +213,15 @@ def Vessel_current_position():
     column_headers.extend([key for key in payload_keys if key != 'vessel_particulars'])
     
     # Append a 'Timestamp' column
-    column_headers.append('Timestamp')
+    #Column_headers.append('Timestamp')
     print(f"column_headers final: {column_headers}")
     # Append the column headers as the first row
-    worksheet_replit.append_table(values=column_headers, start='A1')
+    #worksheet_replit.append_table(values=column_headers, start='A1')
 
 
-    #     # Write the headers as the first row
-    # worksheet_replit.insert_rows(
-    # row=1,number=1,values=list(row_data_vessel_movement.keys()))
+        # Write the headers as the first row
+    worksheet_replit.insert_rows(
+    row=1,number=1,values=column_headers)
 
 
 
@@ -238,8 +239,8 @@ def Vessel_current_position():
     row_values = vessel_particulars_values + payload_values
     
     # Append the 'Timestamp' value
-    row_values.append(current_datetime)
-    print(row_values)
+    #row_values.append(current_datetime)
+    print(f"row_values = {row_values}")
     # Append the data as a new row
     worksheet_replit.append_table(values=row_values, start='A2')
 
