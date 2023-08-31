@@ -71,7 +71,7 @@ url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_Key})
     )
     #print(response_vessel_movement.text)
   print("Sleep 5 seconds")
-  time.sleep(5)
+  time.sleep(10)
     #print(response_vessel_current_position.text)
   return redirect(url_for('Vessel_map'))
 
