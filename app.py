@@ -310,8 +310,8 @@ def Vessel_map():
     spin=True,
     add_legend=True,
   )
-  print(f"vessel_latitude_degrees = {merged_df["vessel_longitude_degrees"]}")
-  print(f"merged_df["vessel_latitude_degrees"] = {merged_df["vessel_longitude_degrees"]}")
+  print(f"vessel_latitude_degrees = {merged_df["vessel_latitude_degrees"]}")
+  print(f"vessel_longitude_degrees = {merged_df["vessel_longitude_degrees"]}")
   os.remove("templates/mymap.html")
   m.to_html("templates/mymap.html")
   
