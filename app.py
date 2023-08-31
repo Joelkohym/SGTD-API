@@ -15,6 +15,7 @@ app = Flask(__name__)
 colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
+gc = pygsheets.authorize(service_account_file='/etc/secrets/creds.json')
 
 #========================Vessel data PULL===========================
 @app.route("/api/vessel/<vessel_imo>")
@@ -151,7 +152,6 @@ def Vessel_movement_receive():
     singapore_timezone = pytz.timezone('Asia/Singapore')
     current_datetime = datetime.now(singapore_timezone).strftime('%Y-%m-%d %H:%M:%S')
     row_data_vessel_movement['Timestamp'] = current_datetime
-    gc = pygsheets.authorize(service_account_file='creds.json')
     print(gc.spreadsheet_titles())
     sh = gc.open('SGTD Received APIs')
     worksheet_replit = sh.worksheet_by_title("replit_vessel_movement")
@@ -194,7 +194,6 @@ def Vessel_current_position():
     row_data_vessel_current_position['Timestamp'] = current_datetime
     print(
       f"row_data_vessel_current_position: {row_data_vessel_current_position}")
-    gc = pygsheets.authorize(service_account_file='creds.json')
     print(gc.spreadsheet_titles())
     sh = gc.open('SGTD Received APIs')
     worksheet_replit = sh.worksheet_by_title("replit_vessel_current_position")
@@ -273,7 +272,6 @@ def Vessel_current_position():
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
   # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
-  gc = pygsheets.authorize(service_account_file='creds.json')
   print(gc.spreadsheet_titles())
   sh = gc.open('SGTD Received APIs')
   sheet1 = sh.worksheet_by_title('replit_vessel_current_position')
@@ -353,6 +351,12 @@ def SGTD():
         system_ids_names.append((from_item['id'], from_item['name']))
   return system_ids_names
 
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 
 if __name__ == '__main__':
