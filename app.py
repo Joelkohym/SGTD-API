@@ -8,6 +8,7 @@ import leafmap.foliumap as leafmap
 import random
 import time
 import pytz 
+import os
 
 app = Flask(__name__)
 
@@ -310,6 +311,7 @@ def Vessel_map():
     spin=True,
     add_legend=True,
   )
+  os.remove("templates/mymap.html")
   m.to_html("templates/mymap.html")
   
   return render_template('mymap.html')
