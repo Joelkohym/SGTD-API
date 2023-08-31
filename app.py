@@ -291,8 +291,8 @@ def Vessel_map():
                        how='inner')
   
   merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
-  print(f"Merged_df == {merged_df}")
-  print(f"Merged_df IMO No == {merged_df['vessel_imo_no']}")
+  print(f"Merged_df == {merged_df.to_string(index=False)}")
+  print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
   m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
   regions = 'templates/SG_anchorages.geojson'
   m.add_geojson(regions,
@@ -310,17 +310,20 @@ def Vessel_map():
     spin=True,
     add_legend=True,
   )
-  print(f"vessel_latitude_degrees = {merged_df['vessel_latitude_degrees']}")
-  print(f"vessel_longitude_degrees = {merged_df['vessel_longitude_degrees']}")
-  for f in glob.glob("*mymap.html"):
-    print(f"*mymap.html file to be removed = {f}")
-    os.remove(f)
+  print(f"Merged_df IMO No == {merged_df['vessel_imo_no']}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees']}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees']}")
+  for f in os.listdir(".\\templates\\"):
+    print(f)
+    if "mymap.html" in f:
+        print(f"*mymap.html file to be removed = {f}")
+        os.remove(f".\\templates\\{f}")
   current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
-  newHTML = f"templates/{merged_df['vessel_latitude_degrees']}{merged_df['vessel_longitude_degrees']}{current_datetime}mymap.html"
+  newHTML = f"templates\\{current_datetime}mymap.html"
+  newHTMLwotemp = f"{current_datetime}mymap.html"
   print(f"new html file created = {newHTML}")
   m.to_html(newHTML)
-  
-  return render_template(newHTML)
+  time.sleep(2)
+  return render_template(newHTMLwotemp)
+
 
 
 
