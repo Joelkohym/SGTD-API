@@ -197,17 +197,33 @@ def Vessel_current_position():
 
     # Extract specific keys from 'vessel_particulars' for column headers
     # Extract the payload data
-    payload_data = data['payload'][0]
+    # payload_data = data['payload'][0]
+
+
+
+    # Extract specific keys from 'vessel_particulars' for column headers
+    vessel_particulars = data_dict['payload'][0]['vessel_particulars']
+    # Create column headers from the keys in 'vessel_particulars'
+    column_headers = list(vessel_particulars.keys())
+    # Append a 'Timestamp' column
+    column_headers.append('Timestamp')
+
+    # Append the column headers as the first row
+    worksheet_replit.append_table(values=[column_headers], start='A1')
     
-    # Combine the vessel particulars dictionary with the payload data
-    combined_data = {**payload_data, **payload_data['vessel_particulars']}
-    del combined_data['vessel_particulars']
+    # Extract the payload data
+    payload_data = data_dict['payload'][0]
+
+    # Extract all the keys from the payload
+    all_keys = list(payload_data.keys())
     
-    # Convert the combined data to a JSON string
-    payload_json = json.dumps(combined_data)
-    
-    # Write the JSON payload to a cell in the worksheet
-    worksheet_replit.set_dataframe(json.loads(payload_json), start='A1')
+    # Create a list of values corresponding to the keys
+    row_values = [payload_data[key] for key in all_keys]
+    # Append the 'Timestamp' value
+    row_values.append(current_datetime)
+
+    # Append the data as a new row
+    worksheet_replit.append_table(values=[row_values], start='A2')
 
     # worksheet_replit.append_table(
     #   start='A1',  # You can specify the starting cell here
@@ -241,7 +257,7 @@ def Vessel_map():
   # Assuming 'imo_no' is the common column
   merged_df = pd.merge(df1,
                        df2,
-                       left_on='vessel_particulars.vessel_imo_no',
+                       left_on='vessel_imo_no',
                        right_on='vm_vessel_particulars.vessel_imo_no',
                        how='inner')
   print(f"Merged_df == {merged_df}")
