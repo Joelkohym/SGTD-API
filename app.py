@@ -197,7 +197,7 @@ def Vessel_current_position():
 
     # Extract specific keys from 'vessel_particulars' for column headers
     columns = data['vessel_particulars'][0].keys()
-    
+    print(f"Columns VCP = {columns}")
     # Create a list of values to be written to the sheet
     values_to_write = []
     for key in columns:
@@ -207,7 +207,7 @@ def Vessel_current_position():
         if key != 'vessel_particulars':
             values_to_write.append(key)
             values_to_write.append(value)
-        
+    print(f"values_to_write VCP = {values_to_write}")
     # Write the data to the worksheet
     worksheet.insert_rows(row=1, values=values_to_write, number=1)
     # # Write the headers as the first row
