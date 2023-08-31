@@ -232,7 +232,7 @@ def Vessel_current_position():
     row_values.append(current_datetime)
 
     # Append the data as a new row
-    worksheet_replit.append_table(values=[row_values], start='A2'
+    worksheet_replit.append_table(values=[row_values], start='A2')
 
     return "Vessel Current Location Data saved to Google Sheets."
   except Exception as e:
