@@ -315,7 +315,7 @@ def Vessel_map():
   for f in glob.glob("*mymap.html"):
     print(f"*mymap.html file to be removed = {f}")
     os.remove(f)
-  current_datetime = datetime.now(singapore_timezone).strftime('%Y%m%d %H%M%S')
+  current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
   newHTML = f"templates/{merged_df['vessel_latitude_degrees']}{merged_df['vessel_longitude_degrees']}{current_datetime}mymap.html"
   print(f"new html file created = {newHTML}")
   m.to_html(newHTML)
