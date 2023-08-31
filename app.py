@@ -314,7 +314,7 @@ def Vessel_map():
   try:
     print(f"try: {os.listdir('templates/')}")
   except:
-    print(f"try: {os.listdir('templates')}")
+    print(f"except: {os.listdir('templates')}")
   for f in os.listdir("templates/"):
     print(f)
     if "mymap.html" in f:
