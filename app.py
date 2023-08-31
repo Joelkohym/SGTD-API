@@ -7,6 +7,7 @@ import pandas as pd
 import leafmap.foliumap as leafmap
 import random
 import time
+import pytz 
 
 app = Flask(__name__)
 
@@ -146,7 +147,8 @@ def Vessel_movement_receive():
     # Append the data to the worksheet
     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
     # Add the current date and time to your data dictionary
-    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    singapore_timezone = pytz.timezone('Asia/Singapore')
+    current_datetime = datetime.now(singapore_timezone).strftime('%Y-%m-%d %H:%M:%S')
     row_data_vessel_movement['Timestamp'] = current_datetime
     gc = pygsheets.authorize(service_account_file='creds.json')
     print(gc.spreadsheet_titles())
@@ -186,7 +188,8 @@ def Vessel_current_position():
     data_dict = json.loads(data_str)
     row_data_vessel_current_position = data_dict['payload'][-1]
     # Add the current date and time to your data dictionary
-    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    singapore_timezone = pytz.timezone('Asia/Singapore')
+    current_datetime = datetime.now(singapore_timezone).strftime('%Y-%m-%d %H:%M:%S')
     row_data_vessel_current_position['Timestamp'] = current_datetime
     print(
       f"row_data_vessel_current_position: {row_data_vessel_current_position}")
