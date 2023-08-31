@@ -166,6 +166,8 @@ def Vessel_movement_receive():
       values=list(row_data_vessel_movement.values()))
     worksheet_replit.delete_rows(1)
     print([list(row_data_vessel_movement.values())])
+
+    #wks.update_value( (1,len(wks[0])), "classstr")
     return "Gsheet row_data_vessel_movement appended"
   except Exception as e:
     # Handle the error gracefully and log it
@@ -284,7 +286,7 @@ def Vessel_map():
                        right_on='vm_vessel_particulars.vessel_imo_no',
                        how='inner')
   print(f"Merged_df == {merged_df}")
-  merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_particulars.vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
+  merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
  
   m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
   regions = 'templates/SG_anchorages.geojson'
