@@ -203,8 +203,11 @@ def Vessel_current_position():
     combined_data = {**payload_data, **payload_data['vessel_particulars']}
     del combined_data['vessel_particulars']
     
+    # Convert the combined data to a JSON string
+    payload_json = json.dumps(combined_data)
+    
     # Write the JSON payload to a cell in the worksheet
-    worksheet_replit.set_dataframe(combined_data, start='A1')
+    worksheet_replit.set_dataframe(json.loads(payload_json), start='A1')
 
     # worksheet_replit.append_table(
     #   start='A1',  # You can specify the starting cell here
