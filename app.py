@@ -203,12 +203,12 @@ def Vessel_current_position():
     vessel_particulars = data_dict['payload'][0]['vessel_particulars']
     # Create column headers from the keys in 'vessel_particulars'
     column_headers = list(vessel_particulars.keys())
-    
+    print(column_headers)
     # Extract all the keys from the payload data
     payload_keys = list(data_dict['payload'][0].keys())
     
-    # Append the payload keys (excluding 'vessel_particulars') to column_headers
-    column_headers.extend(payload_keys)
+      # Append the payload keys (excluding 'vessel_particulars') to column_headers
+    column_headers.extend([key for key in payload_keys if key != 'vessel_particulars'])
     
     # Append a 'Timestamp' column
     column_headers.append('Timestamp')
@@ -220,17 +220,17 @@ def Vessel_current_position():
     payload_data = data_dict['payload'][0]
 
     # Extract all the values from the payload data
-    payload_values = [payload_data[key] for key in payload_keys]
+    payload_values = [payload_data[key] for key in payload_keys if key != 'vessel_particulars']
     
     # Create a list of values corresponding to the keys
-    row_values = [payload_data['vessel_particulars'][key] for key in vessel_particulars.keys()]
+    vessel_particulars_values = list(vessel_particulars.values())
     
     # Extend row_values with payload_values
-    row_values.extend(payload_values)
+    row_values = vessel_particulars_values + payload_values)
     
     # Append the 'Timestamp' value
     row_values.append(current_datetime)
-
+    print(row_values)
     # Append the data as a new row
     worksheet_replit.append_table(values=[row_values], start='A2')
 
@@ -239,6 +239,20 @@ def Vessel_current_position():
     # Handle the error gracefully and log it
     print("An error occurred:", str(e))
     return f"An error occurred: {str(e)}", 500  # Return a 500
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #============================MAP=========================
