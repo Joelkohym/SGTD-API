@@ -226,7 +226,7 @@ def Vessel_current_position():
     vessel_particulars_values = list(vessel_particulars.values())
     
     # Extend row_values with payload_values
-    row_values = vessel_particulars_values + payload_values)
+    row_values = vessel_particulars_values + payload_values
     
     # Append the 'Timestamp' value
     row_values.append(current_datetime)
