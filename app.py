@@ -150,7 +150,7 @@ def Vessel_movement_receive():
     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
     # Add the current date and time to your data dictionary
     singapore_timezone = pytz.timezone('Asia/Singapore')
-    current_datetime = datetime.now(singapore_timezone).strftime('%Y-%m-%d %H:%M:%S')
+    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     row_data_vessel_movement['Timestamp'] = current_datetime
     print(gc.spreadsheet_titles())
     sh = gc.open('SGTD Received APIs')
@@ -190,7 +190,7 @@ def Vessel_current_position():
     row_data_vessel_current_position = data_dict['payload'][-1]
     # Add the current date and time to your data dictionary
     singapore_timezone = pytz.timezone('Asia/Singapore')
-    current_datetime = datetime.now(singapore_timezone).strftime('%Y-%m-%d %H:%M:%S')
+    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     row_data_vessel_current_position['Timestamp'] = current_datetime
     print(
       f"row_data_vessel_current_position: {row_data_vessel_current_position}")
