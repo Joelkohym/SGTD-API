@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Auth system</title>
+  <title>Login page</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -14,9 +14,10 @@
 <div class="container">
     <div class=" row justify-content-center">
         <div class="col-sm-8">
-            <h2>Home page</h2>
-            <a href="/register" class="btn btn-primary mt-3">Register</a>
-            <a href="/login" class="btn btn-dark mt-3">Login</a>
+            <h2>user dashboard</h2>
+            <p><b>Name: </b> {{user.name }}</p>
+            <p><b>Email: </b> {{user.email }}</p>
+            <a href="/logout" class="btn btn-dark">Logout</a>
         </div>
 
     </div>

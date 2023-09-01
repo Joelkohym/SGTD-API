@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Register page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class=" row justify-content-center">
+        <div class="col-sm-6 mt-4">
+            <h2>Register form</h2>
+            <form action="/register" method="POST">
+                <div class="form-group">
+                <label for="username_">Username:</label>
+                <input type="text" class="form-control" id="username_" placeholder="Enter username" name="username_">
+                </div>
+            
+                <div class="form-group">
+                <label for="password_">Password:</label>
+                <input type="password" class="form-control" id="password_" placeholder="Enter password" name="password_">
+                </div>
+
+                <div class="form-group">
+                <label for="api_key_">API Key:</label>
+                <input type="text" class="form-control" id="api_key_" placeholder="Enter SGTD pitstop API KEY" name="api_key_">
+                </div>
+
+
+                <div class="form-group">
+                <label for="participant_id_">API Key:</label>
+                <input type="text" class="form-control" id="participant_id_" placeholder="Enter SGTD pitstop Participant ID" name="participant_id_">
+                </div>
+
+                <div class="form-group">
+                <label for="on_behalf_id_">API Key:</label>
+                <input type="text" class="form-control" id="on_behalf_id_" placeholder="Enter SGTD pitstop On Behalf Of Id" name="on_behalf_id_">
+                </div>
+
+                <div class="form-group">
+                <label for="gsheet_cred_path_">API Key:</label>
+                <input type="text" class="form-control" id="gsheet_cred_path_" placeholder="Enter gsheet_cred_path_" name="gsheet_cred_path_">
+                </div>
+
+                <div class="form-group">
+                <label for="company_">API Key:</label>
+                <input type="text" class="form-control" id="company_" placeholder="Enter Company Name" name="company_">
+                </div>
+
+                <button type="submit" class="btn btn-dark">Submit</button>
+                <a href="/login" class="btn btn-primary">Login</a>
+            </form>
+        </div>
+    </div>
+  
+</div>
+
+</body>
+</html>

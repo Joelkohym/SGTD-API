@@ -9,13 +9,31 @@ import random
 import time
 import pytz 
 import os
-from database import load_data_from_db
+from database import load_data_from_db, new_registration
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
 app = Flask(__name__)
 
 
-@app.route("/login")
-def hello_user():
+@app.route("/register", methods=['GET','POST'])
+def register():
+  if request.method == 'POST':
+    data = request.form
+    new_registration(data)
+    username_ = request.form['username_']
+    password_ = request.form['password_']
+    api_key_ = request.form['api_key_']
+    participant_id_ = request.form['participant_id_']
+    on_behalf_id_ = request.form['on_behalf_id_']
+    gsheet_cred_path_ = request.form['gsheet_cred_path_']
+    company_ = request.form['company_']
+    #new_registration(username_, password_, api_key_, participant_id_, on_behalf_id_, gsheet_cred_path_, company_)
+  #handle request
+    pass
+  return render_remplate('login.html')
+
+@app.route("/login", methods=['GET','POST'])
+def login():
   user_data = load_data_from_db()
   return render_template('login.html', user_data = user_data)
   
