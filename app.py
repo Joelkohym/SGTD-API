@@ -48,6 +48,7 @@ def login():
       global API_KEY
       global pID 
       global obID
+      global gc
       API_KEY = validate_login(username, password)[0]
       pID = validate_login(username, password)[1]
       obID = validate_login(username, password)[2]
