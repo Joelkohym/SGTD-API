@@ -43,7 +43,7 @@ def login():
     # obID = request.form['on_behalf_id_']
     validate_login(username, password)
     print(f"Validate_login value returned = {validate_login(username, password)}")
-    if len(validate_login(username, password)) == 3:
+    if len(validate_login(username, password)) == 4:
       session['user']=username
       API_KEY = validate_login(username, password)[0]
       pID = validate_login(username, password)[1]
