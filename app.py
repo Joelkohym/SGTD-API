@@ -77,62 +77,63 @@ colors = [
 #========================Vessel data PULL===========================
 @app.route("/api/vessel")
 def Vessel_data_pull(API_KEY, pID, obID):
-  vessel_imo = request.form['vessel_imo']
+  user_vessel_imo = request.form['vessel_imo']
+  input_list = [int(x) for x in user_vessel_imo.split(',')]
+  print(f"API_KEY={API_KEY}, pID={pID}, obID={obID}")
+  print(f"user_vessel_imo from html = {user_vessel_imo}")
+  print(f"input_list from html = {input_list}")
   print(f"API_KEY={API_KEY}, pID={pID}, obID={obID}")
   #vessel_imo = request.args.get('imo')
   #API_KEY = API_KEY
   # API_KEY = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
   #vessel_imo = "9702699"
-  url_vessel_movement = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_movement"
-  url_vessel_current_position = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_current_position"
-  on_behalf_of_id = "49f04a6f-f157-479b-b211-18931fad4ca4"
-  payload = {
-    "participants": [{
-      "id": "1817878d-c468-411b-8fe1-698eca7170dd",
-      "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
-      "meta": {
-        "data_ref_id": ""
-      }
-    }],
-    "parameters": {
-      "vessel_imo_no": vessel_imo
-    },
-    "on_behalf_of": [{
-      #"id": on_behalf_of_id
-      "id": obID
-    }]
-  }
-  print(f"IMO Number = {vessel_imo}")
-  json_string = json.dumps(
-    payload, indent=4)  # Convert payload dictionary to JSON string
-  # Rest of the code to send the JSON payload to the API
-  data = json.loads(json_string)
-#========================PULL vessel_current_position===========================
-  response_vessel_current_position = requests.post(
-url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_KEY})
-  if response_vessel_current_position.status_code == 200:
-    print(f"Response JSON = {response_vessel_current_position.json()}")
-    print("Pull vessel_current_position success.")
-  else:
-    print(
-      f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
-    )
+  for vessel_imo in input_list:
+    print(f"IMO Number = {vessel_imo}")
+    url_vessel_movement = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_movement"
+    url_vessel_current_position = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_current_position"
+    on_behalf_of_id = "49f04a6f-f157-479b-b211-18931fad4ca4"
+    payload = {
+      "participants": [{
+        "id": "1817878d-c468-411b-8fe1-698eca7170dd",
+        "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
+        "meta": {
+          "data_ref_id": ""
+        }
+      }],
+      "parameters": {
+        "vessel_imo_no": vessel_imo
+      },
+      "on_behalf_of": [{
+        #"id": on_behalf_of_id
+        "id": obID
+      }]
+    }
+    
+    json_string = json.dumps(
+      payload, indent=4)  # Convert payload dictionary to JSON string
+    # Rest of the code to send the JSON payload to the API
+    data = json.loads(json_string)
+  #========================PULL vessel_current_position===========================
+    response_vessel_current_position = requests.post(
+  url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_KEY})
+    if response_vessel_current_position.status_code == 200:
+      print(f"Response JSON = {response_vessel_current_position.json()}")
+      print("Pull vessel_current_position success.")
+    else:
+      print(
+        f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
+      )
 
-
-
-
-
-
-#========================PULL vessel_movement=====================================
-  response_vessel_movement = requests.post(
-    url_vessel_movement, json=data, headers={'SGTRADEX-API-KEY': API_KEY})
-  if response_vessel_movement.status_code == 200:
-    #print(f"Response JSON = {response_vessel_movement.json()}")
-    print("Pull vessel_movement success.")
-  else:
-    print(
-      f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
-    )
+  #========================PULL vessel_movement=====================================
+    response_vessel_movement = requests.post(
+      url_vessel_movement, json=data, headers={'SGTRADEX-API-KEY': API_KEY})
+    if response_vessel_movement.status_code == 200:
+      #print(f"Response JSON = {response_vessel_movement.json()}")
+      print("Pull vessel_movement success.")
+    else:
+      print(
+        f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
+      )
     #print(response_vessel_movement.text)
 
 
