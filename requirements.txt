@@ -5,3 +5,5 @@ pygsheets
 pandas
 leafmap
 geopandas
+sqlalchemy
+pymysql
