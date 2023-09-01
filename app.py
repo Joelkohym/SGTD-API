@@ -73,8 +73,16 @@ url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_Key})
       f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
     )
     #print(response_vessel_movement.text)
-  print("Sleep 3 seconds")
-  time.sleep(3)
+  sh = gc.open('SGTD Received APIs')
+  sheet1 = sh.worksheet_by_title("replit_vessel_current_position")
+  sheet1.clear()
+  print('Cleared replit_vessel_current_position')
+  sheet2 = sh.worksheet_by_title('replit_vessel_movement')
+  sheet2.clear()
+  print('Cleared replit_vessel_movement')
+    #clear
+  #print("Sleep 3 seconds")
+  #time.sleep(2)
     #print(response_vessel_current_position.text)
   return redirect(url_for('Vessel_map'))
 
@@ -198,12 +206,6 @@ def Vessel_current_position():
     sh = gc.open('SGTD Received APIs')
     worksheet_replit = sh.worksheet_by_title("replit_vessel_current_position")
 
-    #clear
-    worksheet_replit.clear()
-
-
-    
-
 
     # Extract specific keys from 'vessel_particulars' for column headers
     vessel_particulars = data_dict['payload'][0]['vessel_particulars'][0]
@@ -257,16 +259,6 @@ def Vessel_current_position():
 
 
 
-
-
-
-
-
-
-
-
-
-
 #9490820 / 9929297
 #====================================MAP========================================
 @app.route("/api/vessel_map", methods=['GET','POST'])
@@ -311,12 +303,8 @@ def Vessel_map():
     add_legend=True,
   )
   print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
-  try:
-    print(f"try: {os.listdir('templates/')}")
-  except:
-    print(f"except: {os.listdir('templates')}")
   for f in os.listdir("templates/"):
-    print(f)
+    #print(f)
     if "mymap.html" in f:
         print(f"*mymap.html file to be removed = {f}")
         os.remove(f"templates/{f}")
@@ -325,7 +313,7 @@ def Vessel_map():
   newHTMLwotemp = f"{current_datetime}mymap.html"
   print(f"new html file created = {newHTML}")
   m.to_html(newHTML)
-  time.sleep(2)
+  #time.sleep(2)
   return render_template(newHTMLwotemp)
 
 
