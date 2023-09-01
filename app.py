@@ -19,23 +19,29 @@ app = Flask(__name__)
 def register():
   if request.method == 'POST':
     data = request.form
+    print(data)
     new_registration(data)
-    username_ = request.form['username_']
-    password_ = request.form['password_']
-    api_key_ = request.form['api_key_']
-    participant_id_ = request.form['participant_id_']
-    on_behalf_id_ = request.form['on_behalf_id_']
-    gsheet_cred_path_ = request.form['gsheet_cred_path_']
-    company_ = request.form['company_']
-    #new_registration(username_, password_, api_key_, participant_id_, on_behalf_id_, gsheet_cred_path_, company_)
-  #handle request
-    pass
-  return render_template('register.html')
+    return render_template('login.html')
+  if request.method == 'GET':
+    return render_template('register.html')
 
 @app.route("/login", methods=['GET','POST'])
 def login():
-  user_data = load_data_from_db()
-  return render_template('login.html', user_data = user_data)
+  if request.method == 'POST':
+    username = request.form['username_']
+    password = request.form['password_']
+    validate_login(username, password)
+    print(f"Validate_login value returned = {validate_login(username, password)}")
+    if validate_login(username, password) == 1:
+      print("Login success, redirect")
+      return redirect(url_for('Vessel_map'))
+    else:
+      print("Invalid credentials, reset login")
+      return render_template('login.html')
+    # if request.data['username'] and request.data['password'] in db:
+    #   user_data = load_data_from_db()
+  if request.method == 'GET':
+    return render_template('login.html')
   
 colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
@@ -341,17 +347,6 @@ def Vessel_map():
   m.to_html(newHTML)
   #time.sleep(2)
   return render_template(newHTMLwotemp)
-
-
-
-
-
-
-
-
-
-
-
 
 
 

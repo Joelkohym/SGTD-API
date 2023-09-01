@@ -35,15 +35,34 @@ def load_user_from_db(username, password):
 
 # def new_registration(username, password, api_key, participant_id, on_behalf_id, gsheet_cred_path, company):
 def new_registration(data):
+  print(f"printing data from new_registration: {data}")
+  print(f"data['username_'] == {data['username_']}")
+  print(f"data['api_key_'] == {data['api_key_']}")
+  print(f"data['participant_id_'] == {data['participant_id_']}")
+  print(f"data['on_behalf_id_'] == {data['on_behalf_id_']}")
   with engine.connect() as conn:
-    query = text("INSERT INTO userDB (username_, password_, api_key_, participant_id_, on_behalf_id_, gsheet_cred_path_, company_) VALUES (:username_, :password_, :api_key_, :participant_id_, :on_behalf_id_, :gsheet_cred_path_, :company_)")
+    #query = text("INSERT INTO userDB (username_, password_, api_key_, participant_id_, on_behalf_id_, gsheet_cred_path_, company_) VALUES (:username_, :password_, :api_key_, :participant_id_, :on_behalf_id_, :gsheet_cred_path_, :company_)")
+    query = text("INSERT INTO userDB (username_, password_, api_key_, participant_id_, on_behalf_id_, gsheet_cred_path_, company_) VALUES (:username_,:password_, :api_key_, :participant_id_, :on_behalf_id_, :gsheet_cred_path_, :company_)")
+    values = {'username_' : data['username_'], 'password_' : data['password_'], 'api_key_' : data['api_key_'], 'participant_id_' :data['participant_id_'], 'on_behalf_id_' : data['on_behalf_id_'], 'gsheet_cred_path_' : data['gsheet_cred_path_'], 'company_' : data['company_']}
     print(query)
-    conn.execute(query, username_ = data['username_'],
-    password_ =data['password_'],
-    api_key_ = data['api_key_'],
-    participant_id_ = data['participant_id'],
-    on_behalf_id_ = data['on_behalf_id'],
-    gsheet_cred_path_ = data['gsheet_cred_path'], 
-    company_ = data['company'])
+    conn.execute(query, values)
+    #conn.execute(query, username_ = data['username_'],password_ =data['password_'],api_key_ = data['api_key_'],participant_id_ = data['participant_id_'],on_behalf_id_ = data['on_behalf_id_'],gsheet_cred_path_ = data['gsheet_cred_path_'], company_ = data['company_'])
     print("execute success")
+
+def validate_login(username, password):
+  print(f"printing data from validate_login: username = {username}, password = {password}")
+
+  with engine.connect() as conn:
+    query = text("SELECT * FROM userDB WHERE username_ = :username_ AND password_ = :password_")
+    values = {'username_' : username, 'password_' : password}
+    check_login = conn.execute(query, values)
+    print(f"check_login == {check_login}")
+    result_login = len(check_login.all())
+    print(f"dresult_login == {result_login}")
+    if result_login == 1:
+      print("Login success")
+      return 1
+    else:
+      print("Error in Login")
+      return 0
 
