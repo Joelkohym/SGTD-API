@@ -38,16 +38,16 @@ def login():
     session.pop('user', None)
     username = request.form['username_']
     password = request.form['password_']
-    API_KEY = request.form['api_key_']
-    pID = request.form['participant_id_']
-    obID = request.form['on_behalf_id_']
+    # API_KEY = request.form['api_key_']
+    # pID = request.form['participant_id_']
+    # obID = request.form['on_behalf_id_']
     validate_login(username, password)
     print(f"Validate_login value returned = {validate_login(username, password)}")
-    if validate_login(username, password) == 1:
+    if len(validate_login(username, password)) == 3:
       session['user']=username
-      session['api_key'] = API_KEY
-      session['pID'] = pID
-      session['obID'] obID
+      API_KEY = validate_login(username, password)[0]
+      pID = validate_login(username, password)[1]
+      obID = validate_login(username, password)[2]
       print("Login success, redirect")
       redirect(url_for('Vessel_data_pull', API_KEY=API_KEY, pID=pID, obID=obID))
       return redirect(url_for('Vessel_map'))
@@ -58,6 +58,7 @@ def login():
     #   user_data = load_data_from_db()
   if request.method == 'GET':
     return render_template('login.html')
+      
 
   
 colors = [

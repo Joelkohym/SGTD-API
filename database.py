@@ -49,6 +49,7 @@ def new_registration(data):
     #conn.execute(query, username_ = data['username_'],password_ =data['password_'],api_key_ = data['api_key_'],participant_id_ = data['participant_id_'],on_behalf_id_ = data['on_behalf_id_'],gsheet_cred_path_ = data['gsheet_cred_path_'], company_ = data['company_'])
     print("execute success")
 
+
 def validate_login(username, password):
   print(f"printing data from validate_login: username = {username}, password = {password}")
 
@@ -56,13 +57,16 @@ def validate_login(username, password):
     query = text("SELECT * FROM userDB WHERE username_ = :username_ AND password_ = :password_")
     values = {'username_' : username, 'password_' : password}
     check_login = conn.execute(query, values)
-    print(f"check_login == {check_login}")
-    result_login = len(check_login.all())
-    print(f"dresult_login == {result_login}")
-    if result_login == 1:
+    login_entry = check_login.all()[0]
+    print(f"check_login == {login_entry}")
+    print(f"check_login TYPE == {type(login_entry)}")
+    print(f"check_login_API == {login_entry[3]}")
+    result_login = len(login_entry)
+    print(login_entry[3],login_entry[4],login_entry[5])
+    print(f"result_login == {result_login}")
+    if result_login > 1:
       print("Login success")
-      return 1
+      return (login_entry[3],login_entry[4],login_entry[5])
     else:
       print("Error in Login")
       return 0
-
