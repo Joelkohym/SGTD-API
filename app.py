@@ -9,7 +9,7 @@ import random
 import time
 import pytz 
 import os
-from database import load_data_from_db, new_registration
+from database import load_data_from_db, new_registration, validate_login
 # from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
 app = Flask(__name__)
