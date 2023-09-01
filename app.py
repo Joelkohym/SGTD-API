@@ -15,6 +15,9 @@ from database import load_data_from_db, new_registration, validate_login
 app = Flask(__name__)
 @app.route("/", methods=['GET','POST'])
 def redirect_to_login():
+  if request.method == 'POST'
+  session.pop('user', None)
+  if request.form
   return redirect(url_for('login'))
   
 @app.route("/register", methods=['GET','POST'])
@@ -30,11 +33,13 @@ def register():
 @app.route("/login", methods=['GET','POST'])
 def login():
   if request.method == 'POST':
+    session.pop('user', None)
     username = request.form['username_']
     password = request.form['password_']
     validate_login(username, password)
     print(f"Validate_login value returned = {validate_login(username, password)}")
     if validate_login(username, password) == 1:
+      session['user']=username
       print("Login success, redirect")
       return redirect(url_for('Vessel_map'))
     else:
@@ -297,59 +302,66 @@ def Vessel_current_position():
 #====================================MAP========================================
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
-  # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
-  print(gc.spreadsheet_titles())
-  sh = gc.open('SGTD Received APIs')
-  sheet1 = sh.worksheet_by_title('replit_vessel_current_position')
-  sheet2 = sh.worksheet_by_title('replit_vessel_movement')
-  # Read data from 'Sheet1' into a DataFrame
-  df1 = pd.DataFrame(sheet1.get_all_records())
-  print(f"df1 = {df1}")
-  # Read data from 'Sheet2' into another DataFrame
-  df2 = pd.DataFrame(sheet2.get_all_records())
-  print(f"df2 = {df2}")
-  
-  # Assuming 'imo_no' is the common column
-  merged_df = pd.merge(df1,
-                       df2,
-                       left_on='vessel_imo_no',
-                       right_on='vm_vessel_particulars.vessel_imo_no',
-                       how='inner')
-  
-  merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
-  print(f"Merged_df == {merged_df.to_string(index=False)}")
-  print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
-  m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
-  regions = 'templates/SG_anchorages.geojson'
-  m.add_geojson(regions,
-                layer_name='SG Anchorages',
-                style={
-                  "color": (random.choice(colors)),
-                  "fill": True,
-                  "fillOpacity": 0.05
-                })
-  m.add_points_from_xy(
-    merged_df,
-    x="vessel_longitude_degrees",
-    y="vessel_latitude_degrees",
-    icon_names=['gear', 'map', 'leaf', 'globe'],
-    spin=True,
-    add_legend=True,
-  )
-  print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
-  for f in os.listdir("templates/"):
-    #print(f)
-    if "mymap.html" in f:
-        print(f"*mymap.html file to be removed = {f}")
-        os.remove(f"templates/{f}")
-  current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
-  newHTML = f"templates/{current_datetime}mymap.html"
-  newHTMLwotemp = f"{current_datetime}mymap.html"
-  print(f"new html file created = {newHTML}")
-  m.to_html(newHTML)
-  #time.sleep(2)
-  return render_template(newHTMLwotemp)
+  if g.user:
+    # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
+    print(gc.spreadsheet_titles())
+    sh = gc.open('SGTD Received APIs')
+    sheet1 = sh.worksheet_by_title('replit_vessel_current_position')
+    sheet2 = sh.worksheet_by_title('replit_vessel_movement')
+    # Read data from 'Sheet1' into a DataFrame
+    df1 = pd.DataFrame(sheet1.get_all_records())
+    print(f"df1 = {df1}")
+    # Read data from 'Sheet2' into another DataFrame
+    df2 = pd.DataFrame(sheet2.get_all_records())
+    print(f"df2 = {df2}")
+    
+    # Assuming 'imo_no' is the common column
+    merged_df = pd.merge(df1,
+                         df2,
+                         left_on='vessel_imo_no',
+                         right_on='vm_vessel_particulars.vessel_imo_no',
+                         how='inner')
+    
+    merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
+    print(f"Merged_df == {merged_df.to_string(index=False)}")
+    print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
+    m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
+    regions = 'templates/SG_anchorages.geojson'
+    m.add_geojson(regions,
+                  layer_name='SG Anchorages',
+                  style={
+                    "color": (random.choice(colors)),
+                    "fill": True,
+                    "fillOpacity": 0.05
+                  })
+    m.add_points_from_xy(
+      merged_df,
+      x="vessel_longitude_degrees",
+      y="vessel_latitude_degrees",
+      icon_names=['gear', 'map', 'leaf', 'globe'],
+      spin=True,
+      add_legend=True,
+    )
+    print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
+    for f in os.listdir("templates/"):
+      #print(f)
+      if "mymap.html" in f:
+          print(f"*mymap.html file to be removed = {f}")
+          os.remove(f"templates/{f}")
+    current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
+    newHTML = f"templates/{current_datetime}mymap.html"
+    newHTMLwotemp = f"{current_datetime}mymap.html"
+    print(f"new html file created = {newHTML}")
+    m.to_html(newHTML)
+    #time.sleep(2)
+    return render_template(newHTMLwotemp, user=session['user'])
+  return redirect(url_for('login'))
 
+@app.before_request
+def before_request():
+  g.user=None
+  if 'user' in session:
+    g.user=session['user']
 
 
 
