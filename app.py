@@ -230,7 +230,7 @@ def Vessel_movement_receive():
 #==========================RECEIVE vessel_current_position===============================
 @app.route("/api/vessel_current_position/receive", methods=['POST'])
 def Vessel_current_position():
-  try:
+  # try:
     data = request.data  # Get the raw data from the request body
     print(f"Vessel_current_position = {data}")
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
@@ -291,10 +291,10 @@ def Vessel_current_position():
     worksheet_replit.append_table(values=row_values, start='A2')
     worksheet_replit.delete_rows(1)
     return "Vessel Current Location Data saved to Google Sheets."
-  except Exception as e:
-    # Handle the error gracefully and log it
-    print("An error occurred:", str(e))
-    return f"An error occurred: {str(e)}", 500  # Return a 500
+  # except Exception as e:
+  #   # Handle the error gracefully and log it
+  #   print("An error occurred:", str(e))
+  #   return f"An error occurred: {str(e)}", 500  # Return a 500
 
 
 
@@ -327,6 +327,11 @@ def Vessel_map():
     merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
     print(f"Merged_df == {merged_df.to_string(index=False)}")
     print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
+
+    #sort & drop duplicates
+    # sorting by first name
+    merged_df.drop_duplicates(subset="vessel_imo_no", keep='last', inplace=True)
+    
     m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
     regions = 'templates/SG_anchorages.geojson'
     m.add_geojson(regions,
