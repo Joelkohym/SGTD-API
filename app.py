@@ -13,12 +13,14 @@ from database import load_data_from_db, new_registration, validate_login
 # from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
 app = Flask(__name__)
+
+app.secret_key = os.urandom(24)
+
 @app.route("/", methods=['GET','POST'])
-def redirect_to_login():
-  if request.method == 'POST'
-  session.pop('user', None)
-  if request.form
-  return redirect(url_for('login'))
+def index():
+  if request.method=='POST':
+    session.pop('user,None')
+  return render_template('login.html')
   
 @app.route("/register", methods=['GET','POST'])
 def register():
