@@ -45,14 +45,18 @@ def login():
     print(f"Validate_login value returned = {validate_login(username, password)}")
     if len(validate_login(username, password)) == 4:
       session['user']=username
+      global API_KEY
+      global pID 
+      global obID
       API_KEY = validate_login(username, password)[0]
       pID = validate_login(username, password)[1]
       obID = validate_login(username, password)[2]
       gSheet = validate_login(username, password)[3]
       gc = pygsheets.authorize(service_account_file=gSheet)
       print("Login success, redirect")
-      redirect(url_for('Vessel_data_pull', API_KEY=API_KEY, pID=pID, obID=obID))
-      return redirect(url_for('Vessel_map'))
+      #redirect(url_for('Vessel_data_pull', API_KEY=API_KEY, pID=pID, obID=obID))
+      #return redirect(url_for('Vessel_map'))
+      return render_template('vessel_request.html')
     else:
       print("Invalid credentials, reset login")
       return render_template('login.html')
@@ -75,7 +79,7 @@ def Vessel_data_pull(API_KEY, pID, obID):
   vessel_imo = request.form['vessel_imo']
   print(f"API_KEY={API_KEY}, pID={pID}, obID={obID}")
   #vessel_imo = request.args.get('imo')
-  API_KEY = API_KEY
+  #API_KEY = API_KEY
   # API_KEY = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
   #vessel_imo = "9702699"
   url_vessel_movement = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_movement"
@@ -129,6 +133,14 @@ url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_KEY})
       f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
     )
     #print(response_vessel_movement.text)
+
+
+
+
+
+
+
+  
   sh = gc.open('SGTD Received APIs')
   sheet1 = sh.worksheet_by_title("replit_vessel_current_position")
   sheet1.clear()
