@@ -9,13 +9,34 @@ import random
 import time
 import pytz 
 import os
+from sqlalchemy import create_engine, text
 
 app = Flask(__name__)
 
+db_connection_string = "mysql+pymysql://jhf1ksg5tmrpia7hl6n1:pscale_pw_pCHorRp8Lw1r9NHKnRmWcSrcB3pkvmu81cv2wS5HsaT@aws.connect.psdb.cloud/sgtd?charset=utf8mb4"
+engine = create_engine(
+  db_connection_string,
+  connect_args={
+  "ssl": {
+            "ssl_ca": "/etc/ssl/cert.pem"}})
+
+with engine.connect() as conn:
+  result = conn.execute(text("select * from userDB"))
+  result_all = result.all()
+  print(f"result = {result_all}")
+  result_dicts = []
+  for row in result_all:
+    print(f"Row = {row}")
+    print(type(row))
+    result_dicts.append(dict(row))
+  print(result_dicts)
+
+  
 colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
-gc = pygsheets.authorize(service_account_file='/etc/secrets/creds.json')
+#gc = pygsheets.authorize(service_account_file='creds.json')
+#gc = pygsheets.authorize(service_account_file='/etc/secrets/creds.json')
 
 #========================Vessel data PULL===========================
 @app.route("/api/vessel/<vessel_imo>")

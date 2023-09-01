@@ -966,6 +966,18 @@ google-auth-oauthlib = ">=0.7.1"
 pandas = ["pandas (>=0.14.0)"]
 
 [[package]]
+name = "pymysql"
+version = "1.1.0"
+description = "Pure Python MySQL Driver"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+ed25519 = ["PyNaCl (>=1.4.0)"]
+rsa = ["cryptography"]
+
+[[package]]
 name = "pyparsing"
 version = "3.0.9"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
@@ -1370,7 +1382,7 @@ python-versions = ">=3.8"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "7af9905bb00fee207fa715192ead83d234742b349350a4aa749ad2afebe870bf"
+content-hash = "e93a8972865c5a8f212d60cdd92b7c996ba2c6e716201a51d906bf60ee902cd9"
 
 [metadata.files]
 appnope = []
@@ -1445,6 +1457,7 @@ pyasn1 = []
 pyasn1-modules = []
 pygments = []
 pygsheets = []
+pymysql = []
 pyparsing = []
 pyproj = []
 pyrsistent = []

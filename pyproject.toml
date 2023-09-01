@@ -14,6 +14,7 @@ leafmap = "0.23.3"
 geopandas = "0.13.2"
 Flask-SQLAlchemy = "^3.0.5"
 Flask-Login = "^0.6.2"
+pymysql = "1.1.0"
 
 [tool.poetry.dev-dependencies]
 
