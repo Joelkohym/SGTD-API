@@ -37,6 +37,7 @@ def load_user_from_db(username, password):
 def new_registration(data):
   with engine.connect() as conn:
     query = text("INSERT INTO userDB (username_, password_, api_key_, participant_id_, on_behalf_id_, gsheet_cred_path_, company_) VALUES (:username_, :password_, :api_key_, :participant_id_, :on_behalf_id_, :gsheet_cred_path_, :company_)")
+    print(query)
     conn.execute(query, username_ = data['username_'],
     password_ =data['password_'],
     api_key_ = data['api_key_'],
@@ -44,4 +45,5 @@ def new_registration(data):
     on_behalf_id_ = data['on_behalf_id'],
     gsheet_cred_path_ = data['gsheet_cred_path'], 
     company_ = data['company'])
+    print("execute success")
 

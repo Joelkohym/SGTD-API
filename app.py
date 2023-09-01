@@ -30,7 +30,7 @@ def register():
     #new_registration(username_, password_, api_key_, participant_id_, on_behalf_id_, gsheet_cred_path_, company_)
   #handle request
     pass
-  return render_template('login.html')
+  return render_template('register.html')
 
 @app.route("/login", methods=['GET','POST'])
 def login():
