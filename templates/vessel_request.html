@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Vessel Request Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class=" row justify-content-center">
+        <div class="col-sm-6 mt-4">
+            <h2>Vessel request form</h2>
+            <form action="/api/vessel/<vessel_imo>" method="POST">
+                <div class="form-group">
+                <label for="vessel_imo">Vessel IMO Number:</label>
+                <input type="text" class="form-control" id="vessel_imo" placeholder="Enter Vessel IMO Number" name="vessel_imo">
+                <!-- </div>
+                <div class="form-group">
+                <label for="password_">Password:</label>
+                <input type="password_" class="form-control" id="password_" placeholder="Enter password" name="password_">
+                </div> -->
+
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </form>
+        </div>
+
+    </div>
+  
+</div>
+
+</body>
+</html>
