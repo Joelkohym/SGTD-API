@@ -49,8 +49,8 @@ def login():
       session['pID'] = pID
       session['obID'] obID
       print("Login success, redirect")
-      redirect(url_for('Vessel_data_pull', API_KEY=API_KEY, pID=pID, obID=obID)
-      return redirect(url_for('Vessel_map')
+      redirect(url_for('Vessel_data_pull', API_KEY=API_KEY, pID=pID, obID=obID))
+      return redirect(url_for('Vessel_map'))
     else:
       print("Invalid credentials, reset login")
       return render_template('login.html')
