@@ -26,10 +26,8 @@ with engine.connect() as conn:
   print(f"result = {result_all}")
   result_dicts = []
   for row in result_all:
-    print(f"Row = {row}")
-    print(type(row))
-    result_dicts.append(dict(row))
-  print(result_dicts)
+    result_dicts.append(dict(row._mapping))
+  print(f"result_dicts = {result_dicts}")
 
   
 colors = [
