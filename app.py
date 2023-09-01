@@ -38,12 +38,19 @@ def login():
     session.pop('user', None)
     username = request.form['username_']
     password = request.form['password_']
+    API_KEY = request.form['api_key_']
+    pID = request.form['participant_id_']
+    obID = request.form['on_behalf_id_']
     validate_login(username, password)
     print(f"Validate_login value returned = {validate_login(username, password)}")
     if validate_login(username, password) == 1:
       session['user']=username
+      session['api_key'] = API_KEY
+      session['pID'] = pID
+      session['obID'] obID
       print("Login success, redirect")
-      return redirect(url_for('Vessel_map'))
+      redirect(url_for('Vessel_data_pull', API_KEY=API_KEY, pID=pID, obID=obID)
+      return redirect(url_for('Vessel_map')
     else:
       print("Invalid credentials, reset login")
       return render_template('login.html')
@@ -51,6 +58,7 @@ def login():
     #   user_data = load_data_from_db()
   if request.method == 'GET':
     return render_template('login.html')
+
   
 colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
@@ -59,10 +67,13 @@ colors = [
 gc = pygsheets.authorize(service_account_file='/etc/secrets/creds.json')
 
 #========================Vessel data PULL===========================
-@app.route("/api/vessel/<vessel_imo>")
-def Vessel_data_pull(vessel_imo):
+@app.route("/api/vessel")
+def Vessel_data_pull(API_KEY, pID, obID):
+  vessel_imo = request.form['vessel_imo']
+  print(f"API_KEY={API_KEY}, pID={pID}, obID={obID}")
   #vessel_imo = request.args.get('imo')
-  API_Key = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
+  API_KEY = API_KEY
+  # API_KEY = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
   #vessel_imo = "9702699"
   url_vessel_movement = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_movement"
   url_vessel_current_position = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_current_position"
@@ -79,7 +90,8 @@ def Vessel_data_pull(vessel_imo):
       "vessel_imo_no": vessel_imo
     },
     "on_behalf_of": [{
-      "id": on_behalf_of_id
+      #"id": on_behalf_of_id
+      "id": obID
     }]
   }
   print(f"IMO Number = {vessel_imo}")
@@ -89,7 +101,7 @@ def Vessel_data_pull(vessel_imo):
   data = json.loads(json_string)
 #========================PULL vessel_current_position===========================
   response_vessel_current_position = requests.post(
-url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_Key})
+url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_KEY})
   if response_vessel_current_position.status_code == 200:
     print(f"Response JSON = {response_vessel_current_position.json()}")
     print("Pull vessel_current_position success.")
@@ -105,7 +117,7 @@ url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_Key})
 
 #========================PULL vessel_movement=====================================
   response_vessel_movement = requests.post(
-    url_vessel_movement, json=data, headers={'SGTRADEX-API-KEY': API_Key})
+    url_vessel_movement, json=data, headers={'SGTRADEX-API-KEY': API_KEY})
   if response_vessel_movement.status_code == 200:
     #print(f"Response JSON = {response_vessel_movement.json()}")
     print("Pull vessel_movement success.")
