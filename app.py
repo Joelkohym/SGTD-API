@@ -13,8 +13,10 @@ from database import load_data_from_db, new_registration
 # from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
 app = Flask(__name__)
-
-
+@app.route("/", methods=['GET','POST'])
+def redirect_to_login():
+  return redirect(url_for('login'))
+  
 @app.route("/register", methods=['GET','POST'])
 def register():
   if request.method == 'POST':
