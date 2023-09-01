@@ -49,7 +49,7 @@ colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
 #gc = pygsheets.authorize(service_account_file='creds.json')
-#gc = pygsheets.authorize(service_account_file='/etc/secrets/creds.json')
+gc = pygsheets.authorize(service_account_file='/etc/secrets/creds.json')
 
 #========================Vessel data PULL===========================
 @app.route("/api/vessel/<vessel_imo>")
