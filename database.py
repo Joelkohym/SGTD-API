@@ -66,7 +66,7 @@ def validate_login(username, password):
     print(f"result_login == {result_login}")
     if result_login > 1:
       print("Login success")
-      return (login_entry[3],login_entry[4],login_entry[5])
+      return (login_entry[3],login_entry[4],login_entry[5], login_entry[6])
     else:
       print("Error in Login")
       return 0

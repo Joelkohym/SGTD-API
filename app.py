@@ -48,6 +48,8 @@ def login():
       API_KEY = validate_login(username, password)[0]
       pID = validate_login(username, password)[1]
       obID = validate_login(username, password)[2]
+      gSheet = validate_login(username, password)[3]
+      gc = pygsheets.authorize(service_account_file=gSheet)
       print("Login success, redirect")
       redirect(url_for('Vessel_data_pull', API_KEY=API_KEY, pID=pID, obID=obID))
       return redirect(url_for('Vessel_map'))
@@ -65,7 +67,7 @@ colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
 #gc = pygsheets.authorize(service_account_file='creds.json')
-gc = pygsheets.authorize(service_account_file='/etc/secrets/creds.json')
+
 
 #========================Vessel data PULL===========================
 @app.route("/api/vessel")
