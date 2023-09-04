@@ -49,6 +49,7 @@ def login():
       global pID 
       global obID
       global gc
+      global gSheet
       API_KEY = validate_login(username, password)[0]
       pID = validate_login(username, password)[1]
       obID = validate_login(username, password)[2]
@@ -101,7 +102,7 @@ def Vessel_data_pull(API_KEY, pID, obID):
         }
       }],
       "parameters": {
-        "vessel_imo_no": vessel_imo
+        "vessel_imo_no": str(vessel_imo)
       },
       "on_behalf_of": [{
         #"id": on_behalf_of_id
@@ -233,8 +234,7 @@ def Vessel_movement_receive():
     print(gc.spreadsheet_titles())
     sh = gc.open('SGTD Received APIs')
     worksheet_replit = sh.worksheet_by_title("replit_vessel_movement")
-    #clear
-    worksheet_replit.clear()
+
     # Write the headers as the first row
     print(f"row_data_vessel_movement.keys: {row_data_vessel_movement.keys()}")
     worksheet_replit.insert_rows(
