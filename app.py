@@ -76,10 +76,10 @@ colors = [
 
 #========================Vessel data PULL===========================
 @app.route("/api/vessel", methods=['GET', 'POST'])
-def Vessel_data_pull(API_KEY, pID, obID):
+def Vessel_data_pull():
   user_vessel_imo = request.form['vessel_imo']
   input_list = [int(x) for x in user_vessel_imo.split(',')]
-  print(f"API_KEY={API_KEY}, pID={pID}, obID={obID}")
+  #print(f"API_KEY={API_KEY}, pID={pID}, obID={obID}")
   print(f"user_vessel_imo from html = {user_vessel_imo}")
   print(f"input_list from html = {input_list}")
   print(f"API_KEY={API_KEY}, pID={pID}, obID={obID}")
@@ -89,6 +89,7 @@ def Vessel_data_pull(API_KEY, pID, obID):
   #vessel_imo = "9702699"
   for vessel_imo in input_list:
     print(f"IMO Number = {vessel_imo}")
+    print(f'On behalf id= {obID}')
     url_vessel_movement = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_movement"
     url_vessel_current_position = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_current_position"
     on_behalf_of_id = "49f04a6f-f157-479b-b211-18931fad4ca4"
