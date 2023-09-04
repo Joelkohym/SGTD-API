@@ -135,13 +135,6 @@ def Vessel_data_pull(API_KEY, pID, obID):
         f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
       )
     #print(response_vessel_movement.text)
-
-
-
-
-
-
-
   
   sh = gc.open('SGTD Received APIs')
   sheet1 = sh.worksheet_by_title("replit_vessel_current_position")

@@ -77,4 +77,5 @@ def receive_details(username):
     values = {'username_' : username}
     receive_db = conn.execute(query, values)
     receive_gsheet = receive_db.all()[0]
-  return(login_entry[6])
+    print(f"receive_gsheet == {receive_gsheet}")
+  return(receive_gsheet[6])
