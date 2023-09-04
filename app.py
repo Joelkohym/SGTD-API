@@ -35,7 +35,6 @@ def register():
 @app.route("/login", methods=['GET','POST'])
 def login():
   if request.method == 'POST':
-    session.pop('user', None)
     username = request.form['username_']
     password = request.form['password_']
     # API_KEY = request.form['api_key_']
@@ -159,9 +158,12 @@ def Vessel_data_pull(API_KEY, pID, obID):
 
 
 #==========================RECEIVE vessel_movement===============================
-@app.route("/api/vessel_movement/receive", methods=['POST'])
+@app.route("/api/vessel_movement/receive/admin", methods=['POST'])
 def Vessel_movement_receive():
-  try:
+    username = "admin"
+    gsheet_data = receive_details(username)[0]
+    gc = pygsheets.authorize(service_account_file=gSheet)
+  #try:
     data = request.data  # Get the raw data from the request body
     #print(data)
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
@@ -228,7 +230,6 @@ def Vessel_movement_receive():
     # Append the data to the worksheet
     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
     # Add the current date and time to your data dictionary
-    singapore_timezone = pytz.timezone('Asia/Singapore')
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     row_data_vessel_movement['Timestamp'] = current_datetime
     print(gc.spreadsheet_titles())
@@ -250,16 +251,19 @@ def Vessel_movement_receive():
 
     #wks.update_value( (1,len(wks[0])), "classstr")
     return "Gsheet row_data_vessel_movement appended"
-  except Exception as e:
-    # Handle the error gracefully and log it
-    print("An error occurred:", str(e))
-    return f"An error occurred: {str(e)}", 500  # Return a 500
+  # except Exception as e:
+  #   # Handle the error gracefully and log it
+  #   print("An error occurred:", str(e))
+  #   return f"An error occurred: {str(e)}", 500  # Return a 500
 
 
 #==========================RECEIVE vessel_current_position===============================
-@app.route("/api/vessel_current_position/receive", methods=['POST'])
+@app.route("/api/vessel_current_position/receive/admin", methods=['POST'])
 def Vessel_current_position():
   # try:
+    username = "admin"
+    gsheet_data = receive_details(username)[0]
+    gc = pygsheets.authorize(service_account_file=gSheet)
     data = request.data  # Get the raw data from the request body
     print(f"Vessel_current_position = {data}")
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
@@ -267,7 +271,6 @@ def Vessel_current_position():
     data_dict = json.loads(data_str)
     row_data_vessel_current_position = data_dict['payload'][-1]
     # Add the current date and time to your data dictionary
-    singapore_timezone = pytz.timezone('Asia/Singapore')
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     row_data_vessel_current_position['Timestamp'] = current_datetime
     print(

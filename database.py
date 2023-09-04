@@ -70,3 +70,11 @@ def validate_login(username, password):
     else:
       print("Error in Login")
       return 0
+
+def receive_details(username):
+  with engine.connect() as conn:
+    query = text("SELECT * FROM userDB WHERE username_ = :username_")
+    values = {'username_' : username}
+    receive_db = conn.execute(query, values)
+    receive_gsheet = receive_db.all()[0]
+  return(login_entry[6])
