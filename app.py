@@ -154,9 +154,8 @@ def Vessel_data_pull(API_KEY, pID, obID):
 @app.route("/api/vessel_movement/receive/admin", methods=['POST'])
 def Vessel_movement_receive():
     username = "admin"
-    gsheet_data = receive_details(username)[0]
+    gsheet_data = receive_details(username)
     print(f"Receive_details from database.py {receive_details(username)}")
-    print(receive_details(username)[0])
     gc = pygsheets.authorize(service_account_file=gsheet_data)
   #try:
     data = request.data  # Get the raw data from the request body
@@ -257,9 +256,8 @@ def Vessel_movement_receive():
 def Vessel_current_position():
   # try:
     username = "admin"
-    gsheet_data = receive_details(username)[0]
+    gsheet_data = receive_details(username)
     print(f"Receive_details from database.py {receive_details(username)}")
-    print(receive_details(username)[0])
     gc = pygsheets.authorize(service_account_file=gsheet_data)
     data = request.data  # Get the raw data from the request body
     print(f"Vessel_current_position = {data}")
