@@ -155,7 +155,7 @@ def Vessel_data_pull(API_KEY, pID, obID):
 def Vessel_movement_receive():
     username = "admin"
     gsheet_data = receive_details(username)[0]
-    gc = pygsheets.authorize(service_account_file=gSheet)
+    gc = pygsheets.authorize(service_account_file=gsheet_data)
   #try:
     data = request.data  # Get the raw data from the request body
     #print(data)
@@ -258,7 +258,7 @@ def Vessel_current_position():
     gsheet_data = receive_details(username)[0]
     print(f"Receive_details from database.py {receive_details(username)}")
     print(receive_details(username)[0])
-    gc = pygsheets.authorize(service_account_file=gSheet)
+    gc = pygsheets.authorize(service_account_file=gsheet_data)
     data = request.data  # Get the raw data from the request body
     print(f"Vessel_current_position = {data}")
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
