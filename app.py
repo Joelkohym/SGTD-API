@@ -75,7 +75,7 @@ colors = [
 
 
 #========================Vessel data PULL===========================
-@app.route("/api/vessel")
+@app.route("/api/vessel", methods=['GET', 'POST'])
 def Vessel_data_pull(API_KEY, pID, obID):
   user_vessel_imo = request.form['vessel_imo']
   input_list = [int(x) for x in user_vessel_imo.split(',')]
