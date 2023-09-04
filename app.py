@@ -155,6 +155,8 @@ def Vessel_data_pull(API_KEY, pID, obID):
 def Vessel_movement_receive():
     username = "admin"
     gsheet_data = receive_details(username)[0]
+    print(f"Receive_details from database.py {receive_details(username)}")
+    print(receive_details(username)[0])
     gc = pygsheets.authorize(service_account_file=gsheet_data)
   #try:
     data = request.data  # Get the raw data from the request body
