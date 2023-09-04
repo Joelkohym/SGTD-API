@@ -42,17 +42,19 @@ def login():
     # obID = request.form['on_behalf_id_']
     validate_login(username, password)
     print(f"Validate_login value returned = {validate_login(username, password)}")
-    if len(validate_login(username, password)) == 4:
+    if len(validate_login(username, password)) == 5:
       session['user']=username
       global API_KEY
       global pID 
       global obID
       global gc
       global gSheet
+      global pitstop
       API_KEY = validate_login(username, password)[0]
       pID = validate_login(username, password)[1]
       obID = validate_login(username, password)[2]
       gSheet = validate_login(username, password)[3]
+      pitstop = validate_login(username, password)[4]
       gc = pygsheets.authorize(service_account_file=gSheet)
       print("Login success, redirect")
       #redirect(url_for('Vessel_data_pull', API_KEY=API_KEY, pID=pID, obID=obID))
@@ -90,9 +92,9 @@ def Vessel_data_pull():
   for vessel_imo in input_list:
     print(f"IMO Number = {vessel_imo}")
     print(f'On behalf id= {obID}')
-    url_vessel_movement = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_movement"
-    url_vessel_current_position = "https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/data/pull/vessel_current_position"
-    on_behalf_of_id = "49f04a6f-f157-479b-b211-18931fad4ca4"
+    url_vessel_movement = f"{pitstop}/api/v1/data/pull/vessel_movement"
+    url_vessel_current_position = f"{pitstop}/api/v1/data/pull/vessel_current_position"
+    #on_behalf_of_id = "49f04a6f-f157-479b-b211-18931fad4ca4"
     payload = {
       "participants": [{
         "id": "1817878d-c468-411b-8fe1-698eca7170dd",
