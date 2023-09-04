@@ -9,7 +9,7 @@ import random
 import time
 import pytz 
 import os
-from database import load_data_from_db, new_registration, validate_login
+from database import load_data_from_db, new_registration, validate_login, receive_details
 # from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
 app = Flask(__name__)
@@ -263,6 +263,8 @@ def Vessel_current_position():
   # try:
     username = "admin"
     gsheet_data = receive_details(username)[0]
+    print(f"Receive_details from database.py {receive_details(username)}")
+    print(receive_details(username)[0])
     gc = pygsheets.authorize(service_account_file=gSheet)
     data = request.data  # Get the raw data from the request body
     print(f"Vessel_current_position = {data}")
