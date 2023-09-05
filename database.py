@@ -20,11 +20,11 @@ def load_data_from_db():
     print(f"result_dicts = {user_data}")
   return user_data
 
-def load_user_from_db(username, password):
+def load_user_from_db(email, password):
   with engine.connect() as conn:
-    username_ = username
-    password_ = password
-    result = conn.execute(text("select * from userDB WHERE username = :username_ and password = :password_"))
+    email = email
+    password = password
+    result = conn.execute(text("select * from userDB WHERE email = :email and password = :password"))
     result_all = result.all()
     if len(result_all) == 0:
       return None
@@ -33,29 +33,29 @@ def load_user_from_db(username, password):
     print(f"result = {result_all}")
   return user_data
 
-# def new_registration(username, password, api_key, participant_id, on_behalf_id, gsheet_cred_path, company):
+# def new_registration(email, password, api_key, participant_id, on_behalf_id, gsheet_cred_path, company):
 def new_registration(data):
   print(f"printing data from new_registration: {data}")
-  print(f"data['username_'] == {data['username_']}")
-  print(f"data['api_key_'] == {data['api_key_']}")
-  print(f"data['participant_id_'] == {data['participant_id_']}")
+  print(f"data['email'] == {data['email']}")
+  print(f"data['api_key'] == {data['api_key']}")
+  print(f"data['participant_id'] == {data['participant_id']}")
   print(f"data['on_behalf_id_'] == {data['on_behalf_id_']}")
   with engine.connect() as conn:
-    #query = text("INSERT INTO userDB (username_, password_, api_key_, participant_id_, on_behalf_id_, gsheet_cred_path_, company_) VALUES (:username_, :password_, :api_key_, :participant_id_, :on_behalf_id_, :gsheet_cred_path_, :company_)")
-    query = text("INSERT INTO userDB (username_, password_, api_key_, participant_id_, on_behalf_id_, gsheet_cred_path_, company_) VALUES (:username_,:password_, :api_key_, :participant_id_, :on_behalf_id_, :gsheet_cred_path_, :company_)")
-    values = {'username_' : data['username_'], 'password_' : data['password_'], 'api_key_' : data['api_key_'], 'participant_id_' :data['participant_id_'], 'on_behalf_id_' : data['on_behalf_id_'], 'gsheet_cred_path_' : data['gsheet_cred_path_'], 'company_' : data['company_']}
+    #query = text("INSERT INTO userDB (email, password, api_key, participant_id, on_behalf_id_, gsheet_cred_path, company_) VALUES (:email, :password, :api_key, :participant_id, :on_behalf_id_, :gsheet_cred_path, :company_)")
+    query = text("INSERT INTO userDB (email, password, api_key, participant_id, on_behalf_id_, gsheet_cred_path, company_) VALUES (:email,:password, :api_key, :participant_id, :on_behalf_id_, :gsheet_cred_path, :company_)")
+    values = {'email' : data['email'], 'password' : data['password'], 'api_key' : data['api_key'], 'participant_id' :data['participant_id'], 'gsheet_cred_path' : data['gsheet_cred_path']}
     print(query)
     conn.execute(query, values)
-    #conn.execute(query, username_ = data['username_'],password_ =data['password_'],api_key_ = data['api_key_'],participant_id_ = data['participant_id_'],on_behalf_id_ = data['on_behalf_id_'],gsheet_cred_path_ = data['gsheet_cred_path_'], company_ = data['company_'])
+    #conn.execute(query, email = data['email'],password =data['password'],api_key = data['api_key'],participant_id = data['participant_id'],on_behalf_id_ = data['on_behalf_id_'],gsheet_cred_path = data['gsheet_cred_path'], company_ = data['company_'])
     print("execute success")
 
 
-def validate_login(username, password):
-  print(f"printing data from validate_login: username = {username}, password = {password}")
+def validate_login(email, password):
+  print(f"printing data from validate_login: email = {email}, password = {password}")
 
   with engine.connect() as conn:
-    query = text("SELECT * FROM userDB WHERE username_ = :username_ AND password_ = :password_")
-    values = {'username_' : username, 'password_' : password}
+    query = text("SELECT * FROM userDB WHERE email = :email AND password = :password")
+    values = {'email' : email, 'password' : password}
     check_login = conn.execute(query, values)
     login_entry = check_login.all()[0]
     print(f"check_login == {login_entry}")
@@ -71,11 +71,11 @@ def validate_login(username, password):
       print("Error in Login")
       return 0
 
-def receive_details(username):
+def receive_details(email):
   with engine.connect() as conn:
-    query = text("SELECT * FROM userDB WHERE username_ = :username_")
-    values = {'username_' : username}
+    query = text("SELECT * FROM userDB WHERE email = :email")
+    values = {'email' : email}
     receive_db = conn.execute(query, values)
-    receive_gsheet = receive_db.all()[0]
-    print(f"receive_gsheet == {receive_gsheet}")
-  return(receive_gsheet[6])
+    receive_data = receive_db.all()[0]
+    print(f"receive_data == {receive_data}, return api ={receive_data[3]}, return obid = {receive_data[4]}, return pitstop = {receive_data[5]}")
+  return(receive_data[3],receive_data[4],receive_data[5],receive_data[6])
