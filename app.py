@@ -241,7 +241,7 @@ def Vessel_movement_receive():
     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
     # Add the current date and time to your data dictionary
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    row_data_vessel_movement['Timestamp vessel_movement'] = current_datetime
+    row_data_vessel_movement['Timestamp vessel_movement'] = str(current_datetime)
     #Initialise Gsheet
     gc = pygsheets.authorize(service_account_file=gsheet_cred_path)
     print(f"Receive vessel_movement API: {gc.spreadsheet_titles()}")
@@ -286,7 +286,7 @@ def Vessel_current_position():
     row_data_vessel_current_position = data_dict['payload'][-1]
     # Add the current date and time to your data dictionary
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    row_data_vessel_current_position['Timestamp vessel_current_position'] = current_datetime
+    row_data_vessel_current_position['Timestamp vessel_current_position'] = str(current_datetime)
     
     print(
       f"row_data_vessel_current_position: {row_data_vessel_current_position}")
