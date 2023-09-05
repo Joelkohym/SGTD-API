@@ -35,8 +35,8 @@ def register():
 @app.route("/login", methods=['GET','POST'])
 def login():
   if request.method == 'POST':
-    username = request.form['username_']
-    password = request.form['password_']
+    username = request.form['username']
+    password = request.form['password']
     # API_KEY = request.form['api_key_']
     # pID = request.form['participant_id_']
     # obID = request.form['on_behalf_id_']
