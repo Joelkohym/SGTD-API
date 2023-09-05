@@ -398,12 +398,6 @@ def Vessel_current_position():
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
   if g.user:
-    session['id'] = id
-    session['email']=email
-    session['participant_id']=pID
-    session['pitstop_url']=pitstop
-    session['api_key']=API_KEY
-    session['gc']=gSheet
     gc = pygsheets.authorize(service_account_file=session['gc'])
     # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
     print(gc.spreadsheet_titles())
