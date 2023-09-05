@@ -7,3 +7,5 @@ leafmap
 geopandas
 sqlalchemy
 pymysql
+Flask-MySQLdb
+pytz
