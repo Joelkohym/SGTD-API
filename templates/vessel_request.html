@@ -19,6 +19,7 @@
         <div class="col-sm-6 mt-4">
             <h2>Vessel request form</h2>
             <form action="/api/vessel" method="POST">
+              <div class="msg">{{ msg }}</div>
                 <div class="form-group">
                 <label for="vessel_imo">Vessel IMO Number:</label>
                 <input type="text" class="form-control" id="vessel_imo" placeholder="i.e. 9000000,9111111,9222222" name="vessel_imo">

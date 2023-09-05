@@ -1,7 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
-from flask_mysqldb import MySQL
-from sqlalchemy import create_engine, text
-import re
+from flask import Flask, render_template, request, redirect, url_for, session, g
 import requests
 import json
 import pygsheets
@@ -13,30 +10,17 @@ import time
 import pytz 
 import os
 from database import load_data_from_db, new_registration, validate_login, receive_details
+# from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = os.environ['MYSQL_HOST']
-app.config['MYSQL_USER'] = os.environ['MYSQL_USER']
-app.config['MYSQL_PASSWORD'] = os.environ['MYSQL_PASSWORD']
-app.config['MYSQL_DB'] = os.environ['MYSQL_DB']
-
 app.secret_key = os.urandom(24)
-print(f"app sercret key = {app.secret_key}")
 
-mysql = MySQL(app)
-
-db_connection_string = os.environ['DB_CONNECTION_STRING']
-engine = create_engine(
-  db_connection_string,
-  connect_args={
-  "ssl": {
-            "ssl_ca": "/etc/ssl/cert.pem"}})
-
-
-colors = [
-"red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
-]
+@app.route("/", methods=['GET','POST'])
+def index():
+  if request.method=='POST':
+    session.pop('user,None')
+  return render_template('login.html')
   
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -47,135 +31,139 @@ def register():
     return render_template('login.html')
   if request.method == 'GET':
     return render_template('register.html')
-    
-@app.route('/')
+
 @app.route("/login", methods=['GET','POST'])
 def login():
   if request.method == 'POST':
-    email = request.form['email']
+    username = request.form['username']
     password = request.form['password']
-    login_data = validate_login(email, password)
-    print(f"Validate_login value returned = {validate_login(email, password)}")
+    # API_KEY = request.form['api_key_']
+    # pID = request.form['participant_id_']
+    # obID = request.form['on_behalf_id_']
+    login_data = validate_login(username, password)
+    print(f"Validate_login value returned = {validate_login(username, password)}")
     if len(login_data) == 5:
-      id = login_data[0]
-      API_KEY = login_data[1]
-      pID = login_data[2]
-      pitstop = login_data[3]
-      gSheet = login_data[4]
-
-      session['loggedin'] = True
-      session['id'] = id
-      session['email']=email
-      session['participant_id']=pID
-      session['pitstop_url']=pitstop
-      session['api_key']=API_KEY
+      API_KEY = login_data[0]
+      pID = login_data[1]
+      obID = login_data[2]
+      gSheet = login_data[3]
+      pitstop = login_data[4]
+      session['user']=username
       session['gc']=gSheet
-      
+      global API_KEY
+      global pID 
+      global obID
+      global gc
+      global gSheet
+      global pitstop
       gc = pygsheets.authorize(service_account_file=gSheet)
-      msg = f"Login success for {email}, redirect"
-      print(f"Login success for {email}, redirect")
-      return render_template('vessel_request.html', msg=msg)
+      print("Login success, redirect")
+      #redirect(url_for('Vessel_data_pull', API_KEY=API_KEY, pID=pID, obID=obID))
+      #return redirect(url_for('Vessel_map'))
+      return render_template('vessel_request.html')
     else:
-      msg = "Invalid credentials, reset login"
       print("Invalid credentials, reset login")
-      return redirect(url_for('login'),msg=msg)
+      return render_template('login.html')
     # if request.data['username'] and request.data['password'] in db:
     #   user_data = load_data_from_db()
   if request.method == 'GET':
-    return redirect(url_for('login'))
+    return render_template('login.html')
+      
+
   
 colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
+#gc = pygsheets.authorize(service_account_file='creds.json')
+
 
 #========================Vessel data PULL===========================
 @app.route("/api/vessel", methods=['GET', 'POST'])
 def Vessel_data_pull():
-  if request.method == 'POST':
-    user_vessel_imo = request.form['vessel_imo']
-    #Split vessel_imo list into invdivual records
-    input_list = [int(x) for x in user_vessel_imo.split(',')]
+  user_vessel_imo = request.form['vessel_imo']
+  input_list = [int(x) for x in user_vessel_imo.split(',')]
+  #print(f"API_KEY={API_KEY}, pID={pID}, obID={obID}")
+  print(f"user_vessel_imo from html = {user_vessel_imo}")
+  print(f"input_list from html = {input_list}")
+  print(f"API_KEY={API_KEY}, pID={pID}, obID={obID}")
+  #vessel_imo = request.args.get('imo')
+  #API_KEY = API_KEY
+  # API_KEY = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
+  #vessel_imo = "9702699"
+  for vessel_imo in input_list:
+    print(f"IMO Number = {vessel_imo}")
+    print(f'On behalf id= {obID}')
+    url_vessel_movement = f"{pitstop}/api/v1/data/pull/vessel_movement"
+    url_vessel_current_position = f"{pitstop}/api/v1/data/pull/vessel_current_position"
+    #on_behalf_of_id = "49f04a6f-f157-479b-b211-18931fad4ca4"
+    payload = {
+      "participants": [{
+        "id": "1817878d-c468-411b-8fe1-698eca7170dd",
+        "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
+        "meta": {
+          "data_ref_id": ""
+        }
+      }],
+      "parameters": {
+        "vessel_imo_no": str(vessel_imo)
+      },
+      "on_behalf_of": [{
+        #"id": on_behalf_of_id
+        "id": obID
+      }]
+    }
     
-    print(f"user_vessel_imo from html = {user_vessel_imo}")
-    print(f"input_list from html = {input_list}")
-    
-    #Loop through input IMO list
-    for vessel_imo in input_list:
-      print(f"IMO Number = {vessel_imo}")
-      
-      url_vessel_movement = f"{session['pitstop_url']}/api/v1/data/pull/vessel_movement"
-      url_vessel_current_position = f"{session['pitstop_url']}/api/v1/data/pull/vessel_current_position"
-      
-      payload = {
-        "participants": [{
-          "id": "1817878d-c468-411b-8fe1-698eca7170dd",
-          "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
-          "meta": {
-            "data_ref_id": ""
-          }
-        }],
-        "parameters": {
-          "vessel_imo_no": str(vessel_imo)
-        },
-        "on_behalf_of": [{
-          "id": session['participant_id']
-        }]
-      }
-      
-      json_string = json.dumps(
-        payload, indent=4)  # Convert payload dictionary to JSON string
-      # Rest of the code to send the JSON payload to the API
-      data = json.loads(json_string)
-      
-    #========================PULL vessel_current_position===========================
-      response_vessel_current_position = requests.post(
-    url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
-      if response_vessel_current_position.status_code == 200:
-        print(f"Response JSON = {response_vessel_current_position.json()}")
-        print("Pull vessel_current_position success.")
-      else:
-        print(
-          f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
-        )
-  
-    #========================PULL vessel_movement=====================================
-      response_vessel_movement = requests.post(
-        url_vessel_movement, json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
-      if response_vessel_movement.status_code == 200:
-        print("Pull vessel_movement success.")
-      else:
-        print(
-          f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
-        )
+    json_string = json.dumps(
+      payload, indent=4)  # Convert payload dictionary to JSON string
+    # Rest of the code to send the JSON payload to the API
+    data = json.loads(json_string)
+  #========================PULL vessel_current_position===========================
+    response_vessel_current_position = requests.post(
+  url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': API_KEY})
+    if response_vessel_current_position.status_code == 200:
+      print(f"Response JSON = {response_vessel_current_position.json()}")
+      print("Pull vessel_current_position success.")
+    else:
+      print(
+        f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
+      )
 
-      
-    gc = pygsheets.authorize(service_account_file=session['gc'])
-    sh = gc.open('SGTD Received APIs')
-    sheet1 = sh.worksheet_by_title("replit_vessel_current_position")
-    #Clear gSheet
-    sheet1.clear()
-    print('Cleared replit_vessel_current_position')
-    sheet2 = sh.worksheet_by_title('replit_vessel_movement')
-    sheet2.clear()
-    print('Cleared replit_vessel_movement')
-    
-    return redirect(url_for('Vessel_map'))
-    
-  return render_template('vessel_request.html')
+  #========================PULL vessel_movement=====================================
+    response_vessel_movement = requests.post(
+      url_vessel_movement, json=data, headers={'SGTRADEX-API-KEY': API_KEY})
+    if response_vessel_movement.status_code == 200:
+      #print(f"Response JSON = {response_vessel_movement.json()}")
+      print("Pull vessel_movement success.")
+    else:
+      print(
+        f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
+      )
+    #print(response_vessel_movement.text)
+  
+  sh = gc.open('SGTD Received APIs')
+  sheet1 = sh.worksheet_by_title("replit_vessel_current_position")
+  sheet1.clear()
+  print('Cleared replit_vessel_current_position')
+  sheet2 = sh.worksheet_by_title('replit_vessel_movement')
+  sheet2.clear()
+  print('Cleared replit_vessel_movement')
+    #clear
+  #print("Sleep 3 seconds")
+  #time.sleep(2)
+    #print(response_vessel_current_position.text)
+  return redirect(url_for('Vessel_map'))
+
 
 #==========================RECEIVE vessel_movement===============================
 @app.route("/api/vessel_movement/receive/admin", methods=['POST'])
 def Vessel_movement_receive():
-    email = "joel.koh@sgtradex.com"
-    receive_details_data = receive_details(email)
-    print(f"Receive_details from database.py {receive_details(email)}")
-    API_KEY = receive_details_data[1]
-    participant_id = receive_details_data[2]
-    pitstop_url = receive_details_data[3]
-    gsheet_cred_path = receive_details_data[4]
-
+    username = "admin"
+    gsheet_data = receive_details(username)
+    print(f"Receive_details from database.py {receive_details(username)}")
+    gc = pygsheets.authorize(service_account_file=gsheet_data)
+  #try:
     data = request.data  # Get the raw data from the request body
-    print(data)
+    #print(data)
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
     # Convert the JSON string to a Python dictionary
     data_dict = json.loads(data_str)
@@ -241,10 +229,8 @@ def Vessel_movement_receive():
     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
     # Add the current date and time to your data dictionary
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    row_data_vessel_movement['Timestamp vessel_movement'] = current_datetime
-    #Initialise Gsheet
-    gc = pygsheets.authorize(service_account_file=gsheet_cred_path)
-    print(f"Receive vessel_movement API: {gc.spreadsheet_titles()}")
+    row_data_vessel_movement['Timestamp'] = current_datetime
+    print(gc.spreadsheet_titles())
     sh = gc.open('SGTD Received APIs')
     worksheet_replit = sh.worksheet_by_title("replit_vessel_movement")
 
@@ -261,56 +247,46 @@ def Vessel_movement_receive():
     worksheet_replit.delete_rows(1)
     print([list(row_data_vessel_movement.values())])
 
-    return f"Gsheet row_data_vessel_movement appended {list(row_data_vessel_movement.values())}"
-
+    #wks.update_value( (1,len(wks[0])), "classstr")
+    return "Gsheet row_data_vessel_movement appended"
+  # except Exception as e:
+  #   # Handle the error gracefully and log it
+  #   print("An error occurred:", str(e))
+  #   return f"An error occurred: {str(e)}", 500  # Return a 500
 
 
 #==========================RECEIVE vessel_current_position===============================
 @app.route("/api/vessel_current_position/receive/admin", methods=['POST'])
 def Vessel_current_position():
-    email = "joel.koh@sgtradex.com"
-    receive_details_data = receive_details(email)
-    print(f"Receive_details from database.py {receive_details(email)}")
-    API_KEY = receive_details_data[1]
-    participant_id = receive_details_data[2]
-    pitstop_url = receive_details_data[3]
-    gsheet_cred_path = receive_details_data[4]
-  
+  # try:
+    username = "admin"
+    gsheet_data = receive_details(username)
+    print(f"Receive_details from database.py {receive_details(username)}")
+    gc = pygsheets.authorize(service_account_file=gsheet_data)
     data = request.data  # Get the raw data from the request body
-    
     print(f"Vessel_current_position = {data}")
-
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
     # Convert the JSON string to a Python dictionary
     data_dict = json.loads(data_str)
     row_data_vessel_current_position = data_dict['payload'][-1]
     # Add the current date and time to your data dictionary
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    row_data_vessel_current_position['Timestamp vessel_current_position'] = current_datetime
-    
+    row_data_vessel_current_position['Timestamp'] = current_datetime
     print(
       f"row_data_vessel_current_position: {row_data_vessel_current_position}")
-    #Initialise Gsheet
-    gc = pygsheets.authorize(service_account_file=gsheet_cred_path)
-  
     print(gc.spreadsheet_titles())
-  
     sh = gc.open('SGTD Received APIs')
     worksheet_replit = sh.worksheet_by_title("replit_vessel_current_position")
 
+
     # Extract specific keys from 'vessel_particulars' for column headers
     vessel_particulars = data_dict['payload'][0]['vessel_particulars'][0]
-  
     print(f"vessel_particulars: {vessel_particulars}")
-  
     # Create column headers from the keys in 'vessel_particulars'
     column_headers = list(vessel_particulars.keys())
-  
     print(f"column_headers: {column_headers}")
-  
     # Extract all the keys from the payload data
     payload_keys = list(data_dict['payload'][0].keys())
-  
     print(f"payload_keys: {payload_keys}")
       # Append the payload keys (excluding 'vessel_particulars') to column_headers
     column_headers.extend([key for key in payload_keys if key != 'vessel_particulars'])
@@ -318,26 +294,23 @@ def Vessel_current_position():
     # Append a 'Timestamp' column
     #Column_headers.append('Timestamp')
     print(f"column_headers final: {column_headers}")
+    # Append the column headers as the first row
+    #worksheet_replit.append_table(values=column_headers, start='A1')
 
-    # Write the headers as the first row
+
+        # Write the headers as the first row
     worksheet_replit.insert_rows(
     row=1,number=1,values=column_headers)
 
     # Extract the payload data
     payload_data = data_dict['payload'][0]
-  
     print(f"payload_data: {payload_data}")
-  
     # Extract all the values from the payload data
     payload_values = [payload_data[key] for key in payload_keys if key != 'vessel_particulars']
-  
     print(f"payload_values: {payload_data}")
-  
     # Create a list of values corresponding to the keys
     vessel_particulars_values = list(vessel_particulars.values())
-  
     print(f"vessel_particulars_values: {vessel_particulars_values}")
-  
     # Extend row_values with payload_values
     row_values = vessel_particulars_values + payload_values
     
@@ -348,7 +321,7 @@ def Vessel_current_position():
     # Append the data as a new row
     worksheet_replit.append_table(values=row_values, start='A2')
     worksheet_replit.delete_rows(1)
-    return f"Vessel Current Location Data saved to Google Sheets.{row_values}"
+    return "Vessel Current Location Data saved to Google Sheets."
   # except Exception as e:
   #   # Handle the error gracefully and log it
   #   print("An error occurred:", str(e))
@@ -363,12 +336,6 @@ def Vessel_current_position():
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
   if g.user:
-    session['id'] = id
-    session['email']=email
-    session['participant_id']=pID
-    session['pitstop_url']=pitstop
-    session['api_key']=API_KEY
-    session['gc']=gSheet
     gc = pygsheets.authorize(service_account_file=session['gc'])
     # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
     print(gc.spreadsheet_titles())
@@ -426,14 +393,14 @@ def Vessel_map():
     print(f"new html file created = {newHTML}")
     m.to_html(newHTML)
     #time.sleep(2)
-    return render_template(newHTMLwotemp, user=session['email'])
+    return render_template(newHTMLwotemp, user=session['user'])
   return redirect(url_for('login'))
 
 @app.before_request
 def before_request():
   g.user=None
   if 'user' in session:
-    g.user=session['email']
+    g.user=session['user']
 
 
 
