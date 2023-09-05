@@ -40,21 +40,22 @@ def login():
     # API_KEY = request.form['api_key_']
     # pID = request.form['participant_id_']
     # obID = request.form['on_behalf_id_']
-    validate_login(username, password)
+    login_data = validate_login(username, password)
     print(f"Validate_login value returned = {validate_login(username, password)}")
-    if len(validate_login(username, password)) == 5:
+    if len(login_data) == 5:
+      API_KEY = login_data[0]
+      pID = login_data[1]
+      obID = login_data[2]
+      gSheet = login_data[3]
+      pitstop = login_data[4]
       session['user']=username
+      session['gc']=gSheet
       global API_KEY
       global pID 
       global obID
       global gc
       global gSheet
       global pitstop
-      API_KEY = validate_login(username, password)[0]
-      pID = validate_login(username, password)[1]
-      obID = validate_login(username, password)[2]
-      gSheet = validate_login(username, password)[3]
-      pitstop = validate_login(username, password)[4]
       gc = pygsheets.authorize(service_account_file=gSheet)
       print("Login success, redirect")
       #redirect(url_for('Vessel_data_pull', API_KEY=API_KEY, pID=pID, obID=obID))
@@ -335,6 +336,7 @@ def Vessel_current_position():
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
   if g.user:
+    gc = pygsheets.authorize(service_account_file=session['gc'])
     # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
     print(gc.spreadsheet_titles())
     sh = gc.open('SGTD Received APIs')
