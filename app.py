@@ -39,50 +39,82 @@ colors = [
   
 @app.route("/register", methods=['GET','POST'])
 def register():
-  if request.method == 'POST':
+  msg=''
+  if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
     data = request.form
     print(data)
-    new_registration(data)
-    return render_template('login.html')
+    r_status = new_registration(data)
+    if r_status == 1:
+      msg = 'You have successfully registered!, please send Admin gsheet credentials file.'
+      return render_template('login.html', msg=msg)
+    else:
+      msg = 'Your email exists in database! Please reach out to Admin if you need assistance.' 
+      return render_template('login.html',msg=msg)
+  elif request.method == 'POST':
+    msg = 'Please fill out the form !'
+    return render_template('login.html', msg=msg)
   if request.method == 'GET':
     return render_template('register.html')
+  return render_template('register.html')
     
 @app.route('/')
 @app.route("/login", methods=['GET','POST'])
 def login():
   if request.method == 'POST':
-    email = request.form['email']
-    password = request.form['password']
-    login_data = validate_login(email, password)
-    print(f"Validate_login value returned = {validate_login(email, password)}")
-    if len(login_data) == 5:
-      id = login_data[0]
-      API_KEY = login_data[1]
-      pID = login_data[2]
-      pitstop = login_data[3]
-      gSheet = login_data[4]
+    msg = ''
+    try:
+      email = request.form['email']
+      password = request.form['password']
+      login_data = validate_login(email, password)
+      print(f"Validate_login value returned = {validate_login(email, password)}")
+      if len(login_data) == 5:
+        id = login_data[0]
+        API_KEY = login_data[1]
+        pID = login_data[2]
+        pitstop = login_data[3]
+        gSheet = login_data[4]
 
-      session['loggedin'] = True
-      session['id'] = id
-      session['email']=email
-      session['participant_id']=pID
-      session['pitstop_url']=pitstop
-      session['api_key']=API_KEY
-      session['gc']=gSheet
-      
-      gc = pygsheets.authorize(service_account_file=gSheet)
-      msg = f"Login success for {email}, redirect"
-      print(f"Login success for {email}, redirect")
-      return render_template('vessel_request.html', msg=msg)
-    else:
-      msg = "Invalid credentials, reset login"
+        session['loggedin'] = True
+        session['id'] = id
+        session['email']=email
+        session['participant_id']=pID
+        session['pitstop_url']=pitstop
+        session['api_key']=API_KEY
+        session['gc']=gSheet
+        
+        print(f"SESSION DATA: Pitstop URL = {session['pitstop_url']}, API_KEY = {session['api_key']}, obID = {session['participant_id']}")
+        gc = pygsheets.authorize(service_account_file=gSheet)
+        msg = f"Login success for {email}, redirect"
+        print(f"Login success for {email}, redirect")
+        return render_template('vessel_request.html', msg=msg, email=email)
+      else:
+        msg = "Invalid credentials, please try again.."
+        print("Invalid credentials, reset login")
+        return render_template('login.html', msg=msg)
+    except Exception as e:
+      msg = "Invalid credentials, please try again."
       print("Invalid credentials, reset login")
-      return redirect(url_for('login'),msg=msg)
-    # if request.data['username'] and request.data['password'] in db:
-    #   user_data = load_data_from_db()
+      return render_template('login.html', msg=msg)
+      # if request.data['username'] and request.data['password'] in db:
+      #   user_data = load_data_from_db()
   if request.method == 'GET':
+    print("Requets == GET")
     return render_template('login.html')
-  
+
+# Make function for logout session
+@app.route('/logout')
+def logout():
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('email', None)
+    session.pop('participant_id', None)
+    session.pop('pitstop_url', None)
+    session.pop('api_key', None)
+    session.pop('gc', None)
+    return redirect(url_for('login'))
+
+
+
 colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]

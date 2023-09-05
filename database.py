@@ -39,15 +39,23 @@ def new_registration(data):
   print(f"data['email'] == {data['email']}")
   print(f"data['api_key'] == {data['api_key']}")
   print(f"data['participant_id'] == {data['participant_id']}")
-  print(f"data['on_behalf_id_'] == {data['on_behalf_id_']}")
+  email = data['email']
+  password = data['password']
   with engine.connect() as conn:
-    #query = text("INSERT INTO userDB (email, password, api_key, participant_id, on_behalf_id_, gsheet_cred_path, company_) VALUES (:email, :password, :api_key, :participant_id, :on_behalf_id_, :gsheet_cred_path, :company_)")
-    query = text("INSERT INTO userDB (email, password, api_key, participant_id, on_behalf_id_, gsheet_cred_path, company_) VALUES (:email,:password, :api_key, :participant_id, :on_behalf_id_, :gsheet_cred_path, :company_)")
-    values = {'email' : data['email'], 'password' : data['password'], 'api_key' : data['api_key'], 'participant_id' :data['participant_id'], 'gsheet_cred_path' : data['gsheet_cred_path']}
-    print(query)
-    conn.execute(query, values)
+    result = conn.execute(text("select * from userDB WHERE email = :email"))
+    result_all = result.all()
+    if len(result_all) == 0:
+      query = text("INSERT INTO userDB (email, password, api_key, participant_id, pitstop_url, gsheet_cred_path) VALUES (:email,:password, :api_key, :participant_id, :pitstop_url, :gsheet_cred_path)")
+      values = {'email' : data['email'], 'password' : data['password'], 'api_key' : data['api_key'], 'participant_id' :data['participant_id'], pitstop_url:data['pitstop_url'],'gsheet_cred_path' : data['gsheet_cred_path']}
+      print(query)
+      result = conn.execute(query, values)
+      print("execute success")
+      return 1
+    else:
+      print('User exists, please try again')
+      return 0
     #conn.execute(query, email = data['email'],password =data['password'],api_key = data['api_key'],participant_id = data['participant_id'],on_behalf_id_ = data['on_behalf_id_'],gsheet_cred_path = data['gsheet_cred_path'], company_ = data['company_'])
-    print("execute success")
+    
 
 
 def validate_login(email, password):
@@ -66,7 +74,7 @@ def validate_login(email, password):
     print(f"result_login == {result_login}")
     if result_login > 1:
       print("Login success")
-      return (login_entry[3],login_entry[4],login_entry[5], login_entry[6])
+      return (login_entry[0],login_entry[3],login_entry[4],login_entry[5], login_entry[6])
     else:
       print("Error in Login")
       return 0
