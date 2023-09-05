@@ -22,7 +22,6 @@ app.config['MYSQL_PASSWORD'] = os.environ['MYSQL_PASSWORD']
 app.config['MYSQL_DB'] = os.environ['MYSQL_DB']
 
 app.secret_key = os.urandom(24)
-print(f"app sercret key = {app.secret_key}")
 
 mysql = MySQL(app)
 
@@ -362,7 +361,7 @@ def Vessel_current_position():
 #====================================MAP========================================
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
-  if g.email:
+  if g.user:
     session['id'] = id
     session['email']=email
     session['participant_id']=pID
@@ -431,9 +430,9 @@ def Vessel_map():
 
 @app.before_request
 def before_request():
-  g.email=None
+  g.user=None
   if 'email' in session:
-    g.email=session['email']
+    g.user=session['email']
 
 
 
