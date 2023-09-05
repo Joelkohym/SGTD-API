@@ -36,26 +36,7 @@ engine = create_engine(
 colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
-  
-@app.route("/register", methods=['GET','POST'])
-def register():
-  msg=''
-  if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
-    data = request.form
-    print(data)
-    r_status = new_registration(data)
-    if r_status == 1:
-      msg = 'You have successfully registered!, please send Admin gsheet credentials file.'
-      return render_template('login.html', msg=msg)
-    else:
-      msg = 'Your email exists in database! Please reach out to Admin if you need assistance.' 
-      return render_template('login.html',msg=msg)
-  elif request.method == 'POST':
-    msg = 'Please fill out the form !'
-    return render_template('login.html', msg=msg)
-  if request.method == 'GET':
-    return render_template('register.html')
-  return render_template('register.html')
+
     
 @app.route('/')
 @app.route("/login", methods=['GET','POST'])
@@ -101,6 +82,8 @@ def login():
     print("Requets == GET")
     return render_template('login.html')
 
+
+
 # Make function for logout session
 @app.route('/logout')
 def logout():
@@ -112,6 +95,27 @@ def logout():
     session.pop('api_key', None)
     session.pop('gc', None)
     return redirect(url_for('login'))
+
+
+@app.route("/register", methods=['GET','POST'])
+def register():
+  msg=''
+  if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+    data = request.form
+    print(data)
+    r_status = new_registration(data)
+    if r_status == 1:
+      msg = 'You have successfully registered!, please send Admin gsheet credentials file.'
+      return render_template('login.html', msg=msg)
+    else:
+      msg = 'Your email exists in database! Please reach out to Admin if you need assistance.' 
+      return render_template('login.html',msg=msg)
+  elif request.method == 'POST':
+    msg = 'Please fill out the form !'
+    return render_template('login.html', msg=msg)
+  if request.method == 'GET':
+    return render_template('register.html')
+  return render_template('register.html')
 
 
 
