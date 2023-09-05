@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g
 from flask_mysqldb import MySQL
 from sqlalchemy import create_engine, text
 import re
@@ -362,7 +362,7 @@ def Vessel_current_position():
 #====================================MAP========================================
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
-  if g.user:
+  if g.email:
     session['id'] = id
     session['email']=email
     session['participant_id']=pID
@@ -431,9 +431,9 @@ def Vessel_map():
 
 @app.before_request
 def before_request():
-  g.user=None
-  if 'user' in session:
-    g.user=session['email']
+  g.email=None
+  if 'email' in session:
+    g.email=session['email']
 
 
 
