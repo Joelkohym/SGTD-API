@@ -199,9 +199,9 @@ def Vessel_data_pull():
   return render_template('vessel_request.html')
 
 #==========================RECEIVE vessel_movement===============================
-@app.route("/api/vessel_movement/receive/admin", methods=['POST'])
-def Vessel_movement_receive():
-    email = "joel.koh@sgtradex.com"
+@app.route("/api/vessel_movement/receive/<email_url>", methods=['POST'])
+def Vessel_movement_receive(email_url):
+    email = email_url
     receive_details_data = receive_details(email)
     print(f"Receive_details from database.py {receive_details(email)}")
     API_KEY = receive_details_data[1]
@@ -301,9 +301,9 @@ def Vessel_movement_receive():
 
 
 #==========================RECEIVE vessel_current_position===============================
-@app.route("/api/vessel_current_position/receive/admin", methods=['POST'])
-def Vessel_current_position():
-    email = "joel.koh@sgtradex.com"
+@app.route("/api/vessel_current_position/receive/<email_url>", methods=['POST'])
+def Vessel_current_position(email_url):
+    email = email_url
     receive_details_data = receive_details(email)
     print(f"Receive_details from database.py {receive_details(email)}")
     API_KEY = receive_details_data[1]
