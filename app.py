@@ -100,7 +100,7 @@ def logout():
 @app.route("/register", methods=['GET','POST'])
 def register():
   msg=''
-  if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
+  if request.method == 'POST' and 'email'in request.form and 'password' in request.form:
     data = request.form
     print(data)
     r_status = new_registration(data)

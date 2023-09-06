@@ -43,10 +43,11 @@ def new_registration(data):
   password = data['password']
   with engine.connect() as conn:
     result = conn.execute(text("select * from userDB WHERE email = :email"))
+    print(result_all)
     result_all = result.all()
     if len(result_all) == 0:
       query = text("INSERT INTO userDB (email, password, api_key, participant_id, pitstop_url, gsheet_cred_path) VALUES (:email,:password, :api_key, :participant_id, :pitstop_url, :gsheet_cred_path)")
-      values = {'email' : data['email'], 'password' : data['password'], 'api_key' : data['api_key'], 'participant_id' :data['participant_id'], pitstop_url:data['pitstop_url'],'gsheet_cred_path' : data['gsheet_cred_path']}
+      values = {'email' : data['email'], 'password' : data['password'], 'api_key' : data['api_key'], 'participant_id' :data['participant_id'], 'pitstop_url':data['pitstop_url'],'gsheet_cred_path' : data['gsheet_cred_path']}
       print(query)
       result = conn.execute(query, values)
       print("execute success")
