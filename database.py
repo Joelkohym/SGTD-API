@@ -42,7 +42,7 @@ def new_registration(data):
   email = data['email']
   password = data['password']
   with engine.connect() as conn:
-    query = conn.execute(text("select * from userDB WHERE email = :email"))
+    query = text("select * from userDB WHERE email = :email"))
     values = {'email' : email}
     result = conn.execute(query, values)
     result_all = result.all()
