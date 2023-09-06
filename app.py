@@ -65,7 +65,7 @@ def login():
         
         print(f"SESSION DATA: Pitstop URL = {session['pitstop_url']}, API_KEY = {session['api_key']}, obID = {session['participant_id']}")
         gc = pygsheets.authorize(service_account_file=gSheet)
-        msg = f"Login success for {email}, redirect"
+        msg = f"Login success for {email}, please enter Vessel IMO number(s)"
         print(f"Login success for {email}, redirect")
         return render_template('vessel_request.html', msg=msg, email=email)
       else:
@@ -410,6 +410,7 @@ def Vessel_map():
     # Read data from 'Sheet2' into another DataFrame
     df2 = pd.DataFrame(sheet2.get_all_records())
     print(f"df2 = {df2}")
+    time.sleep(15)
     # Read data from 'Sheet1' into a DataFrame
     while df1.empty or df2.empty:
       df1 = pd.DataFrame(sheet1.get_all_records())
@@ -417,7 +418,7 @@ def Vessel_map():
       # Read data from 'Sheet2' into another DataFrame
       df2 = pd.DataFrame(sheet2.get_all_records())
       print(f"df2 = {df2}")
-      time.sleep(3)
+      time.sleep(1)
       print("Sleep 3 seconds")
     
     # Assuming 'imo_no' is the common column
