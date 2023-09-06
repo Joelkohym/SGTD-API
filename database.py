@@ -47,6 +47,7 @@ def new_registration(data):
     result = conn.execute(query, values)
     result_all = result.all()
     print(result_all)
+    print(f"length of result all = {len(result_all)}")
     result_all = result.all()
     if len(result_all) == 0:
       query = text("INSERT INTO userDB (email, password, api_key, participant_id, pitstop_url, gsheet_cred_path) VALUES (:email,:password, :api_key, :participant_id, :pitstop_url, :gsheet_cred_path)")
