@@ -146,7 +146,7 @@ def Vessel_data_pull():
           "id": "1817878d-c468-411b-8fe1-698eca7170dd",
           "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
           "meta": {
-            "data_ref_id": ""
+            "data_ref_id": session['email']
           }
         }],
         "parameters": {
@@ -417,6 +417,7 @@ def Vessel_map():
       # Read data from 'Sheet2' into another DataFrame
       df2 = pd.DataFrame(sheet2.get_all_records())
       print(f"df2 = {df2}")
+      time.sleep(1)
     
     # Assuming 'imo_no' is the common column
     merged_df = pd.merge(df1,
