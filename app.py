@@ -417,7 +417,7 @@ def Vessel_map():
       # Read data from 'Sheet2' into another DataFrame
       df2 = pd.DataFrame(sheet2.get_all_records())
       print(f"df2 = {df2}")
-      time.sleep(1)
+      time.sleep(3)
     
     # Assuming 'imo_no' is the common column
     merged_df = pd.merge(df1,
