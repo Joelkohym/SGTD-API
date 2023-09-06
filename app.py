@@ -417,7 +417,7 @@ def Vessel_map():
         if "mymap.html" in f:
           print(f"*mymap.html file to be removed = {f}")
           os.remove(f"templates/{f}")
-      m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
+      m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
       regions = 'templates/SG_anchorages.geojson'
       m.add_geojson(regions,
                   layer_name='SG Anchorages',
@@ -446,7 +446,7 @@ def Vessel_map():
       # sorting by first name
       merged_df.drop_duplicates(subset="vessel_imo_no", keep='last', inplace=True)
       
-      m = leafmap.Map(center=[1.257167, 103.897], zoom=12)
+      m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
       regions = 'templates/SG_anchorages.geojson'
       m.add_geojson(regions,
                     layer_name='SG Anchorages',
