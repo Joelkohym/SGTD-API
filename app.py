@@ -567,8 +567,8 @@ def Vessel_map():
       df2.to_csv(path_or_buf='resultdf2.csv', sep=',')
       merged_df = pd.merge(df1,
                            df2,
-                           left_on=df1.columns[2],
-                           right_on=df2.columns[2],
+                           left_on=df1['vessel_imo_no'],
+                           right_on=df2['vessel_imo_no'],
                            how='inner')
       merged_df.to_csv(path_or_buf='merged.csv', sep=',')
       print(merged_df)
