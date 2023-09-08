@@ -532,9 +532,11 @@ def Vessel_map():
     participant_id = receive_details_data[2]
     pitstop_url = receive_details_data[3]
     gsheet_cred_path = receive_details_data[4]
-    df1 = get_map_data(gsheet_cred_path)[0]
+    df1 = pd.DataFrame(get_map_data(gsheet_cred_path)[0])
+    df2 = pd.DataFrame(get_map_data(gsheet_cred_path)[1])
+    # df1 = get_map_data(gsheet_cred_path)[0]
     print(f"df1 = {df1}")
-    df2 = get_map_data(gsheet_cred_path)[1]
+    # df2 = get_map_data(gsheet_cred_path)[1]
     print(f"df2 = {df2}")
     if df1.empty or df2.empty:
       print(f"Empty df1 or empty df2................")
