@@ -12,7 +12,7 @@ import random
 import time
 import pytz 
 import os
-from database import load_data_from_db, new_registration, validate_login, receive_details
+from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement,new_vessel_current_position
 
 app = Flask(__name__)
 
