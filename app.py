@@ -423,7 +423,7 @@ def Vessel_current_position(email_url):
     data_dict = json.loads(data_str)
     row_data_vessel_current_position = data_dict['payload'][-1]
     result = new_vessel_current_position(row_data_vessel_current_position, email)
-    if result = 1:
+    if result == 1:
       # Append the data as a new row
       return f"Vessel Current Location Data saved to Google Sheets.{row_data_vessel_current_position}"
     else:
@@ -510,7 +510,7 @@ def Vessel_movement_receive(email_url):
     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
 
     result = new_vessel_movement(row_data_vessel_movement, email)
-    if result = 1:
+    if result == 1:
       # Append the data as a new row
       return f"Vessel Current Location Data saved to Google Sheets.{row_data_vessel_current_position}"
     else:
