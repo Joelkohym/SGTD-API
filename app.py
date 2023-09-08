@@ -564,8 +564,8 @@ def Vessel_map():
       #merged_df.to_csv('pandas.csv', index=False, header=True)
       merged_df = pd.merge(df1,
                            df2,
-                           left_on='vessel_imo_no',
-                           right_on='vessel_imo_no',
+                           left_on='2',
+                           right_on='2',
                            how='inner')
       print(merged_df)
       # merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
