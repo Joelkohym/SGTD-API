@@ -445,12 +445,13 @@ def Vessel_movement_receive(email_url):
     gsheet_cred_path = receive_details_data[4]
 
     data = request.data  # Get the raw data from the request body
-    print(data)
+    
     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
     # Convert the JSON string to a Python dictionary
     data_dict = json.loads(data_str)
     # Extract the last item from the "payload" array
     last_payload_item = data_dict['payload'][-1]
+    print(last_payload_item)
     try:
       print(f"Length of vessel movement end date = {len(last_payload_item['vm_vessel_movement_end_dt'])}")
       row_data_vessel_movement = {
@@ -532,6 +533,7 @@ def Vessel_map():
     pitstop_url = receive_details_data[3]
     gsheet_cred_path = receive_details_data[4]
     df1 = pd.DataFrame(get_map_data(gsheet_cred_path)[0])
+    print(f"df1 = {df1}")
     df2 = pd.DataFrame(get_map_data(gsheet_cred_path)[1])
     print(f"df2 = {df2}")
     if df1.empty or df2.empty:
@@ -559,7 +561,7 @@ def Vessel_map():
       merged_df = pd.merge(df1,
                            df2,
                            left_on='vessel_imo_no',
-                           right_on='vm_vessel_particulars.vessel_imo_no',
+                           right_on='vessel_imo_no',
                            how='inner')
       
       merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
