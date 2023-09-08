@@ -209,3 +209,26 @@ def new_vessel_movement(data, email):
     else:
       print('User exists, please try again')
       return 0
+
+
+def get_map_data(db_creds):
+  engine = create_engine(
+  db_creds,
+  connect_args={
+  "ssl": {
+            "ssl_ca": "/etc/ssl/cert.pem"}})
+  with engine.connect() as conn:
+    query = text("select * from vessel_movement_UCE")
+    result_VM = conn.execute(query)
+    result_all_VM = result_VM.all()
+    print(result_all_VM)
+    print(f"length of result all = {len(result_all_VM)}")
+    df1 = pd.DataFrame(result_all_VM)
+    query = text("select * from vessel_current_position_UCE")
+    result_VCP = conn.execute(query)
+    result_all_VCP = result_VCP.all()
+    print(result_all_VCP)
+    print(f"length of result all = {len(result_all_VCP)}")
+    df2 = pd.DataFrame(result_all_VCP)
+    print([df1, df2])
+    return([df1,df2])
