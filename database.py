@@ -230,5 +230,5 @@ def get_map_data(db_creds):
     print(result_all_VCP)
     print(f"length of result_all_VCP = {len(result_all_VCP)}")
     df2 = pd.DataFrame(result_all_VCP)
-    print(f"Final Result all vm = {[result_all_VM, result_all_VCP]}")
-    return([result_all_VM,result_all_VCP])
+    print(f"Final Result all vm = {[df1, df2]}")
+    return([df1, df2])
