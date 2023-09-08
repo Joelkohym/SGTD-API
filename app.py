@@ -535,9 +535,9 @@ def Vessel_map():
     df1 = pd.DataFrame(get_map_data(gsheet_cred_path)[0])
     df2 = pd.DataFrame(get_map_data(gsheet_cred_path)[1])
     # df1 = get_map_data(gsheet_cred_path)[0]
-    print(f"df1 = {df1}")
+    print(f"df1 VESSEL MAP = {df1.to_string(index=False, header=True)}")
     # df2 = get_map_data(gsheet_cred_path)[1]
-    print(f"df2 = {df2}")
+    print(f"df2 VESSEL MAP = {df2.to_string(index=False, header=True)}")
     if df1.empty or df2.empty:
       print(f"Empty df1 or empty df2................")
       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
@@ -561,11 +561,11 @@ def Vessel_map():
       m.to_html(newHTML)
       return render_template(newHTMLwotemp, user=session['email'])
     else:
-      #merged_df.to_csv('pandas.csv', index=False, header=True)
+      merged_df.to_csv(f'templates/merged_df.csv')
       merged_df = pd.merge(df1,
                            df2,
-                           left_on='2',
-                           right_on='2',
+                           left_on=col[2],
+                           right_on=2,
                            how='inner')
       print(merged_df)
       # merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
