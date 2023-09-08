@@ -220,15 +220,15 @@ def get_map_data(db_creds):
   with engine.connect() as conn:
     query = text("select * from vessel_movement_UCE")
     result_VM = conn.execute(query)
-    result_all_VM = result_VM.all()
+    result_all_VM = result_VM.fetchall()
     print(result_all_VM)
     print(f"length of result_all_VM = {len(result_all_VM)}")
     df1 = pd.DataFrame(result_all_VM)
     query = text("select * from vessel_current_position_UCE")
     result_VCP = conn.execute(query)
-    result_all_VCP = result_VCP.all()
+    result_all_VCP = result_VCP.fetchall()
     print(result_all_VCP)
     print(f"length of result_all_VCP = {len(result_all_VCP)}")
     df2 = pd.DataFrame(result_all_VCP)
     print(f"Final Result all vm = {[df1, df2]}")
-    return([df1, df2])
+    return [df1, df2]
