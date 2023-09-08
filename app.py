@@ -594,7 +594,7 @@ def Vessel_map():
         merged_df,
         x="vessel_longitude_degrees",
         y="vessel_latitude_degrees",
-        color_column='vessel_imo_no',
+        #color_column='vessel_imo_no',
         angle = 'heading',
         icon_names=['gear', 'map', 'leaf', 'globe'],
         spin=True,
