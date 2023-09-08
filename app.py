@@ -203,191 +203,191 @@ def Vessel_data_pull():
 
 
 ##########################################################GSHEET#############################################################################################
-#==========================RECEIVE vessel_movement===============================
-@app.route("/api/vessel_movement/receive/<email_url>", methods=['POST'])
-def Vessel_movement_receive(email_url):
-    email = email_url
-    receive_details_data = receive_details(email)
-    print(f"Receive_details from database.py {receive_details(email)}")
-    API_KEY = receive_details_data[1]
-    participant_id = receive_details_data[2]
-    pitstop_url = receive_details_data[3]
-    gsheet_cred_path = receive_details_data[4]
+# #==========================RECEIVE vessel_movement===============================
+# @app.route("/api/vessel_movement/receive/<email_url>", methods=['POST'])
+# def Vessel_movement_receive(email_url):
+#     email = email_url
+#     receive_details_data = receive_details(email)
+#     print(f"Receive_details from database.py {receive_details(email)}")
+#     API_KEY = receive_details_data[1]
+#     participant_id = receive_details_data[2]
+#     pitstop_url = receive_details_data[3]
+#     gsheet_cred_path = receive_details_data[4]
 
-    data = request.data  # Get the raw data from the request body
-    print(data)
-    data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
-    # Convert the JSON string to a Python dictionary
-    data_dict = json.loads(data_str)
-    # Extract the last item from the "payload" array
-    last_payload_item = data_dict['payload'][-1]
-    try:
-      print(f"Length of vessel movement end date = {len(last_payload_item['vm_vessel_movement_end_dt'])}")
-      row_data_vessel_movement = {
-      "vm_vessel_particulars.vessel_nm":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
-      "vm_vessel_particulars.vessel_imo_no":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_imo_no'],
-      "vm_vessel_particulars.vessel_flag":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_flag'],
-      "vm_vessel_particulars.vessel_call_sign":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_call_sign'],
-      "vm_vessel_location_from":
-      last_payload_item['vm_vessel_location_from'],
-      "vm_vessel_location_to":
-      last_payload_item['vm_vessel_location_to'],
-      "vm_vessel_movement_height":
-      last_payload_item['vm_vessel_movement_height'],
-      "vm_vessel_movement_type":
-      last_payload_item['vm_vessel_movement_type'],
-      "vm_vessel_movement_start_dt":
-      last_payload_item['vm_vessel_movement_start_dt'],
-      "vm_vessel_movement_end_dt":
-      last_payload_item['vm_vessel_movement_end_dt'],
-      "vm_vessel_movement_status":
-      last_payload_item['vm_vessel_movement_status'],
-      "vm_vessel_movement_draft":
-      last_payload_item['vm_vessel_movement_draft']
-    }
-    except:
-      print("================no movement end date, printing exception===============")
-      row_data_vessel_movement = {
-      "vm_vessel_particulars.vessel_nm":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
-      "vm_vessel_particulars.vessel_imo_no":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_imo_no'],
-      "vm_vessel_particulars.vessel_flag":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_flag'],
-      "vm_vessel_particulars.vessel_call_sign":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_call_sign'],
-      "vm_vessel_location_from":
-      last_payload_item['vm_vessel_location_from'],
-      "vm_vessel_location_to":
-      last_payload_item['vm_vessel_location_to'],
-      "vm_vessel_movement_height":
-      last_payload_item['vm_vessel_movement_height'],
-      "vm_vessel_movement_type":
-      last_payload_item['vm_vessel_movement_type'],
-      "vm_vessel_movement_start_dt":
-      last_payload_item['vm_vessel_movement_start_dt'],
-      "vm_vessel_movement_end_dt":
-      "",
-      "vm_vessel_movement_status":
-      last_payload_item['vm_vessel_movement_status'],
-      "vm_vessel_movement_draft":
-      last_payload_item['vm_vessel_movement_draft']
-    }
-    # Append the data to the worksheet
-    print(f"row_data_vessel_movement: {row_data_vessel_movement}")
-    # Add the current date and time to your data dictionary
-    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    row_data_vessel_movement['Timestamp vessel_movement'] = str(current_datetime)
+#     data = request.data  # Get the raw data from the request body
+#     print(data)
+#     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
+#     # Convert the JSON string to a Python dictionary
+#     data_dict = json.loads(data_str)
+#     # Extract the last item from the "payload" array
+#     last_payload_item = data_dict['payload'][-1]
+#     try:
+#       print(f"Length of vessel movement end date = {len(last_payload_item['vm_vessel_movement_end_dt'])}")
+#       row_data_vessel_movement = {
+#       "vm_vessel_particulars.vessel_nm":
+#       last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
+#       "vm_vessel_particulars.vessel_imo_no":
+#       last_payload_item['vm_vessel_particulars'][0]['vessel_imo_no'],
+#       "vm_vessel_particulars.vessel_flag":
+#       last_payload_item['vm_vessel_particulars'][0]['vessel_flag'],
+#       "vm_vessel_particulars.vessel_call_sign":
+#       last_payload_item['vm_vessel_particulars'][0]['vessel_call_sign'],
+#       "vm_vessel_location_from":
+#       last_payload_item['vm_vessel_location_from'],
+#       "vm_vessel_location_to":
+#       last_payload_item['vm_vessel_location_to'],
+#       "vm_vessel_movement_height":
+#       last_payload_item['vm_vessel_movement_height'],
+#       "vm_vessel_movement_type":
+#       last_payload_item['vm_vessel_movement_type'],
+#       "vm_vessel_movement_start_dt":
+#       last_payload_item['vm_vessel_movement_start_dt'],
+#       "vm_vessel_movement_end_dt":
+#       last_payload_item['vm_vessel_movement_end_dt'],
+#       "vm_vessel_movement_status":
+#       last_payload_item['vm_vessel_movement_status'],
+#       "vm_vessel_movement_draft":
+#       last_payload_item['vm_vessel_movement_draft']
+#     }
+#     except:
+#       print("================no movement end date, printing exception===============")
+#       row_data_vessel_movement = {
+#       "vm_vessel_particulars.vessel_nm":
+#       last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
+#       "vm_vessel_particulars.vessel_imo_no":
+#       last_payload_item['vm_vessel_particulars'][0]['vessel_imo_no'],
+#       "vm_vessel_particulars.vessel_flag":
+#       last_payload_item['vm_vessel_particulars'][0]['vessel_flag'],
+#       "vm_vessel_particulars.vessel_call_sign":
+#       last_payload_item['vm_vessel_particulars'][0]['vessel_call_sign'],
+#       "vm_vessel_location_from":
+#       last_payload_item['vm_vessel_location_from'],
+#       "vm_vessel_location_to":
+#       last_payload_item['vm_vessel_location_to'],
+#       "vm_vessel_movement_height":
+#       last_payload_item['vm_vessel_movement_height'],
+#       "vm_vessel_movement_type":
+#       last_payload_item['vm_vessel_movement_type'],
+#       "vm_vessel_movement_start_dt":
+#       last_payload_item['vm_vessel_movement_start_dt'],
+#       "vm_vessel_movement_end_dt":
+#       "",
+#       "vm_vessel_movement_status":
+#       last_payload_item['vm_vessel_movement_status'],
+#       "vm_vessel_movement_draft":
+#       last_payload_item['vm_vessel_movement_draft']
+#     }
+#     # Append the data to the worksheet
+#     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
+#     # Add the current date and time to your data dictionary
+#     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#     row_data_vessel_movement['Timestamp vessel_movement'] = str(current_datetime)
 
-    #Initialise Gsheet
-    gc = pygsheets.authorize(service_account_file=gsheet_cred_path)
-    print(f"Receive vessel_movement API: {gc.spreadsheet_titles()}")
-    sh = gc.open('SGTD Received APIs')
-    worksheet_replit = sh.worksheet_by_title("replit_vessel_movement")
-    # Write the headers as the first row
-    print(f"row_data_vessel_movement.keys: {row_data_vessel_movement.keys()}")
-    worksheet_replit.insert_rows(
-    row=1,number=1,values=list(row_data_vessel_movement.keys()))
+#     #Initialise Gsheet
+#     gc = pygsheets.authorize(service_account_file=gsheet_cred_path)
+#     print(f"Receive vessel_movement API: {gc.spreadsheet_titles()}")
+#     sh = gc.open('SGTD Received APIs')
+#     worksheet_replit = sh.worksheet_by_title("replit_vessel_movement")
+#     # Write the headers as the first row
+#     print(f"row_data_vessel_movement.keys: {row_data_vessel_movement.keys()}")
+#     worksheet_replit.insert_rows(
+#     row=1,number=1,values=list(row_data_vessel_movement.keys()))
 
-    # Append the data as a new row
-    worksheet_replit.append_table(
-      start='A2',  # You can specify the starting cell here
-      end=None,  # You can specify the ending cell if needed
-      values=list(row_data_vessel_movement.values()))
-    worksheet_replit.delete_rows(1)
-    print([list(row_data_vessel_movement.values())])
+#     # Append the data as a new row
+#     worksheet_replit.append_table(
+#       start='A2',  # You can specify the starting cell here
+#       end=None,  # You can specify the ending cell if needed
+#       values=list(row_data_vessel_movement.values()))
+#     worksheet_replit.delete_rows(1)
+#     print([list(row_data_vessel_movement.values())])
 
-    return f"Gsheet row_data_vessel_movement appended {list(row_data_vessel_movement.values())}"
+#     return f"Gsheet row_data_vessel_movement appended {list(row_data_vessel_movement.values())}"
 
 
 
-#==========================RECEIVE vessel_current_position===============================
-@app.route("/api/vessel_current_position/receive/<email_url>", methods=['POST'])
-def Vessel_current_position_g(email_url):
-    email = email_url
-    receive_details_data = receive_details(email)
-    print(f"Receive_details from database.py {receive_details(email)}")
-    API_KEY = receive_details_data[1]
-    participant_id = receive_details_data[2]
-    pitstop_url = receive_details_data[3]
-    gsheet_cred_path = receive_details_data[4]
+# #==========================RECEIVE vessel_current_position===============================
+# @app.route("/api/vessel_current_position/receive/<email_url>", methods=['POST'])
+# def Vessel_current_position_g(email_url):
+#     email = email_url
+#     receive_details_data = receive_details(email)
+#     print(f"Receive_details from database.py {receive_details(email)}")
+#     API_KEY = receive_details_data[1]
+#     participant_id = receive_details_data[2]
+#     pitstop_url = receive_details_data[3]
+#     gsheet_cred_path = receive_details_data[4]
   
-    data = request.data  # Get the raw data from the request body
+#     data = request.data  # Get the raw data from the request body
     
-    print(f"Vessel_current_position = {data}")
+#     print(f"Vessel_current_position = {data}")
 
-    data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
-    # Convert the JSON string to a Python dictionary
-    data_dict = json.loads(data_str)
-    row_data_vessel_current_position = data_dict['payload'][-1]
-    # Add the current date and time to your data dictionary
-    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    row_data_vessel_current_position['Timestamp vessel_current_position'] = str(current_datetime)
+#     data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
+#     # Convert the JSON string to a Python dictionary
+#     data_dict = json.loads(data_str)
+#     row_data_vessel_current_position = data_dict['payload'][-1]
+#     # Add the current date and time to your data dictionary
+#     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#     row_data_vessel_current_position['Timestamp vessel_current_position'] = str(current_datetime)
     
-    print(f"row_data_vessel_current_position: {row_data_vessel_current_position}")
-    #Initialise Gsheet
-    gc = pygsheets.authorize(service_account_file=gsheet_cred_path)
+#     print(f"row_data_vessel_current_position: {row_data_vessel_current_position}")
+#     #Initialise Gsheet
+#     gc = pygsheets.authorize(service_account_file=gsheet_cred_path)
   
-    print(gc.spreadsheet_titles())
+#     print(gc.spreadsheet_titles())
   
-    sh = gc.open('SGTD Received APIs')
-    worksheet_replit = sh.worksheet_by_title("replit_vessel_current_position")
+#     sh = gc.open('SGTD Received APIs')
+#     worksheet_replit = sh.worksheet_by_title("replit_vessel_current_position")
 
-    # Extract specific keys from 'vessel_particulars' for column headers
-    vessel_particulars = data_dict['payload'][0]['vessel_particulars'][0]
+#     # Extract specific keys from 'vessel_particulars' for column headers
+#     vessel_particulars = data_dict['payload'][0]['vessel_particulars'][0]
   
-    print(f"vessel_particulars: {vessel_particulars}")
+#     print(f"vessel_particulars: {vessel_particulars}")
   
-    # Create column headers from the keys in 'vessel_particulars'
-    column_headers = list(vessel_particulars.keys())
+#     # Create column headers from the keys in 'vessel_particulars'
+#     column_headers = list(vessel_particulars.keys())
   
-    print(f"column_headers: {column_headers}")
+#     print(f"column_headers: {column_headers}")
   
-    # Extract all the keys from the payload data
-    payload_keys = list(data_dict['payload'][0].keys())
+#     # Extract all the keys from the payload data
+#     payload_keys = list(data_dict['payload'][0].keys())
   
-    print(f"payload_keys: {payload_keys}")
-      # Append the payload keys (excluding 'vessel_particulars') to column_headers
-    column_headers.extend([key for key in payload_keys if key != 'vessel_particulars'])
+#     print(f"payload_keys: {payload_keys}")
+#       # Append the payload keys (excluding 'vessel_particulars') to column_headers
+#     column_headers.extend([key for key in payload_keys if key != 'vessel_particulars'])
     
-    # Append a 'Timestamp' column
-    #Column_headers.append('Timestamp')
-    print(f"column_headers final: {column_headers}")
+#     # Append a 'Timestamp' column
+#     #Column_headers.append('Timestamp')
+#     print(f"column_headers final: {column_headers}")
 
-    # Write the headers as the first row
-    worksheet_replit.insert_rows(
-    row=1,number=1,values=column_headers)
+#     # Write the headers as the first row
+#     worksheet_replit.insert_rows(
+#     row=1,number=1,values=column_headers)
 
-    # Extract the payload data
-    payload_data = data_dict['payload'][0]
+#     # Extract the payload data
+#     payload_data = data_dict['payload'][0]
   
-    print(f"payload_data: {payload_data}")
+#     print(f"payload_data: {payload_data}")
   
-    # Extract all the values from the payload data
-    payload_values = [payload_data[key] for key in payload_keys if key != 'vessel_particulars']
+#     # Extract all the values from the payload data
+#     payload_values = [payload_data[key] for key in payload_keys if key != 'vessel_particulars']
   
-    print(f"payload_values: {payload_data}")
+#     print(f"payload_values: {payload_data}")
   
-    # Create a list of values corresponding to the keys
-    vessel_particulars_values = list(vessel_particulars.values())
+#     # Create a list of values corresponding to the keys
+#     vessel_particulars_values = list(vessel_particulars.values())
   
-    print(f"vessel_particulars_values: {vessel_particulars_values}")
+#     print(f"vessel_particulars_values: {vessel_particulars_values}")
   
-    # Extend row_values with payload_values
-    row_values = vessel_particulars_values + payload_values
+#     # Extend row_values with payload_values
+#     row_values = vessel_particulars_values + payload_values
     
-    # Append the 'Timestamp' value
-    #row_values.append(current_datetime)
-    print(f"row_values = {row_values}")
+#     # Append the 'Timestamp' value
+#     #row_values.append(current_datetime)
+#     print(f"row_values = {row_values}")
 
-    # Append the data as a new row
-    worksheet_replit.append_table(values=row_values, start='A2')
-    worksheet_replit.delete_rows(1)
-    return f"Vessel Current Location Data saved to Google Sheets.{row_values}"
+#     # Append the data as a new row
+#     worksheet_replit.append_table(values=row_values, start='A2')
+#     worksheet_replit.delete_rows(1)
+#     return f"Vessel Current Location Data saved to Google Sheets.{row_values}"
 ##########################################################GSHEET#############################################################################################
 
 
