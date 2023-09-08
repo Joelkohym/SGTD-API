@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, text
-import pandas as pd
+#import pandas as pd
 import os
 
 db_connection_string = os.environ['DB_CONNECTION_STRING']
@@ -224,12 +224,12 @@ def get_map_data(db_creds):
     result_all_VM = result_VM.all()
     print(result_all_VM)
     print(f"length of result all = {len(result_all_VM)}")
-    df1 = pd.DataFrame(result_all_VM)
+    #df1 = pd.DataFrame(result_all_VM)
     query = text("select * from vessel_current_position_UCE")
     result_VCP = conn.execute(query)
     result_all_VCP = result_VCP.all()
     print(result_all_VCP)
     print(f"length of result all = {len(result_all_VCP)}")
-    df2 = pd.DataFrame(result_all_VCP)
-    print([df1, df2])
-    return([df1,df2])
+    #df2 = pd.DataFrame(result_all_VCP)
+    print([result_all_VM, result_all_VCP])
+    return([result_all_VM,result_all_VCP])
