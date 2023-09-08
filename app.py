@@ -535,8 +535,8 @@ def Vessel_map():
     df1 = pd.DataFrame(get_map_data(gsheet_cred_path)[0])
     df2 = pd.DataFrame(get_map_data(gsheet_cred_path)[1])
     # df1 = get_map_data(gsheet_cred_path)[0]
-    print(f"df1 = {df1}")
-    print(f"df2 = {df2}")
+    #print(f"df1 = {df1}")
+    #print(f"df2 = {df2}")
     print(f"df1 VESSEL MAP = {df1.to_string(index=False, header=True)}")
     # df2 = get_map_data(gsheet_cred_path)[1]
     print(f"df2 VESSEL MAP = {df2.to_string(index=False, header=True)}")
@@ -573,13 +573,13 @@ def Vessel_map():
       merged_df.to_csv(path_or_buf='merged.csv', sep=',')
       print(merged_df)
       # merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
-      #merged_df.drop(columns=['id_x', 'id_y', 'vessel_call_sign_x', 'vessel_flag_x', 'vessel_movement_type', 'vessel_movement_height','vessel_year_built','vessel_call_sign_y','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vessel_movement_draft','vessel_nm_x'], inplace=True)
+      merged_df.drop(columns=['id_x', 'id_y', 'vessel_call_sign_x', 'vessel_flag_x', 'vessel_movement_type', 'vessel_movement_height','vessel_year_built','vessel_call_sign_y','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vessel_movement_draft','vessel_nm_x'], inplace=True)
       print(f"Merged_df == {merged_df.to_string(index=False)}")
-      print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
+      #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
   
       #sort & drop duplicates
       # sorting by first name
-      merged_df.drop_duplicates(subset="vessel_imo_no", keep='last', inplace=True)
+      merged_df.drop_duplicates(subset="vessel_imo_no_x", keep='last', inplace=True)
       
       m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
       regions = 'templates/SG_anchorages.geojson'
@@ -600,7 +600,7 @@ def Vessel_map():
         spin=True,
         add_legend=True,
       )
-      print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
+      #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
       for f in os.listdir("templates/"):
         #print(f)
         if "mymap.html" in f:
