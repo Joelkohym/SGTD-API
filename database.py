@@ -234,3 +234,17 @@ def get_map_data(db_creds):
     df2 = pd.DataFrame(result_all_VCP, columns=column_names_VCP)
     print(f"Final Result all vm = {[df1, df2]}")
     return [df1, df2]
+
+def delete_all_rows_in_table(db_creds):
+  print("Start of delete_all_rows_in_table......")
+  engine = create_engine(
+  db_creds,
+  connect_args={
+  "ssl": {
+            "ssl_ca": "/etc/ssl/cert.pem"}})
+  with engine.connect() as conn:
+    query_VM = text("DELETE FROM table_name * from vessel_movement_UCE where id > 1")
+    result_VM = conn.execute(query)
+    query_VCP = text("DELETE FROM table_name * from vessel_current_position_UCE where id > 1")
+    result_VCP = conn.execute(query)
+  

@@ -126,6 +126,8 @@ colors = [
 @app.route("/api/vessel", methods=['GET', 'POST'])
 def Vessel_data_pull():
   if request.method == 'POST':
+    #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
+    delete_all_rows_in_table(session['gc'])
     user_vessel_imo = request.form['vessel_imo']
     #Split vessel_imo list into invdivual records
     input_list = [int(x) for x in user_vessel_imo.split(',')]
