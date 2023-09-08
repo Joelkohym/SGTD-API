@@ -64,7 +64,6 @@ def login():
         session['gc']=gSheet
         
         print(f"SESSION DATA: Pitstop URL = {session['pitstop_url']}, API_KEY = {session['api_key']}, obID = {session['participant_id']}")
-        gc = pygsheets.authorize(service_account_file=gSheet)
         msg = f"Login success for {email}, please enter Vessel IMO number(s)"
         print(f"Login success for {email}, redirect")
         return render_template('vessel_request.html', msg=msg, email=email)
