@@ -246,5 +246,5 @@ def delete_all_rows_in_table(db_creds):
     query_VM = text("DELETE FROM vessel_movement_UCE where id > 1")
     result_VM = conn.execute(query_VM)
     query_VCP = text("DELETE FROM vessel_current_position_UCE where id > 1")
-    result_VCP = conn.execute(result_VCP)
+    result_VCP = conn.execute(query_VCP)
   
