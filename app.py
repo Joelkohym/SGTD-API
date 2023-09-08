@@ -537,6 +537,7 @@ def Vessel_map():
     df2 = pd.DataFrame(get_map_data(gsheet_cred_path)[1])
     print(f"df2 = {df2}")
     if df1.empty or df2.empty:
+      print(f"Empty df1 or empty df2................")
       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
       for f in os.listdir("templates/"):
       #print(f)
@@ -560,8 +561,8 @@ def Vessel_map():
     else:
       merged_df = pd.merge(df1,
                            df2,
-                           left_on='vessel_imo_no',
-                           right_on='vessel_imo_no',
+                           left_on='1',
+                           right_on='1',
                            how='inner')
       print(merged_df)
       # merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)

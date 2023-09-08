@@ -211,6 +211,7 @@ def new_vessel_movement(data, email):
 
 
 def get_map_data(db_creds):
+  print("Start of get_map_data......")
   engine = create_engine(
   db_creds,
   connect_args={
@@ -221,13 +222,13 @@ def get_map_data(db_creds):
     result_VM = conn.execute(query)
     result_all_VM = result_VM.all()
     print(result_all_VM)
-    print(f"length of result all = {len(result_all_VM)}")
+    print(f"length of result_all_VM = {len(result_all_VM)}")
     #df1 = pd.DataFrame(result_all_VM)
     query = text("select * from vessel_current_position_UCE")
     result_VCP = conn.execute(query)
     result_all_VCP = result_VCP.all()
     print(result_all_VCP)
-    print(f"length of result all = {len(result_all_VCP)}")
+    print(f"length of result_all_VCP = {len(result_all_VCP)}")
     #df2 = pd.DataFrame(result_all_VCP)
-    print([result_all_VM, result_all_VCP])
+    print(f"Final Result all vm = {[result_all_VM, result_all_VCP]}")
     return([result_all_VM,result_all_VCP])
