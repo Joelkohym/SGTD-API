@@ -573,7 +573,7 @@ def Vessel_map():
       merged_df.to_csv(path_or_buf='merged.csv', sep=',')
       print(merged_df)
       # merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
-      merged_df.drop(columns=['id_x', 'id_y', ,'vessel_nm_x', 'vessel_call_sign_x', 'vessel_flag_x',,'vessel_call_sign_x','vessel_movement_type', 'vessel_movement_height','vessel_year_built','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vessel_movement_draft'], inplace=True)
+      merged_df.drop(columns=['id_x', 'id_y', ,'vessel_nm_x', 'vessel_call_sign_x', 'vessel_flag_x','vessel_call_sign_x','vessel_movement_type', 'vessel_movement_height','vessel_year_built','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vessel_movement_draft'], inplace=True)
       print(f"Merged_df == {merged_df.to_string(index=False)}")
       #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
   
