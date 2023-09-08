@@ -532,9 +532,9 @@ def Vessel_map():
     participant_id = receive_details_data[2]
     pitstop_url = receive_details_data[3]
     gsheet_cred_path = receive_details_data[4]
-    df1 = pd.DataFrame(get_map_data(gsheet_cred_path)[0])
+    df1 = get_map_data(gsheet_cred_path)[0]
     print(f"df1 = {df1}")
-    df2 = pd.DataFrame(get_map_data(gsheet_cred_path)[1])
+    df2 = get_map_data(gsheet_cred_path)[1]
     print(f"df2 = {df2}")
     if df1.empty or df2.empty:
       print(f"Empty df1 or empty df2................")
@@ -559,10 +559,11 @@ def Vessel_map():
       m.to_html(newHTML)
       return render_template(newHTMLwotemp, user=session['email'])
     else:
+      merged_df.to_csv('pandas.csv', index=False, header=True)
       merged_df = pd.merge(df1,
                            df2,
-                           left_on='1',
-                           right_on='1',
+                           left_on='vessel_imo_no',
+                           right_on='vessel_imo_no',
                            how='inner')
       print(merged_df)
       # merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
@@ -587,6 +588,7 @@ def Vessel_map():
         merged_df,
         x="vessel_longitude_degrees",
         y="vessel_latitude_degrees",
+        color_column='region',
         icon_names=['gear', 'map', 'leaf', 'globe'],
         spin=True,
         add_legend=True,
