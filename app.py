@@ -559,7 +559,7 @@ def Vessel_map():
       m.to_html(newHTML)
       return render_template(newHTMLwotemp, user=session['email'])
     else:
-      merged_df.to_csv('pandas.csv', index=False, header=True)
+      #merged_df.to_csv('pandas.csv', index=False, header=True)
       merged_df = pd.merge(df1,
                            df2,
                            left_on='vessel_imo_no',
