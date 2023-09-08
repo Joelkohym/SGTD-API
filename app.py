@@ -408,7 +408,7 @@ def Vessel_data_pull():
 def Vessel_current_position(email_url):
     email = email_url
     receive_details_data = receive_details(email)
-    print(f"Receive_details from database.py {receive_details(email)}")
+    print(f"Vessel_current_position_receive:   Receive_details from database.py {receive_details(email)}")
     API_KEY = receive_details_data[1]
     participant_id = receive_details_data[2]
     pitstop_url = receive_details_data[3]
@@ -438,7 +438,7 @@ def Vessel_current_position(email_url):
 def Vessel_movement_receive(email_url):
     email = email_url
     receive_details_data = receive_details(email)
-    print(f"Receive_details from database.py {receive_details(email)}")
+    print(f"Vessel_movement_receive:  Receive_details from database.py {receive_details(email)}")
     API_KEY = receive_details_data[1]
     participant_id = receive_details_data[2]
     pitstop_url = receive_details_data[3]
@@ -526,7 +526,7 @@ def Vessel_map():
   if g.user:
     email = session['email']
     receive_details_data = receive_details(email)
-    print(f"Receive_details from database.py {receive_details(email)}")
+    print(f"Vessel_Map:  Receive_details from database.py {receive_details(email)}")
     API_KEY = receive_details_data[1]
     participant_id = receive_details_data[2]
     pitstop_url = receive_details_data[3]

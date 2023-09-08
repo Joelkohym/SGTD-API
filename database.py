@@ -156,10 +156,10 @@ def new_vessel_current_position(data, email):
 
 # Define the data dictionary
         values_vcp = {
-    'vessel_nm': data['vessel_nm'],
-    'vessel_imo_no': data['vessel_imo_no'],
-    'vessel_call_sign': data['vessel_call_sign'],
-    'vessel_flag': data['vessel_flag'],
+    'vessel_nm': data['vessel_particulars'][0]['vessel_nm'],
+    'vessel_imo_no': data['vessel_particulars'][0]['vessel_imo_no'],
+    'vessel_call_sign': data['vessel_particulars'][0]['vessel_call_sign'],
+    'vessel_flag': data['vessel_particulars'][0]['vessel_flag'],
     'vessel_length': data['vessel_length'],
     'vessel_depth': data['vessel_depth'],
     'vessel_type': data['vessel_type'],
