@@ -127,8 +127,7 @@ def new_vessel_current_position(data, email):
         vessel_speed,
         vessel_course,
         vessel_heading,
-        vessel_time_stamp,
-        Timestamp_vessel_current_position
+        vessel_time_stamp
     ) VALUES (
         :vessel_nm,
         :vessel_imo_no,
@@ -150,7 +149,6 @@ def new_vessel_current_position(data, email):
         :vessel_course,
         :vessel_heading,
         :vessel_time_stamp,
-        :Timestamp_vessel_current_position
     )
 """)
         
@@ -176,8 +174,7 @@ def new_vessel_current_position(data, email):
     'vessel_speed': data['vessel_speed'],
     'vessel_course': data['vessel_course'],
     'vessel_heading': data['vessel_heading'],
-    'vessel_time_stamp': data['vessel_time_stamp'],
-    'Timestamp_vessel_current_position': data['Timestamp_vessel_current_position']
+    'vessel_time_stamp': data['vessel_time_stamp']
 }
 
         result = conn.execute(query, values)
@@ -200,9 +197,9 @@ def new_vessel_movement(data, email):
       db_connection_string_vcp = result_all[0][6]
       engine_vcp = create_engine(db_connection_string_vcp,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
       with engine.connect() as conn:
-        query = text("INSERT INTO vessel_movement_UCE (    vessel_nm,vessel_imo_no,vessel_flag,vessel_call_sign,vessel_location_from,vessel_location_to,vessel_movement_height,vessel_movement_type,vessel_movement_start_dt,vessel_movement_end_dt,vessel_movement_status,vessel_movement_draft,Timestamp_vessel_movement) VALUES (:vessel_nm,:vessel_imo_no,:vessel_flag,:vessel_call_sign,:vessel_location_from,:vessel_location_to,:vessel_movement_height,:vessel_movement_type,:vessel_movement_start_dt,:vessel_movement_end_dt,:vessel_movement_status,:vessel_movement_draft,:Timestamp_vessel_movement)")
+        query = text("INSERT INTO vessel_movement_UCE (    vessel_nm,vessel_imo_no,vessel_flag,vessel_call_sign,vessel_location_from,vessel_location_to,vessel_movement_height,vessel_movement_type,vessel_movement_start_dt,vessel_movement_end_dt,vessel_movement_status,vessel_movement_draft,Timestamp_vessel_movement) VALUES (:vessel_nm,:vessel_imo_no,:vessel_flag,:vessel_call_sign,:vessel_location_from,:vessel_location_to,:vessel_movement_height,:vessel_movement_type,:vessel_movement_start_dt,:vessel_movement_end_dt,:vessel_movement_status,:vessel_movement_draft)")
         
-        values = {'vessel_nm,vessel_imo_no':data['vessel_nm,vessel_imo_no'],'vessel_flag':data['vessel_flag'],'vessel_call_sign': data['vessel_call_sign'],'vessel_location_from': data['vessel_location_from'],'vessel_location_to':data['vessel_location_to'],'vessel_movement_height': data['vessel_movement_height'],'vessel_movement_type':data['vessel_movement_type'],'vessel_movement_start_dt':data['vessel_movement_start_dt'],'vessel_movement_end_dt':data['vessel_movement_end_dt'],'vessel_movement_status':data['vessel_movement_status'],'vessel_movement_draft':data['vessel_movement_draft'],'Timestamp_vessel_movement':data['Timestamp_vessel_movement']}
+        values = {'vessel_nm':data['vm_vessel_particulars.vessel_nm'],'vessel_imo_no':data['vm_vessel_particulars.vessel_imo_no'],'vessel_flag':data['vm_vessel_particulars.vessel_flag'],'vessel_call_sign': data['vm_vessel_particulars.vessel_call_sign'],'vessel_location_from': data['vm_vessel_location_from'],'vessel_location_to':data['vm_vessel_location_to'],'vessel_movement_height': data['vm_vessel_movement_height'],'vessel_movement_type':data['vm_vessel_movement_type'],'vessel_movement_start_dt':data['vm_vessel_movement_start_dt'],'vessel_movement_end_dt':data['vm_vessel_movement_end_dt'],'vessel_movement_status':data['vm_vessel_movement_status'],'vessel_movement_draft':data['vm_vessel_movement_draft']]}
 
         result = conn.execute(query, values)
       print("New vessel_current_position execute success")

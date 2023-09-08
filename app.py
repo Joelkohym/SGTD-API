@@ -422,6 +422,7 @@ def Vessel_current_position(email_url):
     # Convert the JSON string to a Python dictionary
     data_dict = json.loads(data_str)
     row_data_vessel_current_position = data_dict['payload'][-1]
+    print(f"row_data_vessel_current_position = {row_data_vessel_current_position}")
     result = new_vessel_current_position(row_data_vessel_current_position, email)
     if result == 1:
       # Append the data as a new row
