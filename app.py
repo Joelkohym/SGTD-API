@@ -182,16 +182,17 @@ def Vessel_data_pull():
           f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
         )
 
-      
-    gc = pygsheets.authorize(service_account_file=session['gc'])
-    sh = gc.open('SGTD Received APIs')
-    sheet1 = sh.worksheet_by_title("replit_vessel_current_position")
-    #Clear gSheet
-    sheet1.clear()
-    print('Cleared replit_vessel_current_position')
-    sheet2 = sh.worksheet_by_title('replit_vessel_movement')
-    sheet2.clear()
-    print('Cleared replit_vessel_movement')
+
+################################GSHEET##############################################    
+    # gc = pygsheets.authorize(service_account_file=session['gc'])
+    # sh = gc.open('SGTD Received APIs')
+    # sheet1 = sh.worksheet_by_title("replit_vessel_current_position")
+    # #Clear gSheet
+    # sheet1.clear()
+    # print('Cleared replit_vessel_current_position')
+    # sheet2 = sh.worksheet_by_title('replit_vessel_movement')
+    # sheet2.clear()
+    # print('Cleared replit_vessel_movement')
     
     return redirect(url_for('Vessel_map'))
     
