@@ -513,7 +513,7 @@ def Vessel_movement_receive(email_url):
     result = new_vessel_movement(row_data_vessel_movement, email)
     if result == 1:
       # Append the data as a new row
-      return f"Vessel Current Location Data saved to Google Sheets.{row_data_vessel_current_position}"
+      return f"Vessel Current Location Data saved to Google Sheets.{row_data_vessel_movement}"
     else:
       return f"Email doesn't exists, unable to add data"
 ##########################################################MySQL DB#############################################################################################

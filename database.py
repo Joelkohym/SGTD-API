@@ -149,7 +149,7 @@ def new_vessel_current_position(data, email):
         :vessel_speed,
         :vessel_course,
         :vessel_heading,
-        :vessel_time_stamp,
+        :vessel_time_stamp
     )
 """)
         
