@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, text
 import pandas as pd
 import os
+import json
 
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
@@ -218,13 +219,15 @@ def get_map_data(db_creds):
   "ssl": {
             "ssl_ca": "/etc/ssl/cert.pem"}})
   with engine.connect() as conn:
-    query = text("select * from vessel_movement_UCE")
+    query = text("select * from MPA_vessel_data")
     result_VM = conn.execute(query)
     result_all_VM = result_VM.fetchall()
     column_names_VM = result_VM.keys()
     print(result_all_VM)
     print(f"length of result_all_VM = {len(result_all_VM)}")
     df1 = pd.DataFrame(result_all_VM, columns=column_names_VM)
+
+    
     query = text("select * from vessel_current_position_UCE")
     result_VCP = conn.execute(query)
     result_all_VCP = result_VCP.fetchall()
@@ -232,9 +235,12 @@ def get_map_data(db_creds):
     print(result_all_VCP)
     print(f"length of result_all_VCP = {len(result_all_VCP)}")
     df2 = pd.DataFrame(result_all_VCP, columns=column_names_VCP)
+
+    
     print(f"Final Result all vm = {[df1, df2]}")
     return [df1, df2]
 
+    
 def delete_all_rows_in_table(db_creds):
   print("Start of delete_all_rows_in_table......")
   engine = create_engine(
@@ -247,4 +253,81 @@ def delete_all_rows_in_table(db_creds):
     result_VM = conn.execute(query_VM)
     query_VCP = text("DELETE FROM vessel_current_position_UCE where id > 1")
     result_VCP = conn.execute(query_VCP)
+
+def MPA_GET(api_response):
+  data_list = json.loads(api_response)
+  print(f"API response = {(data_list)}")
+  print(f"API response[0] = {data_list[0]}")
+  vessel_data = data_list[0]['vesselParticulars']
+  print(f"vessel_data = {vessel_data}")
+  print(f"vessel_data['vesselName'] = {vessel_data['vesselName']}")
+  print(f"vessel_data['callSign'] = {vessel_data['callSign']}")
+  latitude = data_list[0]['latitude']
+  print(f"latitude = {data_list[0]['latitude']}")
+  longitude = data_list[0]['longitude']
+  latitude_degrees = data_list[0]['latitudeDegrees']
+  longitude_degrees = data_list[0]['longitudeDegrees']
+  speed = data_list[0]['speed']
+  course = data_list[0]['course']
+  heading = data_list[0]['heading']
+  timestamp = data_list[0]['timeStamp']
   
+  query = text("INSERT INTO MPA_vessel_data (vesselName, callSign, imoNumber, flag, vesselLength, vesselBreadth, vesselDepth, vesselType, grossTonnage, netTonnage, deadweight, mmsiNumber, yearBuilt, latitude, longitude, latitudeDegrees, longitudeDegrees, speed, course, heading, timeStamp) VALUES (:vesselName, :callSign, :imoNumber, :flag, :vesselLength, :vesselBreadth, :vesselDepth, :vesselType, :grossTonnage, :netTonnage, :deadweight, :mmsiNumber, :yearBuilt, :latitude, :longitude, :latitudeDegrees, :longitudeDegrees, :speed, :course, :heading, :timeStamp)")
+  values = {'vesselName':vessel_data['vesselName'], 'callSign':vessel_data['callSign'], 'imoNumber':vessel_data['imoNumber'], 'flag':vessel_data['flag'], 'vesselLength':vessel_data['vesselLength'], 'vesselBreadth':vessel_data['vesselBreadth'], 'vesselDepth':vessel_data['vesselDepth'], 'vesselType':vessel_data['vesselType'], 'grossTonnage':vessel_data['grossTonnage'], 'netTonnage':vessel_data['netTonnage'], 'deadweight':vessel_data['deadweight'], 'mmsiNumber':vessel_data['mmsiNumber'], 'yearBuilt':vessel_data['yearBuilt'], 'latitude':latitude, 'longitude':longitude, 'latitudeDegrees':latitude_degrees, 'longitudeDegrees':longitude_degrees, 'speed':speed, 'course':course, 'heading':heading, 'timeStamp':timestamp}
+  with engine.connect() as conn:
+    MPA_Data = conn.execute(query, values)
+  return MPA_Data
+
+def MPA_GET_GSHEET(api_response,gsheet_cred_path):
+
+  gc = pygsheets.authorize(service_account_file=gsheet_cred_path)
+  print(gc.spreadsheet_titles())
+  sh = gc.open('SGTD Received APIs')
+  worksheet_replit = sh.worksheet_by_title("replit_vessel_current_position")
+  
+  data_list = json.loads(api_response)
+  print(f"API response = {(data_list)}")
+  print(f"API response[0] = {data_list[0]}")
+  vessel_data = data_list[0]['vesselParticulars']
+  print(f"vessel_data = {vessel_data}")
+  print(f"vessel_data['vesselName'] = {vessel_data['vesselName']}")
+  print(f"vessel_data['callSign'] = {vessel_data['callSign']}")
+  latitude = data_list[0]['latitude']
+  print(f"latitude = {data_list[0]['latitude']}")
+  longitude = data_list[0]['longitude']
+  latitude_degrees = data_list[0]['latitudeDegrees']
+  longitude_degrees = data_list[0]['longitudeDegrees']
+  speed = data_list[0]['speed']
+  course = data_list[0]['course']
+  heading = data_list[0]['heading']
+  timestamp = data_list[0]['timeStamp']
+
+  #Column Headers
+  column_headers = list(vessel_data.keys())
+    # Extract all the keys from the payload data
+  payload_keys = list(data_list[0].keys())
+  print(f"payload_keys: {payload_keys}")
+    # Append the payload keys (excluding 'vessel_particulars') to column_headers
+  column_headers.extend([key for key in payload_keys if key != 'vesselParticulars'])
+  # Write the headers as the first row
+  worksheet_replit.insert_rows(
+  row=1,number=1,values=column_headers)
+
+  #Column Values
+# Extract the payload data
+  # Extract the payload data
+  payload_data = data_list[0]
+  print(f"payload_data: {payload_data}")
+  # Extract all the values from the payload data
+  payload_values = [payload_data[key] for key in payload_keys if key != 'vesselParticulars']
+  print(f"payload_values: {payload_data}")
+  # Create a list of values corresponding to the keys
+  vessel_particulars_values = list(vesselParticulars.values())
+  print(f"vessel_particulars_values: {vessel_particulars_values}")
+  # Extend row_values with payload_values
+  row_values = vessel_particulars_values + payload_values
+
+  # Append the data as a new row
+  worksheet_replit.append_table(values=row_values, start='A2')
+  worksheet_replit.delete_rows(1)
+  return f"Vessel Current Location Data saved to Google Sheets.{row_values}"

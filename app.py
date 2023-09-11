@@ -12,7 +12,8 @@ import random
 import time
 import pytz 
 import os
-from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement,new_vessel_current_position, get_map_data,delete_all_rows_in_table
+from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement,new_vessel_current_position, get_map_data,delete_all_rows_in_table, MPA_GET
+
 
 app = Flask(__name__)
 
@@ -81,8 +82,6 @@ def login():
     print("Requets == GET")
     return render_template('login.html')
 
-
-
 # Make function for logout session
 @app.route('/logout')
 def logout():
@@ -94,7 +93,6 @@ def logout():
     session.pop('api_key', None)
     session.pop('gc', None)
     return redirect(url_for('login'))
-
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -116,8 +114,6 @@ def register():
     return render_template('register.html')
   return render_template('register.html')
 
-
-
 colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
@@ -128,20 +124,27 @@ def Vessel_data_pull():
   if request.method == 'POST':
     #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
     delete_all_rows_in_table(session['gc'])
-    user_vessel_imo = request.form['vessel_imo']
-    #Split vessel_imo list into invdivual records
-    input_list = [int(x) for x in user_vessel_imo.split(',')]
-    
-    print(f"user_vessel_imo from html = {user_vessel_imo}")
-    print(f"input_list from html = {input_list}")
-    
+
     #Loop through input IMO list
     for vessel_imo in input_list:
       print(f"IMO Number = {vessel_imo}")
       
       url_vessel_movement = f"{session['pitstop_url']}/api/v1/data/pull/vessel_movement"
       url_vessel_current_position = f"{session['pitstop_url']}/api/v1/data/pull/vessel_current_position"
-      
+      url_MPA = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/positions/imonumber/{vessel_imo}"
+
+      # Make the GET request
+      API_KEY_MPA = os.environ['MPA_API']
+      r_GET = requests.get(url, headers={'Apikey': API_KEY_MPA})
+        # Check the response
+      if r_GET.status_code == 200:
+        print("Config Data retrieved successfully!")
+        print(r_GET.text)
+        MPA_GET(r_GET.text)
+      else:
+        print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
+        print(r_GET.text) 
+    
       payload = {
         "participants": [{
           "id": "1817878d-c468-411b-8fe1-698eca7170dd",
@@ -163,9 +166,8 @@ def Vessel_data_pull():
       # Rest of the code to send the JSON payload to the API
       data = json.loads(json_string)
       
-    #========================PULL vessel_current_position===========================
-      response_vessel_current_position = requests.post(
-    url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
+      #========================PULL vessel_current_position===========================
+      response_vessel_current_position = requests.post(url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
       if response_vessel_current_position.status_code == 200:
         print(f"Response JSON = {response_vessel_current_position.json()}")
         print("Pull vessel_current_position success.")
@@ -184,7 +186,6 @@ def Vessel_data_pull():
           f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
         )
 
-
 ################################GSHEET##############################################    
     # gc = pygsheets.authorize(service_account_file=session['gc'])
     # sh = gc.open('SGTD Received APIs')
@@ -201,6 +202,267 @@ def Vessel_data_pull():
   return render_template('vessel_request.html')
 
 
+
+
+##########################################################MySQL DB#############################################################################################
+@app.route("/api/vessel_current_position_db/receive/<email_url>", methods=['POST'])
+def Vessel_current_position(email_url):
+    email = email_url
+    receive_details_data = receive_details(email)
+    print(f"Vessel_current_position_receive:   Receive_details from database.py {receive_details(email)}")
+    API_KEY = receive_details_data[1]
+    participant_id = receive_details_data[2]
+    pitstop_url = receive_details_data[3]
+    gsheet_cred_path = receive_details_data[4]
+  
+    data = request.data  # Get the raw data from the request body
+    
+    print(f"Vessel_current_position = {data}")
+
+    data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
+    # Convert the JSON string to a Python dictionary
+    data_dict = json.loads(data_str)
+    row_data_vessel_current_position = data_dict['payload'][-1]
+    print(f"row_data_vessel_current_position = {row_data_vessel_current_position}")
+    result = new_vessel_current_position(row_data_vessel_current_position, email)
+    if result == 1:
+      # Append the data as a new row
+      return f"Vessel Current Location Data saved to Google Sheets.{row_data_vessel_current_position}"
+    else:
+      return f"Email doesn't exists, unable to add data"
+
+
+@app.route("/api/vessel_movement_db/receive/<email_url>", methods=['POST'])
+def Vessel_movement_receive(email_url):
+    email = email_url
+    receive_details_data = receive_details(email)
+    print(f"Vessel_movement_receive:  Receive_details from database.py {receive_details(email)}")
+    API_KEY = receive_details_data[1]
+    participant_id = receive_details_data[2]
+    pitstop_url = receive_details_data[3]
+    gsheet_cred_path = receive_details_data[4]
+
+    data = request.data  # Get the raw data from the request body
+    
+    data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
+    # Convert the JSON string to a Python dictionary
+    data_dict = json.loads(data_str)
+    # Extract the last item from the "payload" array
+    last_payload_item = data_dict['payload'][-1]
+    print(last_payload_item)
+    try:
+      print(f"Length of vessel movement end date = {len(last_payload_item['vm_vessel_movement_end_dt'])}")
+      row_data_vessel_movement = {
+      "vm_vessel_particulars.vessel_nm":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
+      "vm_vessel_particulars.vessel_imo_no":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_imo_no'],
+      "vm_vessel_particulars.vessel_flag":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_flag'],
+      "vm_vessel_particulars.vessel_call_sign":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_call_sign'],
+      "vm_vessel_location_from":
+      last_payload_item['vm_vessel_location_from'],
+      "vm_vessel_location_to":
+      last_payload_item['vm_vessel_location_to'],
+      "vm_vessel_movement_height":
+      last_payload_item['vm_vessel_movement_height'],
+      "vm_vessel_movement_type":
+      last_payload_item['vm_vessel_movement_type'],
+      "vm_vessel_movement_start_dt":
+      last_payload_item['vm_vessel_movement_start_dt'],
+      "vm_vessel_movement_end_dt":
+      last_payload_item['vm_vessel_movement_end_dt'],
+      "vm_vessel_movement_status":
+      last_payload_item['vm_vessel_movement_status'],
+      "vm_vessel_movement_draft":
+      last_payload_item['vm_vessel_movement_draft']
+    }
+    except:
+      print("================no movement end date, printing exception===============")
+      row_data_vessel_movement = {
+      "vm_vessel_particulars.vessel_nm":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
+      "vm_vessel_particulars.vessel_imo_no":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_imo_no'],
+      "vm_vessel_particulars.vessel_flag":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_flag'],
+      "vm_vessel_particulars.vessel_call_sign":
+      last_payload_item['vm_vessel_particulars'][0]['vessel_call_sign'],
+      "vm_vessel_location_from":
+      last_payload_item['vm_vessel_location_from'],
+      "vm_vessel_location_to":
+      last_payload_item['vm_vessel_location_to'],
+      "vm_vessel_movement_height":
+      last_payload_item['vm_vessel_movement_height'],
+      "vm_vessel_movement_type":
+      last_payload_item['vm_vessel_movement_type'],
+      "vm_vessel_movement_start_dt":
+      last_payload_item['vm_vessel_movement_start_dt'],
+      "vm_vessel_movement_end_dt":
+      "",
+      "vm_vessel_movement_status":
+      last_payload_item['vm_vessel_movement_status'],
+      "vm_vessel_movement_draft":
+      last_payload_item['vm_vessel_movement_draft']
+    }
+    # Append the data to the worksheet
+    print(f"row_data_vessel_movement: {row_data_vessel_movement}")
+
+    result = new_vessel_movement(row_data_vessel_movement, email)
+    if result == 1:
+      # Append the data as a new row
+      return f"Vessel Current Location Data saved to Google Sheets.{row_data_vessel_movement}"
+    else:
+      return f"Email doesn't exists, unable to add data"
+##########################################################MySQL DB#############################################################################################
+
+
+#9490820 / 9929297
+#====================================####################MAP DB##############################========================================
+@app.route("/api/vessel_map", methods=['GET','POST'])
+def Vessel_map():
+  if g.user:
+    email = session['email']
+    receive_details_data = receive_details(email)
+    print(f"Vessel_Map:  Receive_details from database.py {receive_details(email)}")
+    API_KEY = receive_details_data[1]
+    participant_id = receive_details_data[2]
+    pitstop_url = receive_details_data[3]
+    gsheet_cred_path = receive_details_data[4]
+    
+    df1 = pd.DataFrame(get_map_data(gsheet_cred_path)[0])
+    df2 = pd.DataFrame(get_map_data(gsheet_cred_path)[1])
+    # df1 = get_map_data(gsheet_cred_path)[0]
+    #print(f"df1 = {df1}")
+    #print(f"df2 = {df2}")
+    print(f"df1 VESSEL MAP = {df1.to_string(index=False, header=True)}")
+    # df2 = get_map_data(gsheet_cred_path)[1]
+    print(f"df2 VESSEL MAP = {df2.to_string(index=False, header=True)}")
+    if df1.empty:
+      print(f"Empty df1 or empty df2................")
+      current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
+      for f in os.listdir("templates/"):
+      #print(f)
+        if "mymap.html" in f:
+          print(f"*mymap.html file to be removed = {f}")
+          os.remove(f"templates/{f}")
+      m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
+      regions = 'templates/SG_anchorages.geojson'
+      m.add_geojson(regions,
+                  layer_name='SG Anchorages',
+                  style={
+                    "color": (random.choice(colors)),
+                    "fill": True,
+                    "fillOpacity": 0.05
+                  })
+      newHTML = f"templates/{current_datetime}mymap.html"
+      newHTMLwotemp = f"{current_datetime}mymap.html"
+      print(f"new html file created = {newHTML}")
+      m.to_html(newHTML)
+      return render_template(newHTMLwotemp, user=session['email'])
+    else:
+      merged_df = pd.merge(df1,
+                           df2,
+                           left_on=df1['imoNumber'],
+                           right_on=df2['vessel_imo_no'],
+                           how='outer')
+      print(merged_df)
+      # merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
+      
+      # merged_df.drop(columns=['id_x', 'id_y','vessel_nm_x', 'vessel_call_sign_x','vessel_flag_x','vessel_call_sign_x','vessel_movement_type','vessel_movement_height','vessel_year_built','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vessel_movement_draft'], inplace=True)
+      
+      # print(f"Merged_df == {merged_df.to_string(index=False)}")
+      #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
+  
+      #sort & drop duplicates
+      # sorting by first name
+      merged_df.drop_duplicates(subset="imoNumber", keep='last', inplace=True)
+      
+      m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
+      regions = 'templates/SG_anchorages.geojson'
+      m.add_geojson(regions,
+                    layer_name='SG Anchorages',
+                    style={
+                      "color": (random.choice(colors)),
+                      "fill": True,
+                      "fillOpacity": 0.05
+                    })
+      m.add_points_from_xy(
+        merged_df,
+        x="vessel_longitude_degrees",
+        y="vessel_latitude_degrees",
+        #color_column='vessel_imo_no',
+        angle = 'heading',
+        icon_names=['gear', 'map', 'leaf', 'globe'],
+        spin=True,
+        add_legend=True,
+      )
+      #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
+      for f in os.listdir("templates/"):
+        #print(f)
+        if "mymap.html" in f:
+            print(f"*mymap.html file to be removed = {f}")
+            os.remove(f"templates/{f}")
+      current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
+      newHTML = f"templates/{current_datetime}mymap.html"
+      newHTMLwotemp = f"{current_datetime}mymap.html"
+      print(f"new html file created = {newHTML}")
+      m.to_html(newHTML)
+      #time.sleep(2)
+      return render_template(newHTMLwotemp, user=session['email'])
+  return redirect(url_for('login'))
+
+@app.before_request
+def before_request():
+  g.user=None
+  if 'email' in session:
+    g.user=session['email']
+#====================================####################MAP DB##############################========================================
+
+#========================Vesseldata GET===========================
+@app.route("/api/sgtd", methods=['POST'])
+def SGTD():
+  
+  user_vessel_imo = request.form['vessel_imo']
+  #Split vessel_imo list into invdivual records
+  input_list = [int(x) for x in user_vessel_imo.split(',')]
+  
+  print(f"user_vessel_imo from html = {user_vessel_imo}")
+  print(f"input_list from html = {input_list}")
+  
+  #Loop through input IMO list
+  for vessel_imo in input_list:
+    print(f"IMO Number = {vessel_imo}")
+    
+    url = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/positions/imonumber/{vessel_imo}"
+  # Make the GET request
+    API_KEY = os.environ['MPA_API']
+    r_GET = requests.get(url, headers={'Apikey': API_KEY})
+  
+  #consumes_list = r_GET.json()['data']['consumes']
+  # Check the response
+    if r_GET.status_code == 200:
+      print("Config Data retrieved successfully!")
+      print(r_GET.text)
+      MPA_GET(r_GET.text)
+      return r_GET.text
+    else:
+      print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
+      print(r_GET.text
+          ) 
+      return "Not OK" # Print the response content if the request was not successful
+
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
+
+if __name__ == '__main__':
+  app.run(host='0.0.0.0', debug=True)
 
 
 
@@ -393,238 +655,6 @@ def Vessel_data_pull():
 ##########################################################GSHEET#############################################################################################
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-##########################################################MySQL DB#############################################################################################
-@app.route("/api/vessel_current_position_db/receive/<email_url>", methods=['POST'])
-def Vessel_current_position(email_url):
-    email = email_url
-    receive_details_data = receive_details(email)
-    print(f"Vessel_current_position_receive:   Receive_details from database.py {receive_details(email)}")
-    API_KEY = receive_details_data[1]
-    participant_id = receive_details_data[2]
-    pitstop_url = receive_details_data[3]
-    gsheet_cred_path = receive_details_data[4]
-  
-    data = request.data  # Get the raw data from the request body
-    
-    print(f"Vessel_current_position = {data}")
-
-    data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
-    # Convert the JSON string to a Python dictionary
-    data_dict = json.loads(data_str)
-    row_data_vessel_current_position = data_dict['payload'][-1]
-    print(f"row_data_vessel_current_position = {row_data_vessel_current_position}")
-    result = new_vessel_current_position(row_data_vessel_current_position, email)
-    if result == 1:
-      # Append the data as a new row
-      return f"Vessel Current Location Data saved to Google Sheets.{row_data_vessel_current_position}"
-    else:
-      return f"Email doesn't exists, unable to add data"
-
-
-
-
-
-@app.route("/api/vessel_movement_db/receive/<email_url>", methods=['POST'])
-def Vessel_movement_receive(email_url):
-    email = email_url
-    receive_details_data = receive_details(email)
-    print(f"Vessel_movement_receive:  Receive_details from database.py {receive_details(email)}")
-    API_KEY = receive_details_data[1]
-    participant_id = receive_details_data[2]
-    pitstop_url = receive_details_data[3]
-    gsheet_cred_path = receive_details_data[4]
-
-    data = request.data  # Get the raw data from the request body
-    
-    data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
-    # Convert the JSON string to a Python dictionary
-    data_dict = json.loads(data_str)
-    # Extract the last item from the "payload" array
-    last_payload_item = data_dict['payload'][-1]
-    print(last_payload_item)
-    try:
-      print(f"Length of vessel movement end date = {len(last_payload_item['vm_vessel_movement_end_dt'])}")
-      row_data_vessel_movement = {
-      "vm_vessel_particulars.vessel_nm":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
-      "vm_vessel_particulars.vessel_imo_no":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_imo_no'],
-      "vm_vessel_particulars.vessel_flag":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_flag'],
-      "vm_vessel_particulars.vessel_call_sign":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_call_sign'],
-      "vm_vessel_location_from":
-      last_payload_item['vm_vessel_location_from'],
-      "vm_vessel_location_to":
-      last_payload_item['vm_vessel_location_to'],
-      "vm_vessel_movement_height":
-      last_payload_item['vm_vessel_movement_height'],
-      "vm_vessel_movement_type":
-      last_payload_item['vm_vessel_movement_type'],
-      "vm_vessel_movement_start_dt":
-      last_payload_item['vm_vessel_movement_start_dt'],
-      "vm_vessel_movement_end_dt":
-      last_payload_item['vm_vessel_movement_end_dt'],
-      "vm_vessel_movement_status":
-      last_payload_item['vm_vessel_movement_status'],
-      "vm_vessel_movement_draft":
-      last_payload_item['vm_vessel_movement_draft']
-    }
-    except:
-      print("================no movement end date, printing exception===============")
-      row_data_vessel_movement = {
-      "vm_vessel_particulars.vessel_nm":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_nm'],
-      "vm_vessel_particulars.vessel_imo_no":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_imo_no'],
-      "vm_vessel_particulars.vessel_flag":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_flag'],
-      "vm_vessel_particulars.vessel_call_sign":
-      last_payload_item['vm_vessel_particulars'][0]['vessel_call_sign'],
-      "vm_vessel_location_from":
-      last_payload_item['vm_vessel_location_from'],
-      "vm_vessel_location_to":
-      last_payload_item['vm_vessel_location_to'],
-      "vm_vessel_movement_height":
-      last_payload_item['vm_vessel_movement_height'],
-      "vm_vessel_movement_type":
-      last_payload_item['vm_vessel_movement_type'],
-      "vm_vessel_movement_start_dt":
-      last_payload_item['vm_vessel_movement_start_dt'],
-      "vm_vessel_movement_end_dt":
-      "",
-      "vm_vessel_movement_status":
-      last_payload_item['vm_vessel_movement_status'],
-      "vm_vessel_movement_draft":
-      last_payload_item['vm_vessel_movement_draft']
-    }
-    # Append the data to the worksheet
-    print(f"row_data_vessel_movement: {row_data_vessel_movement}")
-
-    result = new_vessel_movement(row_data_vessel_movement, email)
-    if result == 1:
-      # Append the data as a new row
-      return f"Vessel Current Location Data saved to Google Sheets.{row_data_vessel_movement}"
-    else:
-      return f"Email doesn't exists, unable to add data"
-##########################################################MySQL DB#############################################################################################
-
-
-#9490820 / 9929297
-#====================================####################MAP DB##############################========================================
-@app.route("/api/vessel_map", methods=['GET','POST'])
-def Vessel_map():
-  if g.user:
-    email = session['email']
-    receive_details_data = receive_details(email)
-    print(f"Vessel_Map:  Receive_details from database.py {receive_details(email)}")
-    API_KEY = receive_details_data[1]
-    participant_id = receive_details_data[2]
-    pitstop_url = receive_details_data[3]
-    gsheet_cred_path = receive_details_data[4]
-    df1 = pd.DataFrame(get_map_data(gsheet_cred_path)[0])
-    df2 = pd.DataFrame(get_map_data(gsheet_cred_path)[1])
-    # df1 = get_map_data(gsheet_cred_path)[0]
-    #print(f"df1 = {df1}")
-    #print(f"df2 = {df2}")
-    print(f"df1 VESSEL MAP = {df1.to_string(index=False, header=True)}")
-    # df2 = get_map_data(gsheet_cred_path)[1]
-    print(f"df2 VESSEL MAP = {df2.to_string(index=False, header=True)}")
-    if df1.empty or df2.empty:
-      print(f"Empty df1 or empty df2................")
-      current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
-      for f in os.listdir("templates/"):
-      #print(f)
-        if "mymap.html" in f:
-          print(f"*mymap.html file to be removed = {f}")
-          os.remove(f"templates/{f}")
-      m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
-      regions = 'templates/SG_anchorages.geojson'
-      m.add_geojson(regions,
-                  layer_name='SG Anchorages',
-                  style={
-                    "color": (random.choice(colors)),
-                    "fill": True,
-                    "fillOpacity": 0.05
-                  })
-      newHTML = f"templates/{current_datetime}mymap.html"
-      newHTMLwotemp = f"{current_datetime}mymap.html"
-      print(f"new html file created = {newHTML}")
-      m.to_html(newHTML)
-      return render_template(newHTMLwotemp, user=session['email'])
-    else:
-      df1.to_csv(path_or_buf='resultdf1.csv', sep=',')
-      df2.to_csv(path_or_buf='resultdf2.csv', sep=',')
-      merged_df = pd.merge(df1,
-                           df2,
-                           left_on=df1['vessel_imo_no'],
-                           right_on=df2['vessel_imo_no'],
-                           how='inner')
-      merged_df.to_csv(path_or_buf='merged.csv', sep=',')
-      print(merged_df)
-      # merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
-      merged_df.drop(columns=['id_x', 'id_y','vessel_nm_x', 'vessel_call_sign_x','vessel_flag_x','vessel_call_sign_x','vessel_movement_type','vessel_movement_height','vessel_year_built','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vessel_movement_draft'], inplace=True)
-      print(f"Merged_df == {merged_df.to_string(index=False)}")
-      #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
-  
-      #sort & drop duplicates
-      # sorting by first name
-      merged_df.drop_duplicates(subset="vessel_imo_no_x", keep='last', inplace=True)
-      
-      m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
-      regions = 'templates/SG_anchorages.geojson'
-      m.add_geojson(regions,
-                    layer_name='SG Anchorages',
-                    style={
-                      "color": (random.choice(colors)),
-                      "fill": True,
-                      "fillOpacity": 0.05
-                    })
-      m.add_points_from_xy(
-        merged_df,
-        x="vessel_longitude_degrees",
-        y="vessel_latitude_degrees",
-        #color_column='vessel_imo_no',
-        angle = 'heading',
-        icon_names=['gear', 'map', 'leaf', 'globe'],
-        spin=True,
-        add_legend=True,
-      )
-      #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
-      for f in os.listdir("templates/"):
-        #print(f)
-        if "mymap.html" in f:
-            print(f"*mymap.html file to be removed = {f}")
-            os.remove(f"templates/{f}")
-      current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
-      newHTML = f"templates/{current_datetime}mymap.html"
-      newHTMLwotemp = f"{current_datetime}mymap.html"
-      print(f"new html file created = {newHTML}")
-      m.to_html(newHTML)
-      #time.sleep(2)
-      return render_template(newHTMLwotemp, user=session['email'])
-  return redirect(url_for('login'))
-
-@app.before_request
-def before_request():
-  g.user=None
-  if 'email' in session:
-    g.user=session['email']
-#====================================####################MAP DB##############################========================================
-
-
 #====================================####################MAP GSHEET##############################========================================
 # @app.route("/api/vessel_map", methods=['GET','POST'])
 # def Vessel_map():
@@ -715,55 +745,3 @@ def before_request():
 #   if 'email' in session:
 #     g.user=session['email']
 #====================================####################MAP GSHEET##############################========================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#========================Vesseldata GET===========================
-@app.route("/api/sgtd")
-def SGTD():
-  system_ids_names = []
-  API_Key = 'VJN5vqP8LfZxVCycQT6PvpJ0VM4Vk2pW'
-  # Make the GET request
-  url = 'https://sgtradexdummy-lbo.pitstop.uat.sgtradex.io/api/v1/config'
-  r_GET = requests.get(url, headers={'SGTRADEX-API-KEY': API_Key})
-  consumes_list = r_GET.json()['data']['consumes']
-  # Check the response
-  if r_GET.status_code == 200:
-    print("Config Data retrieved successfully!")
-  else:
-    print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
-    print(r_GET.text
-          )  # Print the response content if the request was not successful
-  for consume in consumes_list:
-    if consume['id'] == 'vessel_current_position':
-      from_list = consume['from']
-      for from_item in from_list:
-        system_ids_names.append((from_item['id'], from_item['name']))
-  return system_ids_names
-
-@app.after_request
-def after_request(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
-    return response
-
-
-if __name__ == '__main__':
-  app.run(host='0.0.0.0', debug=True)

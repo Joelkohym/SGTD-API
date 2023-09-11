@@ -66,7 +66,7 @@ def login():
         print(f"SESSION DATA: Pitstop URL = {session['pitstop_url']}, API_KEY = {session['api_key']}, obID = {session['participant_id']}")
         msg = f"Login success for {email}, please enter Vessel IMO number(s)"
         print(f"Login success for {email}, redirect")
-        return render_template('vessel_request.html', msg=msg, email=email)
+        return render_template('vessel_request (Gsheet).html', msg=msg, email=email)
       else:
         msg = "Invalid credentials, please try again.."
         print("Invalid credentials, reset login")
@@ -196,7 +196,7 @@ def Vessel_data_pull():
     
     return redirect(url_for('Vessel_map'))
     
-  return render_template('vessel_request.html')
+  return render_template('vessel_request (Gsheet).html')
 
 
 
@@ -390,7 +390,103 @@ def Vessel_current_position_g(email_url):
     return f"Vessel Current Location Data saved to Google Sheets.{row_values}"
 #########################################################GSHEET#############################################################################################
 
+
+
+
+
+
 #====================================####################MAP GSHEET##############################========================================
+##########################################SGTD PULL DF MAP############################################################################
+# @app.route("/api/vessel_map", methods=['GET','POST'])
+# def Vessel_map():
+#   if g.user:
+#     gc = pygsheets.authorize(service_account_file=session['gc'])
+#     # Assuming you have two sheets named 'Sheet1' and 'Sheet2'
+#     print(gc.spreadsheet_titles())
+#     sh = gc.open('SGTD Received APIs')
+#     sheet1 = sh.worksheet_by_title('replit_vessel_current_position')
+#     sheet2 = sh.worksheet_by_title('replit_vessel_movement')
+#     # Read data from 'Sheet1' into a DataFrame
+#     df1 = pd.DataFrame(sheet1.get_all_records())
+#     print(f"df1 = {df1}")
+#     # Read data from 'Sheet2' into another DataFrame
+#     df2 = pd.DataFrame(sheet2.get_all_records())
+#     print(f"df2 = {df2}")
+#     if df1.empty or df2.empty:
+#       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
+#       for f in os.listdir("templates/"):
+#       #print(f)
+#         if "mymap.html" in f:
+#           print(f"*mymap.html file to be removed = {f}")
+#           os.remove(f"templates/{f}")
+#       m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
+#       regions = 'templates/SG_anchorages.geojson'
+#       m.add_geojson(regions,
+#                   layer_name='SG Anchorages',
+#                   style={
+#                     "color": (random.choice(colors)),
+#                     "fill": True,
+#                     "fillOpacity": 0.05
+#                   })
+#       newHTML = f"templates/{current_datetime}mymap.html"
+#       newHTMLwotemp = f"{current_datetime}mymap.html"
+#       print(f"new html file created = {newHTML}")
+#       m.to_html(newHTML)
+#       return render_template(newHTMLwotemp, user=session['email'])
+#     else:
+#       merged_df = pd.merge(df1,
+#                            df2,
+#                            left_on='vessel_imo_no',
+#                            right_on='vm_vessel_particulars.vessel_imo_no',
+#                            how='inner')
+      
+#       merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
+#       print(f"Merged_df == {merged_df.to_string(index=False)}")
+#       print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
+  
+#       #sort & drop duplicates
+#       # sorting by first name
+#       merged_df.drop_duplicates(subset="vessel_imo_no", keep='last', inplace=True)
+      
+#       m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
+#       regions = 'templates/SG_anchorages.geojson'
+#       m.add_geojson(regions,
+#                     layer_name='SG Anchorages',
+#                     style={
+#                       "color": (random.choice(colors)),
+#                       "fill": True,
+#                       "fillOpacity": 0.05
+#                     })
+#       m.add_points_from_xy(
+#         merged_df,
+#         x="vessel_longitude_degrees",
+#         y="vessel_latitude_degrees",
+#         icon_names=['gear', 'map', 'leaf', 'globe'],
+#         spin=True,
+#         add_legend=True,
+#       )
+#       print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
+#       for f in os.listdir("templates/"):
+#         #print(f)
+#         if "mymap.html" in f:
+#             print(f"*mymap.html file to be removed = {f}")
+#             os.remove(f"templates/{f}")
+#       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
+#       newHTML = f"templates/{current_datetime}mymap.html"
+#       newHTMLwotemp = f"{current_datetime}mymap.html"
+#       print(f"new html file created = {newHTML}")
+#       m.to_html(newHTML)
+#       #time.sleep(2)
+#       return render_template(newHTMLwotemp, user=session['email'])
+#   return redirect(url_for('login'))
+###########################################SGTD PULL DF MAP############################################################################
+
+
+
+
+
+
+###########################################MPA DATA PULL MAP############################################################################
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
   if g.user:
@@ -401,8 +497,8 @@ def Vessel_map():
     sheet1 = sh.worksheet_by_title('replit_vessel_current_position')
     sheet2 = sh.worksheet_by_title('replit_vessel_movement')
     # Read data from 'Sheet1' into a DataFrame
-    df1 = pd.DataFrame(sheet1.get_all_records())
-    print(f"df1 = {df1}")
+    df1 = pd.DataFrame(get_map_data_MPA(gsheet_cred_path)[0])
+    df1.drop_duplicates(subset="imoNumber", keep='last', inplace=True)
     # Read data from 'Sheet2' into another DataFrame
     df2 = pd.DataFrame(sheet2.get_all_records())
     print(f"df2 = {df2}")
@@ -430,17 +526,17 @@ def Vessel_map():
     else:
       merged_df = pd.merge(df1,
                            df2,
-                           left_on='vessel_imo_no',
+                           left_on='imoNumber',
                            right_on='vm_vessel_particulars.vessel_imo_no',
-                           how='inner')
+                           how='outer')
       
-      merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
-      print(f"Merged_df == {merged_df.to_string(index=False)}")
-      print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
+      # merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
+      # print(f"Merged_df == {merged_df.to_string(index=False)}")
+      # print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
   
       #sort & drop duplicates
       # sorting by first name
-      merged_df.drop_duplicates(subset="vessel_imo_no", keep='last', inplace=True)
+      # merged_df.drop_duplicates(subset="vessel_imo_no", keep='last', inplace=True)
       
       m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
       regions = 'templates/SG_anchorages.geojson'
@@ -473,6 +569,40 @@ def Vessel_map():
       #time.sleep(2)
       return render_template(newHTMLwotemp, user=session['email'])
   return redirect(url_for('login'))
+
+
+@app.route("/api/sgtd", methods=['POST'])
+def SGTD():
+  
+  user_vessel_imo = request.form['vessel_imo']
+  #Split vessel_imo list into invdivual records
+  input_list = [int(x) for x in user_vessel_imo.split(',')]
+  
+  print(f"user_vessel_imo from html = {user_vessel_imo}")
+  print(f"input_list from html = {input_list}")
+  
+  #Loop through input IMO list
+  for vessel_imo in input_list:
+    print(f"IMO Number = {vessel_imo}")
+    
+    url = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/positions/imonumber/{vessel_imo}"
+  # Make the GET request
+    API_KEY = os.environ['MPA_API']
+    r_GET = requests.get(url, headers={'Apikey': API_KEY})
+  
+  #consumes_list = r_GET.json()['data']['consumes']
+  # Check the response
+    if r_GET.status_code == 200:
+      print("Config Data retrieved successfully!")
+      print(r_GET.text)
+      MPA_GET_GSHEET(r_GET.text,session['gc'])
+      return r_GET.text
+    else:
+      print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
+      print(r_GET.text
+          ) 
+      return "Not OK" # Print the response content if the request was not successful
+
 
 @app.before_request
 def before_request():
