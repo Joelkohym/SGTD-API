@@ -124,7 +124,12 @@ def Vessel_data_pull():
   if request.method == 'POST':
     #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
     delete_all_rows_in_table(session['gc'])
-
+    user_vessel_imo = request.form['vessel_imo']
+    #Split vessel_imo list into invdivual records
+    input_list = [int(x) for x in user_vessel_imo.split(',')]
+    
+    print(f"user_vessel_imo from html = {user_vessel_imo}")
+    print(f"input_list from html = {input_list}")
     #Loop through input IMO list
     for vessel_imo in input_list:
       print(f"IMO Number = {vessel_imo}")
