@@ -219,7 +219,7 @@ def get_map_data(db_creds):
   "ssl": {
             "ssl_ca": "/etc/ssl/cert.pem"}})
   with engine.connect() as conn:
-    query = text("select * from MPA_vessel_data")
+    query = text("select * from vessel_movement_UCE")
     result_VM = conn.execute(query)
     result_all_VM = result_VM.fetchall()
     column_names_VM = result_VM.keys()
@@ -228,7 +228,7 @@ def get_map_data(db_creds):
     df1 = pd.DataFrame(result_all_VM, columns=column_names_VM)
 
     
-    query = text("select * from vessel_current_position_UCE")
+    query = text("select * from MPA_vessel_data")
     result_VCP = conn.execute(query)
     result_all_VCP = result_VCP.fetchall()
     column_names_VCP = result_VCP.keys() 
