@@ -250,11 +250,14 @@ def delete_all_rows_in_table(db_creds):
             "ssl_ca": "/etc/ssl/cert.pem"}})
   with engine.connect() as conn:
     query_VM = text("DELETE FROM vessel_movement_UCE where id > 0")
+    print("Deleted vessel_movement_UCE where id > 0")
     result_VM = conn.execute(query_VM)
     query_VCP = text("DELETE FROM vessel_current_position_UCE where id > 0")
     result_VCP = conn.execute(query_VCP)
-    query_MPA = text("DELETE FROM MPA_vessel_data where id > 0")
+    print("Deleted vessel_current_position_UCE where id > 0")
+    query_MPA = text("DELETE FROM MPA_vessel_data WHERE id > 0")
     result_MPA = conn.execute(query_MPA)
+    print("Deleted MPA_vessel_data where id > 0")
 
 def MPA_GET(api_response):
   data_list = json.loads(api_response)
