@@ -372,7 +372,7 @@ def Vessel_map():
                            left_on=df2['imoNumber'],
                            right_on=df1['vessel_imo_no'],
                            how='outer')
-      print(merged_df)
+      print(f"Merged df  VESSEL MAP == {merged_df}")
       # merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
       
       # merged_df.drop(columns=['id_x', 'id_y','vessel_nm_x', 'vessel_call_sign_x','vessel_flag_x','vessel_call_sign_x','vessel_movement_type','vessel_movement_height','vessel_year_built','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vessel_movement_draft'], inplace=True)
@@ -395,8 +395,8 @@ def Vessel_map():
                     })
       m.add_points_from_xy(
         merged_df,
-        x="vessel_longitude_degrees",
-        y="vessel_latitude_degrees",
+        x="longitudeDegrees",
+        y="latitudeDegrees",
         #color_column='vessel_imo_no',
         angle = 'heading',
         icon_names=['gear', 'map', 'leaf', 'globe'],
