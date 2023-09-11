@@ -140,7 +140,7 @@ def Vessel_data_pull():
 
       # Make the GET request
       API_KEY_MPA = os.environ['MPA_API']
-      r_GET = requests.get(url, headers={'Apikey': API_KEY_MPA})
+      r_GET = requests.get(url_MPA, headers={'Apikey': API_KEY_MPA})
         # Check the response
       if r_GET.status_code == 200:
         print("Config Data retrieved successfully!")
