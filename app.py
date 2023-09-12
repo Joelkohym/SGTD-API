@@ -406,7 +406,7 @@ def Vessel_map():
       #   add_legend=True,
       # )
       for index, row in merged_df.iterrows():
-      folium.Marker(location = [row["latitudeDegrees"],row["longitudeDegrees"]],
+        folium.Marker(location = [row["latitudeDegrees"],row["longitudeDegrees"]],
                     popup=merged_df['vesselName'][index],
                     icon=folium.Icon(color="red",icon="ship", prefix='fa'),
                     angle = merged_df['heading'][index]
