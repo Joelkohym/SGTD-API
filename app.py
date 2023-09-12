@@ -121,80 +121,81 @@ def register():
 #========================Vessel data PULL===========================
 @app.route("/api/vessel", methods=['GET', 'POST'])
 def Vessel_data_pull():
-  if request.method == 'POST':
-    #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
-    delete_all_rows_in_table(session['gc'])
-    user_vessel_imo = request.form['vessel_imo']
-    #Split vessel_imo list into invdivual records
-    input_list = [int(x) for x in user_vessel_imo.split(',')]
-    
-    print(f"user_vessel_imo from html = {user_vessel_imo}")
-    print(f"input_list from html = {input_list}")
-    #Loop through input IMO list
-    for vessel_imo in input_list:
-      print(f"IMO Number = {vessel_imo}")
+  if g.user:
+    if request.method == 'POST':
+      #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
+      delete_all_rows_in_table(session['gc'])
+      user_vessel_imo = request.form['vessel_imo']
+      #Split vessel_imo list into invdivual records
+      input_list = [int(x) for x in user_vessel_imo.split(',')]
       
-      url_vessel_movement = f"{session['pitstop_url']}/api/v1/data/pull/vessel_movement"
-      url_vessel_current_position = f"{session['pitstop_url']}/api/v1/data/pull/vessel_current_position"
-      url_MPA = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/positions/imonumber/{vessel_imo}"
-
-      # Make the GET request
-      API_KEY_MPA = os.environ['MPA_API']
-      r_GET = requests.get(url_MPA, headers={'Apikey': API_KEY_MPA})
-        # Check the response
-      if r_GET.status_code == 200:
-        print("Config Data retrieved successfully!")
-        print(r_GET.text)
-        MPA_GET(r_GET.text)
-      else:
-        print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
-        print(r_GET.text) 
-    
-      payload = {
-        "participants": [{
-          "id": "1817878d-c468-411b-8fe1-698eca7170dd",
-          "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
-          "meta": {
-            "data_ref_id": session['email']
-          }
-        }],
-        "parameters": {
-          "vessel_imo_no": str(vessel_imo)
-        },
-        "on_behalf_of": [{
-          "id": session['participant_id']
-        }]
-      }
-      
-      json_string = json.dumps(
-        payload, indent=4)  # Convert payload dictionary to JSON string
-      # Rest of the code to send the JSON payload to the API
-      data = json.loads(json_string)
-      
-      #========================PULL vessel_current_position===========================
-      response_vessel_current_position = requests.post(url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
-      if response_vessel_current_position.status_code == 200:
-        print(f"Response JSON = {response_vessel_current_position.json()}")
-        print("Pull vessel_current_position success.")
-      else:
-        print(
-          f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
-        )
+      print(f"user_vessel_imo from html = {user_vessel_imo}")
+      print(f"input_list from html = {input_list}")
+      #Loop through input IMO list
+      for vessel_imo in input_list:
+        print(f"IMO Number = {vessel_imo}")
+        
+        url_vessel_movement = f"{session['pitstop_url']}/api/v1/data/pull/vessel_movement"
+        url_vessel_current_position = f"{session['pitstop_url']}/api/v1/data/pull/vessel_current_position"
+        url_MPA = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/positions/imonumber/{vessel_imo}"
   
-    #========================PULL vessel_movement=====================================
-      response_vessel_movement = requests.post(
-        url_vessel_movement, json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
-      if response_vessel_movement.status_code == 200:
-        print("Pull vessel_movement success.")
-      else:
-        print(
-          f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
-        )
+        # Make the GET request
+        API_KEY_MPA = os.environ['MPA_API']
+        r_GET = requests.get(url_MPA, headers={'Apikey': API_KEY_MPA})
+          # Check the response
+        if r_GET.status_code == 200:
+          print("Config Data retrieved successfully!")
+          print(r_GET.text)
+          MPA_GET(r_GET.text)
+        else:
+          print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
+          print(r_GET.text) 
+      
+        payload = {
+          "participants": [{
+            "id": "1817878d-c468-411b-8fe1-698eca7170dd",
+            "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
+            "meta": {
+              "data_ref_id": session['email']
+            }
+          }],
+          "parameters": {
+            "vessel_imo_no": str(vessel_imo)
+          },
+          "on_behalf_of": [{
+            "id": session['participant_id']
+          }]
+        }
+        
+        json_string = json.dumps(
+          payload, indent=4)  # Convert payload dictionary to JSON string
+        # Rest of the code to send the JSON payload to the API
+        data = json.loads(json_string)
+        
+        #========================PULL vessel_current_position===========================
+        response_vessel_current_position = requests.post(url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
+        if response_vessel_current_position.status_code == 200:
+          print(f"Response JSON = {response_vessel_current_position.json()}")
+          print("Pull vessel_current_position success.")
+        else:
+          print(
+            f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
+          )
     
-    return redirect(url_for('Vessel_map'))
-    
-  return render_template('vessel_request.html')
-
+      #========================PULL vessel_movement=====================================
+        response_vessel_movement = requests.post(
+          url_vessel_movement, json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
+        if response_vessel_movement.status_code == 200:
+          print("Pull vessel_movement success.")
+        else:
+          print(
+            f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
+          )
+      
+      return redirect(url_for('Vessel_map'))
+      
+    return render_template('vessel_request.html')
+  return redirect(url_for('login'))
 
 
 
@@ -332,6 +333,7 @@ def vessel_request(msg):
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
   if g.user:
+    print(f"VESSEL MAP PRINTING IMO_NOTFOUND = {IMO_NOTFOUND}")
     email = session['email']
     receive_details_data = receive_details(email)
     print(f"Vessel_Map:  Receive_details from database.py {receive_details(email)}")
