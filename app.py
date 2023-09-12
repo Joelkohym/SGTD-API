@@ -8,6 +8,7 @@ import pygsheets
 from datetime import datetime
 import pandas as pd
 import leafmap.foliumap as leafmap
+import folium
 import random
 import time
 import pytz 
@@ -393,16 +394,23 @@ def Vessel_map():
                       "fill": True,
                       "fillOpacity": 0.05
                     })
-      m.add_points_from_xy(
-        merged_df,
-        x="longitudeDegrees",
-        y="latitudeDegrees",
-        #color_column='vessel_imo_no',
-        angle = 'heading',
-        icon_names=['gear', 'map', 'leaf', 'globe'],
-        spin=True,
-        add_legend=True,
-      )
+      # m.add_points_from_xy(
+      #   merged_df,
+      #   x="longitudeDegrees",
+      #   y="latitudeDegrees",
+        
+      #   #color_column='vessel_imo_no',
+      #   angle = 'heading',
+      #   icon_names=['gear', 'map', 'leaf', 'globe'],
+      #   spin=True,
+      #   add_legend=True,
+      # )
+      for index, row in merged_df.iterrows():
+      folium.Marker(location = [row["latitudeDegrees"],row["longitudeDegrees"]],
+                    popup=merged_df['vesselName'][index],
+                    icon=folium.Icon(color="red",icon="ship", prefix='fa'),
+                    angle = merged_df['heading'][index]
+                    ).add_to(m)
       #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
       for f in os.listdir("templates/"):
         #print(f)
@@ -468,6 +476,35 @@ def after_request(response):
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
