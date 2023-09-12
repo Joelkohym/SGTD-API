@@ -66,8 +66,6 @@ def login():
         session['pitstop_url']=pitstop
         session['api_key']=API_KEY
         session['gc']=gSheet
-        session['IMO_NOTFOUND'] = []
-        session['IMO_FOUND']=[]
         
         print(f"SESSION DATA: Pitstop URL = {session['pitstop_url']}, API_KEY = {session['api_key']}, obID = {session['participant_id']}")
         msg = f"Login success for {email}, please enter Vessel IMO number(s)"
@@ -470,6 +468,7 @@ def before_request():
 #========================Vesseldata GET===========================
 @app.route("/api/sgtd", methods=['POST'])
 def SGTD():
+  session['IMO_NOTFOUND'] = []
   user_vessel_imo = request.form['vessel_imo']
   #Split vessel_imo list into invdivual records
   input_list = [int(x) for x in user_vessel_imo.split(',')]
@@ -496,13 +495,14 @@ def SGTD():
       return r_GET.text
     else:
       print(f"Failed to get Config Data for {vessel_imo}. Status code: {r_GET.status_code}")
+      
       NOT_FOUND_LIST = session['IMO_NOTFOUND']
       NOT_FOUND_LIST.append(vessel_imo)
       session['IMO_NOTFOUND'] = NOT_FOUND_LIST
       print(f"SGTD PRINTING IMO_NOTFOUND1 = {NOT_FOUND_LIST}")
       print(f"SGTD PRINTING IMO_NOTFOUND2 = {session['IMO_NOTFOUND']}")
-      print(r_GET.text
-          ) 
+      print(f"r_GET.text = {r_GET.text}") 
+      print(f"session = {session}") 
       return "Not OK" # Print the response content if the request was not successful
 
 @app.after_request
