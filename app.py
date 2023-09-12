@@ -499,7 +499,8 @@ def SGTD():
       NOT_FOUND_LIST = session['IMO_NOTFOUND']
       NOT_FOUND_LIST.append(vessel_imo)
       session['IMO_NOTFOUND'] = NOT_FOUND_LIST
-      print(f"SGTD PRINTING IMO_NOTFOUND = {session['IMO_NOTFOUND']}")
+      print(f"SGTD PRINTING IMO_NOTFOUND1 = {NOT_FOUND_LIST}")
+      print(f"SGTD PRINTING IMO_NOTFOUND2 = {session['IMO_NOTFOUND']}")
       print(r_GET.text
           ) 
       return "Not OK" # Print the response content if the request was not successful
