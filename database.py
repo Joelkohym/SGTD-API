@@ -102,7 +102,7 @@ def new_vessel_current_position(data, email):
     result = conn.execute(query, values)
     result_all = result.fetchall()
     #result_all = result.all()
-    print(result_all)
+    #print(result_all)
     print(f"length of result all = {len(result_all)}")
     if len(result_all) > 0:
       db_connection_string_vcp = result_all[0][6]
@@ -193,7 +193,7 @@ def new_vessel_movement(data, email):
     values = {'email' : email}
     result = conn.execute(query, values)
     result_all = result.all()
-    print(result_all)
+    #print(result_all)
     print(f"length of result all = {len(result_all)}")
     if len(result_all) > 0:
       db_connection_string_vcp = result_all[0][6]

@@ -517,7 +517,7 @@ def SGTD():
       MPA_GET(r_GET.text)
       return r_GET.text
     else:
-      print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
+      print(f"Failed to get Config Data for {vessel_imo}. Status code: {r_GET.status_code}")
       print(r_GET.text
           ) 
       return "Not OK" # Print the response content if the request was not successful
