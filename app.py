@@ -39,7 +39,7 @@ colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
 
-IMO_NOTFOUND = []
+
 
     
 @app.route('/')
@@ -66,6 +66,7 @@ def login():
         session['pitstop_url']=pitstop
         session['api_key']=API_KEY
         session['gc']=gSheet
+        session['IMO_NOTFOUND'] = []
         
         print(f"SESSION DATA: Pitstop URL = {session['pitstop_url']}, API_KEY = {session['api_key']}, obID = {session['participant_id']}")
         msg = f"Login success for {email}, please enter Vessel IMO number(s)"
@@ -333,6 +334,7 @@ def vessel_request(msg):
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
   if g.user:
+    
     print(f"VESSEL MAP PRINTING IMO_NOTFOUND = {IMO_NOTFOUND}")
     email = session['email']
     receive_details_data = receive_details(email)
@@ -381,7 +383,7 @@ def Vessel_map():
       html_content = menu_banner_html + html_content
       with open(newHTML, 'w') as file:
         file.write(html_content)
-      return render_template(newHTMLwotemp, user=session['email'],IMO_NOTFOUND = IMO_NOTFOUND)
+      return render_template(newHTMLwotemp, user=session['email'],IMO_NOTFOUND = session['IMO_NOTFOUND'])
 
     
     else:
@@ -449,7 +451,7 @@ def Vessel_map():
           file.write(html_content)
     
       newHTMLrender = f"{current_datetime}mymap.html"
-      return render_template(newHTMLrender, user=session['email'], IMO_NOTFOUND = IMO_NOTFOUND)
+      return render_template(newHTMLrender, user=session['email'], IMO_NOTFOUND = session['IMO_NOTFOUND'])
   print("G.user doesn't exists, redirect to login")
   return redirect(url_for('login'))
 
@@ -495,7 +497,7 @@ def before_request():
 #========================Vesseldata GET===========================
 @app.route("/api/sgtd", methods=['POST'])
 def SGTD():
-  
+  session['IMO_NOTFOUND'] = []
   user_vessel_imo = request.form['vessel_imo']
   #Split vessel_imo list into invdivual records
   input_list = [int(x) for x in user_vessel_imo.split(',')]
@@ -521,8 +523,8 @@ def SGTD():
       return r_GET.text
     else:
       print(f"Failed to get Config Data for {vessel_imo}. Status code: {r_GET.status_code}")
-      IMO_NOTFOUND.append(vessel_imo)
-      print(f"SGTD PRINTING IMO_NOTFOUND = {IMO_NOTFOUND}")
+      session['IMO_NOTFOUND'].append(vessel_imo)
+      print(f"SGTD PRINTING IMO_NOTFOUND = {session['IMO_NOTFOUND']}")
       print(r_GET.text
           ) 
       return "Not OK" # Print the response content if the request was not successful
