@@ -195,17 +195,6 @@ def Vessel_data_pull():
         print(
           f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
         )
-
-################################GSHEET##############################################    
-    # gc = pygsheets.authorize(service_account_file=session['gc'])
-    # sh = gc.open('SGTD Received APIs')
-    # sheet1 = sh.worksheet_by_title("replit_vessel_current_position")
-    # #Clear gSheet
-    # sheet1.clear()
-    # print('Cleared replit_vessel_current_position')
-    # sheet2 = sh.worksheet_by_title('replit_vessel_movement')
-    # sheet2.clear()
-    # print('Cleared replit_vessel_movement')
     
     return redirect(url_for('Vessel_map'))
     
@@ -349,20 +338,9 @@ def Vessel_map():
     print(f"df1 VESSEL MAP = {df1.to_string(index=False, header=True)}")
     # df2 = get_map_data(gsheet_cred_path)[1]
     print(f"df2 VESSEL MAP = {df2.to_string(index=False, header=True)}")
-    menu_banner_html = '''
-  <div class="menu-banner">
-    <div class="text-center">
-        <!-- Add the image here with centering styles -->
-        <img src="{{ url_for('static', filename='SGTRADEX LOGO.png') }}" alt="SGTD Logo" class="img-fluid" style="display: inline-block;">
-    </div>
-    <h1 class="text-center">Welcome to SGTraDex Map</h1>
-    <ul class="text-center">
-        <li><a href="/vessel_request/Redirect_Vessel_Map">Vessel Map</a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/logout">Logout</a></li>
-    </ul>
-</div>
-  '''
+    with open('templates/Banner.html', 'r') as file:
+      menu_banner_html = file.read()
+      
     if df2.empty:
 
       print(f"Empty df1 or empty df2................")
