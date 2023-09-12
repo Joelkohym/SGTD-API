@@ -39,6 +39,13 @@ colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
 
+@app.route("/vessel_request/<msg>", methods=['GET','POST'])
+def vessel_request(msg):
+  if g.user:
+    email = session['email']
+    return render_template('vessel_request.html', msg="", email=email)
+  else:
+    return redirect(url_for('login'))
     
 @app.route('/')
 @app.route("/login", methods=['GET','POST'])
@@ -68,7 +75,8 @@ def login():
         print(f"SESSION DATA: Pitstop URL = {session['pitstop_url']}, API_KEY = {session['api_key']}, obID = {session['participant_id']}")
         msg = f"Login success for {email}, please enter Vessel IMO number(s)"
         print(f"Login success for {email}, redirect")
-        return render_template('vessel_request.html', msg=msg, email=email)
+        return redirect(url_for('vessel_request'), msg=msg, email=email)
+        #return render_template('vessel_request.html', msg=msg, email=email)
       else:
         msg = "Invalid credentials, please try again.."
         print("Invalid credentials, reset login")
@@ -346,9 +354,9 @@ def Vessel_map():
   <div class="menu-banner">
       <h1>Welcome to SGTraDex Map</h1>
       <ul>
-          <li><a href="/register">Vessel Map</a></li>
-          <li><a href="#">Login</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="/vessel_request/Redirect_Vessel_Map">Vessel Map</a></li>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/logout">Logout</a></li>
       </ul>
   </div>
   '''
@@ -378,6 +386,8 @@ def Vessel_map():
       with open(newHTML, 'r') as file:
         html_content = file.read()
       html_content = menu_banner_html + html_content
+      with open(newHTML, 'w') as file:
+        file.write(html_content)
       return render_template(newHTMLwotemp, user=session['email'])
 
     
