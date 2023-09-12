@@ -353,7 +353,7 @@ def Vessel_map():
   <div class="menu-banner">
     <div class="text-center">
         <!-- Add the image here with centering styles -->
-        <img src="{{ url_for('static', filename='SGTD Logo.png') }}" alt="SGTD Logo" class="img-fluid" style="display: inline-block;">
+        <img src="{{ url_for('static', filename='SGTRADEX LOGO.png') }}" alt="SGTD Logo" class="img-fluid" style="display: inline-block;">
     </div>
     <h1 class="text-center">Welcome to SGTraDex Map</h1>
     <ul class="text-center">
