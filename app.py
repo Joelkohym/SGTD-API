@@ -522,6 +522,7 @@ def SGTD():
     else:
       print(f"Failed to get Config Data for {vessel_imo}. Status code: {r_GET.status_code}")
       IMO_NOTFOUND.append(vessel_imo)
+      print(f"SGTD PRINTING IMO_NOTFOUND = {IMO_NOTFOUND}")
       print(r_GET.text
           ) 
       return "Not OK" # Print the response content if the request was not successful
