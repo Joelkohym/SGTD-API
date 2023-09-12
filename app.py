@@ -115,10 +115,6 @@ def register():
     return render_template('register.html')
   return render_template('register.html')
 
-colors = [
-"red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
-]
-
 #========================Vessel data PULL===========================
 @app.route("/api/vessel", methods=['GET', 'POST'])
 def Vessel_data_pull():
@@ -345,7 +341,19 @@ def Vessel_map():
     print(f"df1 VESSEL MAP = {df1.to_string(index=False, header=True)}")
     # df2 = get_map_data(gsheet_cred_path)[1]
     print(f"df2 VESSEL MAP = {df2.to_string(index=False, header=True)}")
+    menu_banner_html = '''
+  <!-- Menu Banner -->
+  <div class="menu-banner">
+      <h1>Welcome to SGTraDex Map</h1>
+      <ul>
+          <li><a href="/register">Vessel Map</a></li>
+          <li><a href="#">Login</a></li>
+          <li><a href="#">Contact</a></li>
+      </ul>
+  </div>
+  '''
     if df2.empty:
+
       print(f"Empty df1 or empty df2................")
       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
       for f in os.listdir("templates/"):
@@ -353,6 +361,7 @@ def Vessel_map():
         if "mymap.html" in f:
           print(f"*mymap.html file to be removed = {f}")
           os.remove(f"templates/{f}")
+
       m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
       regions = 'templates/SG_anchorages.geojson'
       m.add_geojson(regions,
@@ -366,7 +375,12 @@ def Vessel_map():
       newHTMLwotemp = f"{current_datetime}mymap.html"
       print(f"new html file created = {newHTML}")
       m.to_html(newHTML)
+      with open(newHTML, 'r') as file:
+        html_content = file.read()
+      html_content = menu_banner_html + html_content
       return render_template(newHTMLwotemp, user=session['email'])
+
+    
     else:
       merged_df = pd.merge(df2,
                            df1,
@@ -374,57 +388,109 @@ def Vessel_map():
                            right_on=df1['vessel_imo_no'],
                            how='outer')
       print(f"Merged df  VESSEL MAP == {merged_df}")
-      # merged_df.drop(columns=['vm_vessel_particulars.vessel_call_sign', 'vm_vessel_particulars.vessel_flag', 'vm_vessel_movement_type', 'vm_vessel_movement_height','vessel_year_built','vessel_call_sign','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vm_vessel_movement_draft','vm_vessel_particulars.vessel_nm'], inplace=True)
-      
-      # merged_df.drop(columns=['id_x', 'id_y','vessel_nm_x', 'vessel_call_sign_x','vessel_flag_x','vessel_call_sign_x','vessel_movement_type','vessel_movement_height','vessel_year_built','vessel_length','vessel_depth','vessel_course','vessel_longitude','vessel_latitude','vessel_movement_draft'], inplace=True)
-      
-      # print(f"Merged_df == {merged_df.to_string(index=False)}")
-      #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}")
   
       #sort & drop duplicates
       # sorting by first name
       merged_df.drop_duplicates(subset="imoNumber", keep='last', inplace=True)
-      
-      m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
-      regions = 'templates/SG_anchorages.geojson'
-      m.add_geojson(regions,
-                    layer_name='SG Anchorages',
-                    style={
-                      "color": (random.choice(colors)),
-                      "fill": True,
-                      "fillOpacity": 0.05
-                    })
-      # m.add_points_from_xy(
-      #   merged_df,
-      #   x="longitudeDegrees",
-      #   y="latitudeDegrees",
-        
-      #   #color_column='vessel_imo_no',
-      #   angle = 'heading',
-      #   icon_names=['gear', 'map', 'leaf', 'globe'],
-      #   spin=True,
-      #   add_legend=True,
-      # )
-      for index, row in merged_df.iterrows():
+
+
+
+
+
+
+
+
+
+
+
+      df = merged_df
+      print(f"Longitiude = {df['longitudeDegrees']}")
+      longitude = list(df['longitudeDegrees'])
+      print(f"Latitiude = {df['latitudeDegrees']}")
+      latitude = list(df['latitudeDegrees'])
+      m = folium.Map(location = [1.257167, 103.897], zoom_start = 9)
+      color_mapping = {}
+      # Add several markers to the map
+      for index, row in df.iterrows():
+        imo_number = row["imoNumber"]
+        # Assign a color to the imoNumber, cycling through the available colors
+        if imo_number not in color_mapping:
+            color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
+        icon_color = color_mapping[imo_number]
+        icon_html = f'<i class="fa fa-arrow-up" style="color: {icon_color}; font-size: 24px; transform: rotate({row["heading"]}deg);"></i>'
+        popup_html = f"<b>Vessel Info</b><br>"
+        for key, value in row.items():
+          popup_html += f"<b>{key}:</b> {value}<br>"
         folium.Marker(location = [row["latitudeDegrees"],row["longitudeDegrees"]],
-                    popup=merged_df['vesselName'][index],
-                    icon=folium.Icon(color="red",icon="ship", prefix='fa'),
-                    angle = merged_df['heading'][index]
-                    ).add_to(m)
-      #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
+                        popup=folium.Popup(html=popup_html, max_width=300),
+                        icon=folium.DivIcon(html=icon_html),
+                        angle = float(row['heading']),
+                        spin=True
+                        ).add_to(m)
+      # Geojson url
+      geojson_url = "static/css/SG_anchorages.geojson"
+    
+      # Desired styles
+      style = {'fillColor': 'red', 'color': 'blueviolet'}
+    
+      # Geojson
+      folium.GeoJson(data = geojson_url, name = "geojson",
+          style_function = lambda x:style).add_to(m)
+
       for f in os.listdir("templates/"):
         #print(f)
         if "mymap.html" in f:
             print(f"*mymap.html file to be removed = {f}")
             os.remove(f"templates/{f}")
+      
       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
-      newHTML = f"templates/{current_datetime}mymap.html"
-      newHTMLwotemp = f"{current_datetime}mymap.html"
-      print(f"new html file created = {newHTML}")
-      m.to_html(newHTML)
-      #time.sleep(2)
-      return render_template(newHTMLwotemp, user=session['email'])
+      newHTML = fr"templates/{current_datetime}mymap.html"
+      m.save(newHTML)
+      with open(newHTML, 'r') as file:
+        html_content = file.read()
+      # Add the menu banner HTML code to the beginning of the file
+      html_content = menu_banner_html + html_content
+      # Write the modified HTML content back to the file
+      with open(newHTML, 'w') as file:
+          file.write(html_content)
+    
+      newHTMLrender = f"{current_datetime}mymap.html"
+      
+      time.sleep(1)
+      return render_template(newHTMLrender, user=session['email'])
   return redirect(url_for('login'))
+
+
+  #     m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
+  #     regions = 'templates/SG_anchorages.geojson'
+  #     m.add_geojson(regions,
+  #                   layer_name='SG Anchorages',
+  #                   style={
+  #                     "color": (random.choice(colors)),
+  #                     "fill": True,
+  #                     "fillOpacity": 0.05
+  #                   })
+
+  #     for index, row in merged_df.iterrows():
+  #       folium.Marker(location = [row["latitudeDegrees"],row["longitudeDegrees"]],
+  #                   popup=merged_df['vesselName'][index],
+  #                   icon=folium.Icon(color="red",icon="ship", prefix='fa'),
+  #                   angle = merged_df['heading'][index]
+  #                   ).add_to(m)
+  #     #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
+  #     for f in os.listdir("templates/"):
+  #       #print(f)
+  #       if "mymap.html" in f:
+  #           print(f"*mymap.html file to be removed = {f}")
+  #           os.remove(f"templates/{f}")
+  #     current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
+  #     newHTML = f"templates/{current_datetime}mymap.html"
+  #     newHTMLwotemp = f"{current_datetime}mymap.html"
+  #     print(f"new html file created = {newHTML}")
+  #     m.to_html(newHTML)
+  #     #time.sleep(2)
+  #     return render_template(newHTMLwotemp, user=session['email'])
+  # return redirect(url_for('login'))
 
 @app.before_request
 def before_request():
