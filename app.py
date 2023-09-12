@@ -335,7 +335,7 @@ def vessel_request(msg):
 def Vessel_map():
   if g.user:
     
-    print(f"VESSEL MAP PRINTING IMO_NOTFOUND = {IMO_NOTFOUND}")
+    print(f"VESSEL MAP PRINTING IMO_NOTFOUND = {session['IMO_NOTFOUND']}")
     email = session['email']
     receive_details_data = receive_details(email)
     print(f"Vessel_Map:  Receive_details from database.py {receive_details(email)}")
