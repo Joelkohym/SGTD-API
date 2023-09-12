@@ -124,6 +124,7 @@ def register():
 def Vessel_data_pull():
   if g.user:
     if request.method == 'POST':
+      session['IMO_NOTFOUND'] = []
       #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
       delete_all_rows_in_table(session['gc'])
       user_vessel_imo = request.form['vessel_imo']
