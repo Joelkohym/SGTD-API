@@ -66,6 +66,7 @@ def login():
         session['pitstop_url']=pitstop
         session['api_key']=API_KEY
         session['gc']=gSheet
+        session['IMO_NOTFOUND'] = []
         
         print(f"SESSION DATA: Pitstop URL = {session['pitstop_url']}, API_KEY = {session['api_key']}, obID = {session['participant_id']}")
         msg = f"Login success for {email}, please enter Vessel IMO number(s)"
@@ -468,7 +469,7 @@ def before_request():
 #========================Vesseldata GET===========================
 @app.route("/api/sgtd", methods=['POST'])
 def SGTD():
-  session['IMO_NOTFOUND'] = []
+  
   user_vessel_imo = request.form['vessel_imo']
   #Split vessel_imo list into invdivual records
   input_list = [int(x) for x in user_vessel_imo.split(',')]
