@@ -39,13 +39,7 @@ colors = [
 "red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
 ]
 
-@app.route("/vessel_request/<msg>", methods=['GET','POST'])
-def vessel_request(msg):
-  if g.user:
-    email = session['email']
-    return render_template('vessel_request.html', msg=msg, email=email)
-  else:
-    return redirect(url_for('login'))
+
     
 @app.route('/')
 @app.route("/login", methods=['GET','POST'])
@@ -317,6 +311,21 @@ def Vessel_movement_receive(email_url):
 ##########################################################MySQL DB#############################################################################################
 
 
+
+@app.route("/vessel_request/<msg>", methods=['GET','POST'])
+def vessel_request(msg):
+  if g.user:
+    email = session['email']
+    return render_template('vessel_request.html', msg=msg, email=email)
+  else:
+    return redirect(url_for('login'))
+
+
+
+
+
+
+
 #9490820 / 9929297
 #====================================####################MAP DB##############################========================================
 @app.route("/api/vessel_map", methods=['GET','POST'])
@@ -438,6 +447,7 @@ def Vessel_map():
     
       newHTMLrender = f"{current_datetime}mymap.html"
       return render_template(newHTMLrender, user=session['email'])
+  print("G.user doesn't exists, redirect to login")
   return redirect(url_for('login'))
 
 
