@@ -457,36 +457,6 @@ def Vessel_map():
   return redirect(url_for('login'))
 
 
-  #     m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
-  #     regions = 'templates/SG_anchorages.geojson'
-  #     m.add_geojson(regions,
-  #                   layer_name='SG Anchorages',
-  #                   style={
-  #                     "color": (random.choice(colors)),
-  #                     "fill": True,
-  #                     "fillOpacity": 0.05
-  #                   })
-
-  #     for index, row in merged_df.iterrows():
-  #       folium.Marker(location = [row["latitudeDegrees"],row["longitudeDegrees"]],
-  #                   popup=merged_df['vesselName'][index],
-  #                   icon=folium.Icon(color="red",icon="ship", prefix='fa'),
-  #                   angle = merged_df['heading'][index]
-  #                   ).add_to(m)
-  #     #print(f"Merged_df IMO No == {merged_df['vessel_imo_no'].to_string(index=False)}, vessel_latitude_degrees = {merged_df['vessel_latitude_degrees'].to_string(index=False)}, vessel_longitude_degrees = {merged_df['vessel_longitude_degrees'].to_string(index=False)}")
-  #     for f in os.listdir("templates/"):
-  #       #print(f)
-  #       if "mymap.html" in f:
-  #           print(f"*mymap.html file to be removed = {f}")
-  #           os.remove(f"templates/{f}")
-  #     current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
-  #     newHTML = f"templates/{current_datetime}mymap.html"
-  #     newHTMLwotemp = f"{current_datetime}mymap.html"
-  #     print(f"new html file created = {newHTML}")
-  #     m.to_html(newHTML)
-  #     #time.sleep(2)
-  #     return render_template(newHTMLwotemp, user=session['email'])
-  # return redirect(url_for('login'))
 
 @app.before_request
 def before_request():
@@ -494,6 +464,8 @@ def before_request():
   if 'email' in session:
     g.user=session['email']
 #====================================####################MAP DB##############################========================================
+
+
 
 #========================Vesseldata GET===========================
 @app.route("/api/sgtd", methods=['POST'])
@@ -524,7 +496,9 @@ def SGTD():
       return r_GET.text
     else:
       print(f"Failed to get Config Data for {vessel_imo}. Status code: {r_GET.status_code}")
-      session['IMO_NOTFOUND'].append(vessel_imo)
+      NOT_FOUND_LIST = session['IMO_NOTFOUND']
+      NOT_FOUND_LIST.append(vessel_imo)
+      session['IMO_NOTFOUND'] = NOT_FOUND_LIST
       print(f"SGTD PRINTING IMO_NOTFOUND = {session['IMO_NOTFOUND']}")
       print(r_GET.text
           ) 
