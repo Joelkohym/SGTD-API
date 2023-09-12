@@ -428,7 +428,7 @@ def Vessel_map():
                         spin=True
                         ).add_to(m)
       # Geojson url
-      geojson_url = "static/css/SG_anchorages.geojson"
+      geojson_url = "templates/SG_anchorages.geojson"
     
       # Desired styles
       style = {'fillColor': 'red', 'color': 'blueviolet'}
