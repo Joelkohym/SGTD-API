@@ -43,7 +43,7 @@ colors = [
 def vessel_request(msg):
   if g.user:
     email = session['email']
-    return render_template('vessel_request.html', msg="", email=email)
+    return render_template('vessel_request.html', msg=msg, email=email)
   else:
     return redirect(url_for('login'))
     
@@ -75,7 +75,7 @@ def login():
         print(f"SESSION DATA: Pitstop URL = {session['pitstop_url']}, API_KEY = {session['api_key']}, obID = {session['participant_id']}")
         msg = f"Login success for {email}, please enter Vessel IMO number(s)"
         print(f"Login success for {email}, redirect")
-        return redirect(url_for('vessel_request'), msg=msg, email=email)
+        return redirect(url_for('vessel_request'), msg=msg)
         #return render_template('vessel_request.html', msg=msg, email=email)
       else:
         msg = "Invalid credentials, please try again.."
