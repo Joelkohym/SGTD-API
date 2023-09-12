@@ -384,18 +384,9 @@ def Vessel_map():
       # sorting by first name
       merged_df.drop_duplicates(subset="imoNumber", keep='last', inplace=True)
 
-
-
-
-
-
-
-
-
-
-
       df = merged_df
-      print(f"Longitiude = {df['longitudeDegrees']}")
+      print(f"Vessel_map Merged DF = {df}")
+      print(f"Vessel_map Longitiude = {df['longitudeDegrees']}")
       longitude = list(df['longitudeDegrees'])
       print(f"Latitiude = {df['latitudeDegrees']}")
       latitude = list(df['latitudeDegrees'])
@@ -446,8 +437,6 @@ def Vessel_map():
           file.write(html_content)
     
       newHTMLrender = f"{current_datetime}mymap.html"
-      
-      time.sleep(1)
       return render_template(newHTMLrender, user=session['email'])
   return redirect(url_for('login'))
 

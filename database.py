@@ -91,7 +91,7 @@ def receive_details(email):
     values = {'email' : email}
     receive_db = conn.execute(query, values)
     receive_data = receive_db.all()[0]
-    print(f"receive_data == {receive_data}, return api ={receive_data[3]}, return pID = {receive_data[4]}, return pitstop = {receive_data[5]}")
+    #print(f"receive_data == {receive_data}, return api ={receive_data[3]}, return pID = {receive_data[4]}, return pitstop = {receive_data[5]}")
   return(receive_data[0],receive_data[3],receive_data[4],receive_data[5],receive_data[6])
 
 
