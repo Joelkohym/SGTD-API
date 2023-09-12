@@ -350,15 +350,18 @@ def Vessel_map():
     # df2 = get_map_data(gsheet_cred_path)[1]
     print(f"df2 VESSEL MAP = {df2.to_string(index=False, header=True)}")
     menu_banner_html = '''
-  <!-- Menu Banner -->
   <div class="menu-banner">
-      <h1>Welcome to SGTraDex Map</h1>
-      <ul>
-          <li><a href="/vessel_request/Redirect_Vessel_Map">Vessel Map</a></li>
-          <li><a href="/login">Login</a></li>
-          <li><a href="/logout">Logout</a></li>
-      </ul>
-  </div>
+    <div class="text-center">
+        <!-- Add the image here with centering styles -->
+        <img src="{{ url_for('static', filename='SGTD Logo.png') }}" alt="SGTD Logo" class="img-fluid" style="display: inline-block;">
+    </div>
+    <h1 class="text-center">Welcome to SGTraDex Map</h1>
+    <ul class="text-center">
+        <li><a href="/vessel_request/Redirect_Vessel_Map">Vessel Map</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+    </ul>
+</div>
   '''
     if df2.empty:
 
