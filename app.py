@@ -134,6 +134,7 @@ def Vessel_data_pull():
       print(f"user_vessel_imo from html = {user_vessel_imo}")
       print(f"input_list from html = {input_list}")
       #Loop through input IMO list
+      tic = time.perf_counter()
       for vessel_imo in input_list:
         print(f"IMO Number = {vessel_imo}")
         
@@ -159,7 +160,7 @@ def Vessel_data_pull():
           print(f"session = {session}") 
           print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
           print(r_GET.text) 
-      
+
         payload = {
           "participants": [{
             "id": "1817878d-c468-411b-8fe1-698eca7170dd",
@@ -200,7 +201,8 @@ def Vessel_data_pull():
           print(
             f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
           )
-      
+      toc = time.perf_counter()
+      print(f"PULL duration for {len(input_list)} in {toc - tic:0.4f} seconds")
       return redirect(url_for('Vessel_map'))
       
     return render_template('vessel_request.html')
