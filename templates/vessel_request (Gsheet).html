@@ -14,6 +14,7 @@
     <div>
       <img src="static/SGTRADEX LOGO.png" class="img-fluid" alt="Your Image" id="centered-image">
     </div>
+    <div style="font-weight: bold; text-decoration: underline; color: rgb(8, 126, 8);">{{ msg }}</div>
     <div>
       <!-- <a href="/api/vessel_map" class="btn btn-dark">MAP</a> -->
       <a href="/login" class="btn btn-dark">LOGIN</a>
@@ -62,7 +63,7 @@
 <div class="container">
     <div class=" row justify-content-center">
         <div class="col-sm-6 mt-4">
-          <div style="font-weight: bold; text-decoration: underline; color: rgb(8, 126, 8);">{{ msg }}</div>
+          
             <h2>Vessel request form</h2>
             <form action="/api/sgtd" method="POST">
                 <div class="form-group">
