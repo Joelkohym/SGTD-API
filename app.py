@@ -403,7 +403,7 @@ def Vessel_map():
                            right_on=df1['vessel_imo_no'],
                            how='outer')
       print(f"Merged df  VESSEL MAP == {merged_df}")
-      merged_df.drop(columns=['id_x','id_y','vessel_nm', 'vessel_imo', 'vessel_flag', 'vessel_call_sign','yearBuilt'],inplace=True)
+      merged_df.drop(columns=['id_x','id_y','vessel_nm', 'vessel_imo_no', 'vessel_flag', 'vessel_call_sign','yearBuilt'],inplace=True)
       #sort & drop duplicates
       # sorting by first name
       merged_df.drop_duplicates(subset="imoNumber", keep='last', inplace=True)
