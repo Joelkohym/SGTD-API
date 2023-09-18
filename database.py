@@ -187,20 +187,15 @@ def new_vessel_movement(data, email, gsheet_cred_path):
 
 
 def new_pilotage_service(data, email, gsheet_cred_path):
-  with engine.connect() as conn:
-      db_connection_string_pilot = gsheet_cred_path
-      engine_pilot = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
-      with engine_pilot.connect() as conn:
-        query_pilot = text("INSERT INTO vessel_movement_UCE (    vessel_nm,vessel_imo_no,vessel_flag,vessel_call_sign,vessel_location_from,vessel_location_to,vessel_movement_height,vessel_movement_type,vessel_movement_start_dt,vessel_movement_end_dt,vessel_movement_status,vessel_movement_draft) VALUES (:vessel_nm,:vessel_imo_no,:vessel_flag,:vessel_call_sign,:vessel_location_from,:vessel_location_to,:vessel_movement_height,:vessel_movement_type,:vessel_movement_start_dt,:vessel_movement_end_dt,:vessel_movement_status,:vessel_movement_draft)")
-        
-        values_pilot = {'vessel_nm':data['vm_vessel_particulars.vessel_nm'],'vessel_imo_no':data['vm_vessel_particulars.vessel_imo_no'],'vessel_flag':data['vm_vessel_particulars.vessel_flag'],'vessel_call_sign': data['vm_vessel_particulars.vessel_call_sign'],'vessel_location_from': data['vm_vessel_location_from'],'vessel_location_to':data['vm_vessel_location_to'],'vessel_movement_height': data['vm_vessel_movement_height'],'vessel_movement_type':data['vm_vessel_movement_type'],'vessel_movement_start_dt':data['vm_vessel_movement_start_dt'],'vessel_movement_end_dt':data['vm_vessel_movement_end_dt'],'vessel_movement_status':data['vm_vessel_movement_status'],'vessel_movement_draft':data['vm_vessel_movement_draft']}
+  engine_pilot = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
+  with engine_pilot.connect() as conn:
+    query_pilot = text("INSERT INTO vessel_movement_UCE (    vessel_nm,vessel_imo_no,vessel_flag,vessel_call_sign,vessel_location_from,vessel_location_to,vessel_movement_height,vessel_movement_type,vessel_movement_start_dt,vessel_movement_end_dt,vessel_movement_status,vessel_movement_draft) VALUES (:vessel_nm,:vessel_imo_no,:vessel_flag,:vessel_call_sign,:vessel_location_from,:vessel_location_to,:vessel_movement_height,:vessel_movement_type,:vessel_movement_start_dt,:vessel_movement_end_dt,:vessel_movement_status,:vessel_movement_draft)")
+    
+    values_pilot = {'vessel_nm':data['vm_vessel_particulars.vessel_nm'],'vessel_imo_no':data['vm_vessel_particulars.vessel_imo_no'],'vessel_flag':data['vm_vessel_particulars.vessel_flag'],'vessel_call_sign': data['vm_vessel_particulars.vessel_call_sign'],'vessel_location_from': data['vm_vessel_location_from'],'vessel_location_to':data['vm_vessel_location_to'],'vessel_movement_height': data['vm_vessel_movement_height'],'vessel_movement_type':data['vm_vessel_movement_type'],'vessel_movement_start_dt':data['vm_vessel_movement_start_dt'],'vessel_movement_end_dt':data['vm_vessel_movement_end_dt'],'vessel_movement_status':data['vm_vessel_movement_status'],'vessel_movement_draft':data['vm_vessel_movement_draft']}
 
-        result = conn.execute(query_pilot, values_pilot)
-      print("New vessel_current_position execute success")
-      return 1
-    else:
-      print('User exists, please try again')
-      return 0
+    result = conn.execute(query_pilot, values_pilot)
+  print("New vessel_current_position execute success")
+  return 1
 
 
 

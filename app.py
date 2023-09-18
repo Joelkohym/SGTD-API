@@ -13,7 +13,7 @@ import random
 import time
 import pytz 
 import os
-from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement,new_vessel_current_position, get_map_data,delete_all_rows_in_table, MPA_GET
+from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement,new_vessel_current_position, get_map_data,delete_all_rows_in_table, MPA_GET,new_pilotage_service
 
 
 app = Flask(__name__)
@@ -216,31 +216,30 @@ def Vessel_data_pull():
 ##########################################################MySQL DB#############################################################################################
 @app.route("/api/pilotage_service_db/receive/<email_url>", methods=['POST'])
 def Pilotage_service(email_url):
-    email = email_url
-    receive_details_data = receive_details(email)
-    #print(f"Vessel_current_position_receive:   Receive_details from database.py {receive_details(email)}")
-    API_KEY = receive_details_data[1]
-    participant_id = receive_details_data[2]
-    pitstop_url = receive_details_data[3]
-    gsheet_cred_path = receive_details_data[4]
+  email = email_url
+  receive_details_data = receive_details(email)
+  #print(f"Vessel_current_position_receive:   Receive_details from database.py {receive_details(email)}")
+  API_KEY = receive_details_data[1]
+  participant_id = receive_details_data[2]
+  pitstop_url = receive_details_data[3]
+  gsheet_cred_path = receive_details_data[4]
+
+  data = request.data # Get the raw data from the request body
   
-    data = request.data # Get the raw data from the request body
-    
-    print(f"Pilotage service = {data}")
+  print(f"Pilotage service = {data}")
 
-    data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
-    # Convert the JSON string to a Python dictionary
-    data_dict = json.loads(data_str)
-    row_data_pilotage_service = data_dict['payload'][-1]
-    print(f"row_data_Pilotage service = {row_data_pilotage_service}")
+  data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
+  # Convert the JSON string to a Python dictionary
+  data_dict = json.loads(data_str)
+  row_data_pilotage_service = data_dict['payload'][-1]
+  print(f"row_data_Pilotage service = {row_data_pilotage_service}")
 
-
-    result = new_pilotage_service(data, email, gsheet_cred_path)
-    # if result == 1:
-    #   # Append the data as a new row
-    #   return f"Vessel Current Location Data saved to Google Sheets.{row_data_pilotage_service}"
-    # else:
-    #   return f"Email doesn't exists, unable to add data"
+  result = new_pilotage_service(data, email, gsheet_cred_path)
+  # if result == 1:
+  #   # Append the data as a new row
+  #   return f"Vessel Current Location Data saved to Google Sheets.{row_data_pilotage_service}"
+  # else:
+  #   return f"Email doesn't exists, unable to add data"
 
 
 
