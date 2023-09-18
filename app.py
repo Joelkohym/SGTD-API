@@ -235,7 +235,7 @@ def Pilotage_service(email_url):
     print(f"row_data_Pilotage service = {row_data_pilotage_service}")
 
 
-    #result = new_vessel_current_position(row_data_vessel_current_position, email)
+    result = new_pilotage_service(data, email, gsheet_cred_path)
     # if result == 1:
     #   # Append the data as a new row
     #   return f"Vessel Current Location Data saved to Google Sheets.{row_data_pilotage_service}"
@@ -264,7 +264,7 @@ def Vessel_current_position(email_url):
     data_dict = json.loads(data_str)
     row_data_vessel_current_position = data_dict['payload'][-1]
     print(f"row_data_vessel_current_position = {row_data_vessel_current_position}")
-    result = new_vessel_current_position(row_data_vessel_current_position, email)
+    result = new_vessel_current_position(row_data_vessel_current_position, email, gsheet_cred_path)
     if result == 1:
       # Append the data as a new row
       return f"Vessel Current Location Data saved to Google Sheets.{row_data_vessel_current_position}"
@@ -349,7 +349,7 @@ def Vessel_movement_receive(email_url):
     # Append the data to the worksheet
     print(f"row_data_vessel_movement: {row_data_vessel_movement}")
 
-    result = new_vessel_movement(row_data_vessel_movement, email)
+    result = new_vessel_movement(row_data_vessel_movement, email, gsheet_cred_path)
     if result == 1:
       # Append the data as a new row
       return f"Vessel Current Location Data saved to Google Sheets.{row_data_vessel_movement}"

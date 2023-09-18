@@ -95,20 +95,10 @@ def receive_details(email):
   return(receive_data[0],receive_data[3],receive_data[4],receive_data[5],receive_data[6])
 
 
-def new_vessel_current_position(data, email):
-  with engine.connect() as conn:
-    query = text("select * from userDB WHERE email = :email")
-    values = {'email' : email}
-    result = conn.execute(query, values)
-    result_all = result.fetchall()
-    #result_all = result.all()
-    #print(result_all)
-    print(f"length of result all = {len(result_all)}")
-    if len(result_all) > 0:
-      db_connection_string_vcp = result_all[0][6]
-      engine_vcp = create_engine(db_connection_string_vcp,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
-      with engine.connect() as conn:
-        query_vcp = text("""
+def new_vessel_current_position(data, email, gsheet_cred_path):
+  engine_vcp = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
+  with engine_vcp.connect() as conn:
+    query_vcp = text("""
     INSERT INTO vessel_current_position_UCE (
         vessel_nm,
         vessel_imo_no,
@@ -156,7 +146,7 @@ def new_vessel_current_position(data, email):
         
 
 # Define the data dictionary
-        values_vcp = {
+    values_vcp = {
     'vessel_nm': data['vessel_particulars'][0]['vessel_nm'],
     'vessel_imo_no': data['vessel_particulars'][0]['vessel_imo_no'],
     'vessel_call_sign': data['vessel_particulars'][0]['vessel_call_sign'],
@@ -179,36 +169,57 @@ def new_vessel_current_position(data, email):
     'vessel_time_stamp': data['vessel_time_stamp']
 }
 
-        result = conn.execute(query_vcp, values_vcp)
-      print("New vessel_current_position execute success")
-      return 1
-    else:
-      print('User exists, please try again')
-      return 0
+    result = conn.execute(query_vcp, values_vcp)
+  print("New vessel_current_position execute success")
+  return 1
 
 
-def new_vessel_movement(data, email):
+def new_vessel_movement(data, email, gsheet_cred_path):
+  engine_vm = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
+  with engine_vm.connect() as conn:
+    query_vm = text("INSERT INTO vessel_movement_UCE (    vessel_nm,vessel_imo_no,vessel_flag,vessel_call_sign,vessel_location_from,vessel_location_to,vessel_movement_height,vessel_movement_type,vessel_movement_start_dt,vessel_movement_end_dt,vessel_movement_status,vessel_movement_draft) VALUES (:vessel_nm,:vessel_imo_no,:vessel_flag,:vessel_call_sign,:vessel_location_from,:vessel_location_to,:vessel_movement_height,:vessel_movement_type,:vessel_movement_start_dt,:vessel_movement_end_dt,:vessel_movement_status,:vessel_movement_draft)")
+      
+    values_vm = {'vessel_nm':data['vm_vessel_particulars.vessel_nm'],'vessel_imo_no':data['vm_vessel_particulars.vessel_imo_no'],'vessel_flag':data['vm_vessel_particulars.vessel_flag'],'vessel_call_sign': data['vm_vessel_particulars.vessel_call_sign'],'vessel_location_from': data['vm_vessel_location_from'],'vessel_location_to':data['vm_vessel_location_to'],'vessel_movement_height': data['vm_vessel_movement_height'],'vessel_movement_type':data['vm_vessel_movement_type'],'vessel_movement_start_dt':data['vm_vessel_movement_start_dt'],'vessel_movement_end_dt':data['vm_vessel_movement_end_dt'],'vessel_movement_status':data['vm_vessel_movement_status'],'vessel_movement_draft':data['vm_vessel_movement_draft']}
+
+    result = conn.execute(query_vm, values_vm)
+  print("New vessel_current_position execute success")
+  return 1
+
+
+def new_pilotage_service(data, email, gsheet_cred_path):
   with engine.connect() as conn:
-    query = text("select * from userDB WHERE email = :email")
-    values = {'email' : email}
-    result = conn.execute(query, values)
-    result_all = result.all()
-    #print(result_all)
-    print(f"length of result all = {len(result_all)}")
-    if len(result_all) > 0:
-      db_connection_string_vcp = result_all[0][6]
-      engine_vcp = create_engine(db_connection_string_vcp,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
-      with engine.connect() as conn:
-        query_vm = text("INSERT INTO vessel_movement_UCE (    vessel_nm,vessel_imo_no,vessel_flag,vessel_call_sign,vessel_location_from,vessel_location_to,vessel_movement_height,vessel_movement_type,vessel_movement_start_dt,vessel_movement_end_dt,vessel_movement_status,vessel_movement_draft) VALUES (:vessel_nm,:vessel_imo_no,:vessel_flag,:vessel_call_sign,:vessel_location_from,:vessel_location_to,:vessel_movement_height,:vessel_movement_type,:vessel_movement_start_dt,:vessel_movement_end_dt,:vessel_movement_status,:vessel_movement_draft)")
+      db_connection_string_pilot = gsheet_cred_path
+      engine_pilot = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
+      with engine_pilot.connect() as conn:
+        query_pilot = text("INSERT INTO vessel_movement_UCE (    vessel_nm,vessel_imo_no,vessel_flag,vessel_call_sign,vessel_location_from,vessel_location_to,vessel_movement_height,vessel_movement_type,vessel_movement_start_dt,vessel_movement_end_dt,vessel_movement_status,vessel_movement_draft) VALUES (:vessel_nm,:vessel_imo_no,:vessel_flag,:vessel_call_sign,:vessel_location_from,:vessel_location_to,:vessel_movement_height,:vessel_movement_type,:vessel_movement_start_dt,:vessel_movement_end_dt,:vessel_movement_status,:vessel_movement_draft)")
         
-        values_vm = {'vessel_nm':data['vm_vessel_particulars.vessel_nm'],'vessel_imo_no':data['vm_vessel_particulars.vessel_imo_no'],'vessel_flag':data['vm_vessel_particulars.vessel_flag'],'vessel_call_sign': data['vm_vessel_particulars.vessel_call_sign'],'vessel_location_from': data['vm_vessel_location_from'],'vessel_location_to':data['vm_vessel_location_to'],'vessel_movement_height': data['vm_vessel_movement_height'],'vessel_movement_type':data['vm_vessel_movement_type'],'vessel_movement_start_dt':data['vm_vessel_movement_start_dt'],'vessel_movement_end_dt':data['vm_vessel_movement_end_dt'],'vessel_movement_status':data['vm_vessel_movement_status'],'vessel_movement_draft':data['vm_vessel_movement_draft']}
+        values_pilot = {'vessel_nm':data['vm_vessel_particulars.vessel_nm'],'vessel_imo_no':data['vm_vessel_particulars.vessel_imo_no'],'vessel_flag':data['vm_vessel_particulars.vessel_flag'],'vessel_call_sign': data['vm_vessel_particulars.vessel_call_sign'],'vessel_location_from': data['vm_vessel_location_from'],'vessel_location_to':data['vm_vessel_location_to'],'vessel_movement_height': data['vm_vessel_movement_height'],'vessel_movement_type':data['vm_vessel_movement_type'],'vessel_movement_start_dt':data['vm_vessel_movement_start_dt'],'vessel_movement_end_dt':data['vm_vessel_movement_end_dt'],'vessel_movement_status':data['vm_vessel_movement_status'],'vessel_movement_draft':data['vm_vessel_movement_draft']}
 
-        result = conn.execute(query_vm, values_vm)
+        result = conn.execute(query_pilot, values_pilot)
       print("New vessel_current_position execute success")
       return 1
     else:
       print('User exists, please try again')
       return 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def get_map_data(db_creds):
@@ -336,3 +347,59 @@ def MPA_GET_GSHEET(api_response,gsheet_cred_path):
   worksheet_replit.append_table(values=row_values, start='A2')
   worksheet_replit.delete_rows(1)
   return f"Vessel Current Location Data saved to Google Sheets.{row_values}"
+
+
+
+
+
+
+
+
+
+
+
+# #CREATE TABLE vessel_movement_UCE (
+# 	id int NOT NULL AUTO_INCREMENT,
+#     vessel_nm VARCHAR(255),
+#     vessel_imo_no VARCHAR(255),
+#     vessel_flag VARCHAR(255),
+#     vessel_call_sign VARCHAR(255),
+#     vessel_location_from VARCHAR(255),
+#     vessel_location_to VARCHAR(255),
+#     vessel_movement_height VARCHAR(255),
+#     vessel_movement_type VARCHAR(255),
+#     vessel_movement_start_dt DATETIME,
+#     vessel_movement_end_dt DATETIME,
+#     vessel_movement_status VARCHAR(255),
+#     vessel_movement_draft VARCHAR(255),
+#     Timestamp_vessel_movement DATETIME,
+#     Timestamp_query DATETIME default now(),
+#     PRIMARY KEY (`id`)
+# );
+
+# #CREATE TABLE vessel_current_position_UCE (
+# 	id int NOT NULL AUTO_INCREMENT,
+#     vessel_nm VARCHAR(255),
+#     vessel_imo_no VARCHAR(255),
+#     vessel_call_sign VARCHAR(255),
+#     vessel_flag VARCHAR(255),
+#     vessel_length FLOAT,
+#     vessel_depth FLOAT,
+#     vessel_type VARCHAR(255),
+#     vessel_grosstonnage FLOAT,
+#     vessel_nettonnage FLOAT,
+#     vessel_deadweight FLOAT,
+#     vessel_mmsi_number VARCHAR(255),
+#     vessel_year_built INT,
+#     vessel_latitude DECIMAL(10, 6),
+#     vessel_longitude DECIMAL(10, 6),
+#     vessel_latitude_degrees DECIMAL(10, 6),
+#     vessel_longitude_degrees DECIMAL(10, 6),
+#     vessel_speed FLOAT,
+#     vessel_course FLOAT,
+#     vessel_heading FLOAT,
+#     vessel_time_stamp DATETIME,
+#     Timestamp_vessel_current_position DATETIME,
+#     Timestamp_query DATETIME default now(),
+#     PRIMARY KEY (`id`)
+# );
