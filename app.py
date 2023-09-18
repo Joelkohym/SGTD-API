@@ -152,7 +152,7 @@ def Vessel_data_pull():
         if r_GET.status_code == 200:
           print("Config Data retrieved successfully!")
           print(r_GET.text)
-          MPA_GET(r_GET.text)
+          MPA_GET(r_GET.text, session['gc'])
         else:
           NOT_FOUND_LIST = session['IMO_NOTFOUND']
           NOT_FOUND_LIST.append(vessel_imo)

@@ -265,7 +265,8 @@ def delete_all_rows_in_table(db_creds):
     result_MPA = conn.execute(query_MPA)
     print("Deleted MPA_vessel_data where id > 0")
 
-def MPA_GET(api_response):
+def MPA_GET(api_response, gsheet_cred_path):
+  
   data_list = json.loads(api_response)
   print(f"API response = {(data_list)}")
   print(f"API response[0] = {data_list[0]}")
@@ -285,7 +286,9 @@ def MPA_GET(api_response):
   
   query = text("INSERT INTO MPA_vessel_data (vesselName, callSign, imoNumber, flag, vesselLength, vesselBreadth, vesselDepth, vesselType, grossTonnage, netTonnage, deadweight, mmsiNumber, yearBuilt, latitude, longitude, latitudeDegrees, longitudeDegrees, speed, course, heading, timeStamp) VALUES (:vesselName, :callSign, :imoNumber, :flag, :vesselLength, :vesselBreadth, :vesselDepth, :vesselType, :grossTonnage, :netTonnage, :deadweight, :mmsiNumber, :yearBuilt, :latitude, :longitude, :latitudeDegrees, :longitudeDegrees, :speed, :course, :heading, :timeStamp)")
   values = {'vesselName':vessel_data['vesselName'], 'callSign':vessel_data['callSign'], 'imoNumber':vessel_data['imoNumber'], 'flag':vessel_data['flag'], 'vesselLength':vessel_data['vesselLength'], 'vesselBreadth':vessel_data['vesselBreadth'], 'vesselDepth':vessel_data['vesselDepth'], 'vesselType':vessel_data['vesselType'], 'grossTonnage':vessel_data['grossTonnage'], 'netTonnage':vessel_data['netTonnage'], 'deadweight':vessel_data['deadweight'], 'mmsiNumber':vessel_data['mmsiNumber'], 'yearBuilt':vessel_data['yearBuilt'], 'latitude':latitude, 'longitude':longitude, 'latitudeDegrees':latitude_degrees, 'longitudeDegrees':longitude_degrees, 'speed':speed, 'course':course, 'heading':heading, 'timeStamp':timestamp}
-  with engine.connect() as conn:
+
+  engine_MPA_GET = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
+  with engine_MPA_GET.connect() as conn:
     MPA_Data = conn.execute(query, values)
   return MPA_Data
 
