@@ -292,6 +292,64 @@ def MPA_GET(api_response, gsheet_cred_path):
     MPA_Data = conn.execute(query, values)
   return MPA_Data
 
+
+
+def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
+  data_list = json.loads(api_response)
+  print(f"API response = {(data_list)}")
+  print(f"API response[0] = {data_list[0]}")
+
+  # Initialize variables to keep track of the latest record and time
+  latest_record = None
+  latest_time = None
+  # Iterate through the list of records
+  for record in data:
+    reported_arrival_time = record.get("reportedArrivalTime")
+
+    # Check if reported_arrival_time is not None and greater than the latest_time
+    if reported_arrival_time and (latest_time is None or reported_arrival_time > latest_time):
+        latest_record = record
+        latest_time = reported_arrival_time
+
+    # Print the latest record
+  if latest_record:
+      print(json.dumps(latest_record, indent=4))
+  else:
+    print("No records with reported arrival times found.")
+
+  # Your JSON data
+  vessel_data = latest_record
+  
+  # Create a SQL query with placeholders for the values
+  query = text("""
+      INSERT INTO MPA_arrivaldeclaration (
+          vesselName, callSign, imoNumber, flag, 
+          location, grid, purpose, agent, reportedArrivalTime
+      ) VALUES (
+          :vesselName, :callSign, :imoNumber, :flag, 
+          :location, :grid, :purpose, :agent, :reportedArrivalTime
+      )
+  """)
+  
+  # Prepare the values
+  values = {
+      'vesselName': vessel_data['vesselParticulars']['vesselName'],
+      'callSign': vessel_data['vesselParticulars']['callSign'],
+      'imoNumber': vessel_data['vesselParticulars']['imoNumber'],
+      'flag': vessel_data['vesselParticulars']['flag'],
+      'location': vessel_data['location'],
+      'grid': vessel_data['grid'],
+      'purpose': vessel_data['purpose'],
+      'agent': vessel_data['agent'],
+      'reportedArrivalTime': vessel_data['reportedArrivalTime']
+  }
+  
+  engine_MPA_GET = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
+  with engine_MPA_GET.connect() as conn:
+    MPA_Data = conn.execute(query, values)
+  return MPA_Data
+
+
 def MPA_GET_GSHEET(api_response,gsheet_cred_path):
 
   gc = pygsheets.authorize(service_account_file=gsheet_cred_path)

@@ -144,10 +144,12 @@ def Vessel_data_pull():
         url_vessel_movement = f"{session['pitstop_url']}/api/v1/data/pull/vessel_movement"
         url_vessel_current_position = f"{session['pitstop_url']}/api/v1/data/pull/vessel_current_position"
         url_MPA = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/positions/imonumber/{vessel_imo}"
+        url_MPA_arrivaldeclaration = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/arrivaldeclaration/imonumber/{vessel_imo}"
   
         # Make the GET request
         API_KEY_MPA = os.environ['MPA_API']
         r_GET = requests.get(url_MPA, headers={'Apikey': API_KEY_MPA})
+
           # Check the response
         if r_GET.status_code == 200:
           print("Config Data retrieved successfully!")
@@ -163,6 +165,22 @@ def Vessel_data_pull():
           print(f"session = {session}") 
           print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
           print(r_GET.text) 
+
+        r_GET_arrivaldeclaration = requests.get(url_MPA_arrivaldeclaration, headers={'Apikey': API_KEY_MPA})
+        if r_GET_arrivaldeclaration.status_code == 200:
+          print("Config Data retrieved successfully!")
+          print(r_GET_arrivaldeclaration.text)
+          MPA_GET_arrivaldeclaration(r_GET_arrivaldeclaration.text, session['gc'])
+        else:
+          NOT_FOUND_LIST = session['IMO_NOTFOUND']
+          NOT_FOUND_LIST.append(vessel_imo)
+          print(f"SGTD PRINTING IMO_NOTFOUND1 = {NOT_FOUND_LIST}")
+          session['IMO_NOTFOUND'] = NOT_FOUND_LIST
+          print(f"SGTD PRINTING IMO_NOTFOUND2 = {session['IMO_NOTFOUND']}")
+          print(f"r_GET.text = {r_GET_arrivaldeclarationtext}") 
+          print(f"session = {session}") 
+          print(f"Failed to get Config Data for arrivaldeclaration. Status code: {r_GET_arrivaldeclaration.status_code}")
+          print(r_GET_arrivaldeclaration.text) 
 
         payload = {
           "participants": [{
