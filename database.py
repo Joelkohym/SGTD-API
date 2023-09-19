@@ -331,25 +331,25 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
   # Create a SQL query with placeholders for the values
   query = text("""
       INSERT INTO MPA_arrivaldeclaration (
-          vesselName, callSign, imoNumber, flag, 
-          location, grid, purpose, agent, reportedArrivalTime
+          vessel_name, call_sign, imo_number, flag, 
+          location, grid, purpose, agent, reported_arrival_time
       ) VALUES (
-          :vesselName, :callSign, :imoNumber, :flag, 
-          :location, :grid, :purpose, :agent, :reportedArrivalTime
+          :vessel_name, :call_sign, :imo_number, :flag, 
+          :location, :grid, :purpose, :agent, :reported_arrival_time
       )
   """)
   
   # Prepare the values
   values = {
-      'vesselName': vessel_data['vesselParticulars']['vesselName'],
-      'callSign': vessel_data['vesselParticulars']['callSign'],
-      'imoNumber': vessel_data['vesselParticulars']['imoNumber'],
+      'vessel_name': vessel_data['vesselParticulars']['vesselName'],
+      'call_sign': vessel_data['vesselParticulars']['callSign'],
+      'imo_number': vessel_data['vesselParticulars']['imoNumber'],
       'flag': vessel_data['vesselParticulars']['flag'],
       'location': vessel_data['location'],
       'grid': vessel_data['grid'],
       'purpose': vessel_data['purpose'],
       'agent': vessel_data['agent'],
-      'reportedArrivalTime': vessel_data['reportedArrivalTime']
+      'reported_arrival_time': vessel_data['reportedArrivalTime']
   }
   
   engine_MPA_arrivaldeclaration = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
