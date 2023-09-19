@@ -242,7 +242,7 @@ def get_map_data(db_creds):
     print(f"length of result_all_VCP = {len(result_all_VCP)}")
     df2 = pd.DataFrame(result_all_VCP, columns=column_names_VCP)
     # sorting by first name
-   df2.drop_duplicates(subset="imoNumber", keep='last', inplace=True)
+    df2.drop_duplicates(subset="imoNumber", keep='last', inplace=True)
 
 
     query = text("select * from MPA_arrivaldeclaration")
@@ -254,14 +254,15 @@ def get_map_data(db_creds):
     df3 = pd.DataFrame(result_all_ETA, columns=column_names_ETA)
     df3.drop_duplicates(subset="imo_number", keep='last', inplace=True)
     df2.drop(columns=['key_0'],inplace=True)
-    df2 = pd.merge(df2,
+    new_df = pd.merge(df2,
                    df3,
                    left_on=df2['imoNumber'],
                    right_on=df3['imo_number'],
                    how='outer')
-    
-    print(f"Final Result all vm = {[df1, df2]}")
-    return [df1, df2]
+    if 'key_0' in new_df.columns:
+      new_df.drop(columns=['key_0'], inplace=True)
+    print(f"Final Result all vm = {[df1, new_df]}")
+    return [df1, new_df]
 
     
 def delete_all_rows_in_table(db_creds):
