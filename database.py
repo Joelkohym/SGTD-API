@@ -344,10 +344,10 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
       'reportedArrivalTime': vessel_data['reportedArrivalTime']
   }
   
-  engine_MPA_GET = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
-  with engine_MPA_GET.connect() as conn:
-    MPA_Data = conn.execute(query, values)
-  return MPA_Data
+  engine_MPA_arrivaldeclaration = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
+  with engine_MPA_arrivaldeclaration.connect() as conn:
+    MPA_arrivaldeclaration = conn.execute(query, values)
+  return MPA_arrivaldeclaration
 
 
 def MPA_GET_GSHEET(api_response,gsheet_cred_path):
