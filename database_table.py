@@ -4,7 +4,7 @@ import os
 import json
 
 # db_connection_string = os.environ['DB_CONNECTION_STRING']
-db_connection_string = "mysql+pymysql://2j104pgpfhay9dokc46k:pscale_pw_fiA5JrG88BcLgKuQmmK9WZHjaOlzf2BkRisjOD6FDn6@aws.connect.psdb.cloud/sgtd?charset=utf8mb4"
+db_connection_string = os.environ['DB_CONNECTION_STRING]']
 engine = create_engine(
   db_connection_string,
   connect_args={
