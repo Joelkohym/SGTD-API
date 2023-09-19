@@ -252,6 +252,7 @@ def get_map_data(db_creds):
     print(result_all_ETA)
     print(f"length of result_all_ETA = {len(result_all_ETA)}")
     df3 = pd.DataFrame(result_all_ETA, columns=column_names_ETA)
+    df3.drop(columns=['call_sign','flag','vessel_name','purpose'], inplace=True)
     df3.drop_duplicates(subset="imo_number", keep='last', inplace=True)
     df2.drop(columns=['key_0'],inplace=True)
     new_df = pd.merge(df2,
