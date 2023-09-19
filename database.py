@@ -280,7 +280,9 @@ def delete_all_rows_in_table(db_creds):
     print("Deleted vessel_current_position_UCE where id > 0")
     query_MPA = text("DELETE FROM MPA_vessel_data WHERE id > 0")
     result_MPA = conn.execute(query_MPA)
-    print("Deleted MPA_vessel_data where id > 0")
+    query_MPA_arrivaldeclaration = text("DELETE FROM MPA_arrivaldeclaration WHERE id > 0")
+    result_MPA_arrivaldeclaration = conn.execute(query_MPA_arrivaldeclaration)
+    print("Deleted MPA_arrivaldeclaration where id > 0")
 
 def MPA_GET(api_response, gsheet_cred_path):
   
