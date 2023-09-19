@@ -258,7 +258,7 @@ def get_map_data(db_creds):
                    df3,
                    left_on=df2['imoNumber'],
                    right_on=df3['imo_number'],
-                   how='outer')
+                   how='inner')
     if 'key_0' in new_df.columns:
       new_df.drop(columns=['key_0'], inplace=True)
     print(f"Final Result all vm = {[df1, new_df]}")
