@@ -250,6 +250,12 @@ def get_map_data(db_creds):
     print(result_all_ETA)
     print(f"length of result_all_ETA = {len(result_all_ETA)}")
     df3 = pd.DataFrame(result_all_ETA, columns=column_names_ETA)
+
+    df2 = pd.merge(df2,
+                   df3,
+                   left_on=df2['imoNumber'],
+                   right_on=df3['imo_number'],
+                   how='outer')
     
     print(f"Final Result all vm = {[df1, df2]}")
     return [df1, df2]

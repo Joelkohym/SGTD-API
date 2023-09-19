@@ -409,7 +409,6 @@ def Vessel_map():
       menu_banner_html = file.read()
       
     if df2.empty:
-
       print(f"Empty df1 or empty df2................")
       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
       for f in os.listdir("templates/"):
