@@ -241,6 +241,8 @@ def get_map_data(db_creds):
     print(result_all_VCP)
     print(f"length of result_all_VCP = {len(result_all_VCP)}")
     df2 = pd.DataFrame(result_all_VCP, columns=column_names_VCP)
+    # sorting by first name
+   df2.drop_duplicates(subset="imoNumber", keep='last', inplace=True)
 
 
     query = text("select * from MPA_arrivaldeclaration")
@@ -250,7 +252,8 @@ def get_map_data(db_creds):
     print(result_all_ETA)
     print(f"length of result_all_ETA = {len(result_all_ETA)}")
     df3 = pd.DataFrame(result_all_ETA, columns=column_names_ETA)
-
+    df3.drop_duplicates(subset="imo_number", keep='last', inplace=True)
+    df2.drop(columns=['key_0'],inplace=True)
     df2 = pd.merge(df2,
                    df3,
                    left_on=df2['imoNumber'],
