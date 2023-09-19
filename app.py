@@ -162,7 +162,6 @@ def Vessel_data_pull():
           session['IMO_NOTFOUND'] = NOT_FOUND_LIST
           print(f"SGTD PRINTING IMO_NOTFOUND2 = {session['IMO_NOTFOUND']}")
           print(f"r_GET.text = {r_GET.text}") 
-          print(f"session = {session}") 
           print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
           print(r_GET.text) 
 
@@ -172,13 +171,6 @@ def Vessel_data_pull():
           print(r_GET_arrivaldeclaration.text)
           MPA_GET_arrivaldeclaration(r_GET_arrivaldeclaration.text, session['gc'])
         else:
-          NOT_FOUND_LIST = session['IMO_NOTFOUND']
-          NOT_FOUND_LIST.append(vessel_imo)
-          print(f"SGTD PRINTING IMO_NOTFOUND1 = {NOT_FOUND_LIST}")
-          session['IMO_NOTFOUND'] = NOT_FOUND_LIST
-          print(f"SGTD PRINTING IMO_NOTFOUND2 = {session['IMO_NOTFOUND']}")
-          print(f"r_GET.text = {r_GET_arrivaldeclarationtext}") 
-          print(f"session = {session}") 
           print(f"Failed to get Config Data for arrivaldeclaration. Status code: {r_GET_arrivaldeclaration.status_code}")
           print(r_GET_arrivaldeclaration.text) 
 
