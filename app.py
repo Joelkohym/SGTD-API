@@ -13,7 +13,7 @@ import random
 import time
 import pytz 
 import os
-from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement,new_vessel_current_position, get_map_data,delete_all_rows_in_table, MPA_GET,new_pilotage_service
+from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement,new_vessel_current_position, get_map_data,delete_all_rows_in_table, MPA_GET,new_pilotage_service,MPA_GET_arrivaldeclaration
 
 
 app = Flask(__name__)

@@ -459,3 +459,43 @@ def MPA_GET_GSHEET(api_response,gsheet_cred_path):
 #     Timestamp_query DATETIME default now(),
 #     PRIMARY KEY (`id`)
 # );
+
+# CREATE TABLE MPA_arrivaldeclaration (
+#     id INT AUTO_INCREMENT PRIMARY KEY,
+#     vessel_name VARCHAR(255),
+#     call_sign VARCHAR(255),
+#     imo_number VARCHAR(255),
+#     flag VARCHAR(255),
+#     location VARCHAR(255),
+#     grid VARCHAR(255),
+#     purpose VARCHAR(255),
+#     agent VARCHAR(255),
+#     reported_arrival_time DATETIME
+# );
+
+# CREATE TABLE MPA_vessel_data (
+# 	id int NOT NULL AUTO_INCREMENT,
+#     vesselName VARCHAR(255),
+# 	callsign VARCHAR(255),
+#     imoNumber VARCHAR(255),
+#     flag VARCHAR(255),
+#     vesselLength FLOAT,
+#     vesselBreadth FLOAT,
+#     vesselDepth FLOAT,
+#     vesselType VARCHAR(255),
+#     grossTonnage FLOAT,
+#     netTonnage FLOAT,
+#     deadweight FLOAT,
+#     mmsiNumber VARCHAR(255),
+#     yearBuilt INT,
+#     latitude DECIMAL(10, 6),
+#     longitude DECIMAL(10, 6),
+#     latitudeDegrees DECIMAL(10, 6),
+#     longitudeDegrees DECIMAL(10, 6),
+#     speed FLOAT,
+#     course FLOAT,
+#     heading FLOAT,
+#     timeStamp DATETIME,
+#     time_queried DATETIME default now(),
+#     PRIMARY KEY (`id`)
+# );
