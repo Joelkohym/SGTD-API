@@ -242,6 +242,14 @@ def get_map_data(db_creds):
     print(f"length of result_all_VCP = {len(result_all_VCP)}")
     df2 = pd.DataFrame(result_all_VCP, columns=column_names_VCP)
 
+
+    query = text("select * from MPA_arrivaldeclaration")
+    result_ETA = conn.execute(query)
+    result_all_ETA = result_ETA.fetchall()
+    column_names_ETA = result_ETA.keys() 
+    print(result_all_ETA)
+    print(f"length of result_all_ETA = {len(result_all_ETA)}")
+    df3 = pd.DataFrame(result_all_ETA, columns=column_names_ETA)
     
     print(f"Final Result all vm = {[df1, df2]}")
     return [df1, df2]
