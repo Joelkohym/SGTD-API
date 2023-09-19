@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Table View</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+<div class="text-center">
+    <img src="https://sgtradex.com/images/sgtradex-logo.svg" alt="SGTD Image" class="img-fluid center-image" style="width: 10rem">
+  </div>
+
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="/vessel_request/Redirect from Vessel Map">Vessel Query</a>
+    </li>
+      <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="/logout">Logout</a>
+    </li>
+  </ul>
+
+<div class="container">
+    <div class=" row justify-content-center">
+        <div class="col-sm-6 mt-4">
+          <div style="font-weight: bold; text-decoration: underline; color: rgb(223, 55, 4);">{{ msg }}</div>
+            <h2>Table view for IMO</h2>
+            <form action="/api/table_pull" method="POST">
+                <div class="form-group">
+                <label for="imo">Vessel IMO for Table View:</label>
+                <input type="text" class="form-control" id="imo" placeholder="Enter Vessel IMO for Table View" name="imo">
+                </div>
+
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </form>
+        </div>
+
+    </div>
+  
+</div>
+
+</body>
+</html>
