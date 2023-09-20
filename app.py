@@ -146,12 +146,12 @@ def table_view_request():
     f'<table border="1" class="dataframe">',
     f'<table id="example" class="table table-striped table-bordered">',)
 
-html_content = html_content.replace(
-    f"<thead>",
-    f'<thead class="table-dark">',)
-html_content = html_content.replace(
-    f"</table>",
-    f'</table></div></div></div></div><script src="static/js/bootstrap.bundle.min.js"></script><script src="static/js/jquery-3.6.0.min.js"></script><script src="static/js/datatables.min.js"></script><script src="static/js/pdfmake.min.js"></script><script src="static/js/vfs_fonts.js"></script><script src="static/js/custom.js"></script></body></html>',)
+      html_content = html_content.replace(
+          f"<thead>",
+          f'<thead class="table-dark">',)
+      html_content = html_content.replace(
+          f"</table>",
+          f'</table></div></div></div></div><script src="static/js/bootstrap.bundle.min.js"></script><script src="static/js/jquery-3.6.0.min.js"></script><script src="static/js/datatables.min.js"></script><script src="static/js/pdfmake.min.js"></script><script src="static/js/vfs_fonts.js"></script><script src="static/js/custom.js"></script></body></html>',)
 
       
       # Write the modified HTML content back to the file
