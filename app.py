@@ -109,6 +109,7 @@ def table_view_request():
     table_df = pd.DataFrame(DB_queried_data[0])
     print(f"table_df  = {table_df }")
     print(f"table_df TABLE VIEW= {table_df.to_string(index=False, header=True)}")
+    
     with open('templates/Banner table.html', 'r') as file:
       menu_banner_html = file.read()
       
@@ -129,7 +130,7 @@ def table_view_request():
             os.remove(f"templates/{f}")
       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
       newHTML = fr"templates/{current_datetime}mytable.html"
-      table_df.to_html(newHTML)
+      table_df.to_html(newHTML, index=False)
       with open(newHTML, 'r') as file:
         html_content = file.read()
       # Add the menu banner HTML code to the beginning of the file
