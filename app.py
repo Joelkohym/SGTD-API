@@ -13,8 +13,8 @@ import random
 import time
 import pytz 
 import os
-from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement,new_vessel_current_position, get_map_data,delete_all_rows_in_table, MPA_GET,new_pilotage_service,MPA_GET_arrivaldeclaration
-from database_table import get_table_data
+from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement,new_vessel_current_position, get_map_data,delete_all_rows_vessel_location, MPA_GET,new_pilotage_service,MPA_GET_arrivaldeclaration
+from database_table import get_table_data, delete_all_rows_table_view
 
 
 
@@ -102,9 +102,7 @@ def table_view():
 def table_view_request():
   if g.user:
     email=session['email']
-    receive_details_data = receive_details(email)
-    #print(f"Vessel_Map:  Receive_details from database.py {receive_details(email)}")
-    gsheet_cred_path = receive_details_data[4]
+    delete_all_rows_table_view(session['gc'])
     DB_queried_data = get_table_data(gsheet_cred_path)
     table_df = pd.DataFrame(DB_queried_data[0])
     print(f"table_df  = {table_df }")
@@ -265,7 +263,7 @@ def Vessel_data_pull():
     if request.method == 'POST':
       session['IMO_NOTFOUND'] = []
       #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
-      delete_all_rows_in_table(session['gc'])
+      delete_all_rows_vessel_location(session['gc'])
       user_vessel_imo = request.form['vessel_imo']
       #Split vessel_imo list into invdivual records
       input_list = [int(x) for x in user_vessel_imo.split(',')]
@@ -523,16 +521,9 @@ def vessel_request(msg):
 @app.route("/api/vessel_map", methods=['GET','POST'])
 def Vessel_map():
   if g.user:
-    
     print(f"VESSEL MAP PRINTING IMO_NOTFOUND = {session['IMO_NOTFOUND']}")
     email = session['email']
-    receive_details_data = receive_details(email)
-    #rint(f"Vessel_Map:  Receive_details from database.py {receive_details(email)}")
-    API_KEY = receive_details_data[1]
-    participant_id = receive_details_data[2]
-    pitstop_url = receive_details_data[3]
-    gsheet_cred_path = receive_details_data[4]
-    DB_queried_data = get_map_data(gsheet_cred_path)
+    DB_queried_data = get_map_data(session['gc'])
     df1 = pd.DataFrame(DB_queried_data[0])
     df2 = pd.DataFrame(DB_queried_data[1])
     # df1 = get_map_data(gsheet_cred_path)[0]

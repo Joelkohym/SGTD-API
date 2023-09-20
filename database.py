@@ -265,8 +265,8 @@ def get_map_data(db_creds):
     return [df1, new_df]
 
     
-def delete_all_rows_in_table(db_creds):
-  print("Start of delete_all_rows_in_table......")
+def delete_all_rows_vessel_location(db_creds):
+  print("Start of delete_all_rows_vessel_location 3 tables: vessel_movement_UCE, vessel_current_position_UCE, MPA_vessel_data......")
   engine = create_engine(
   db_creds,
   connect_args={
@@ -274,16 +274,18 @@ def delete_all_rows_in_table(db_creds):
             "ssl_ca": "/etc/ssl/cert.pem"}})
   with engine.connect() as conn:
     query_VM = text("DELETE FROM vessel_movement_UCE where id > 0")
-    print("Deleted vessel_movement_UCE where id > 0")
     result_VM = conn.execute(query_VM)
+    print("Deleted vessel_movement_UCE where id > 0")
     query_VCP = text("DELETE FROM vessel_current_position_UCE where id > 0")
     result_VCP = conn.execute(query_VCP)
     print("Deleted vessel_current_position_UCE where id > 0")
     query_MPA = text("DELETE FROM MPA_vessel_data WHERE id > 0")
     result_MPA = conn.execute(query_MPA)
+    print("Deleted MPA_vessel_data where id > 0")
     # query_MPA_arrivaldeclaration = text("DELETE FROM MPA_arrivaldeclaration WHERE id > 0")
     # result_MPA_arrivaldeclaration = conn.execute(query_MPA_arrivaldeclaration)
-    print("Deleted MPA_arrivaldeclaration where id > 0")
+    #print("Deleted MPA_arrivaldeclaration where id > 0")
+
 
 def MPA_GET(api_response, gsheet_cred_path):
   

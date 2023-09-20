@@ -57,3 +57,19 @@ def get_table_data(db_creds):
     print(f"new_df= {new_df}")
     print(f"Final Result all vm = {[new_df]}")
     return [new_df]
+
+
+def delete_all_rows_table_view(db_creds):
+  print("Start of delete_all_rows_table_view 2 tables: MPA_arrivaldeclaration......")
+  engine = create_engine(
+  db_creds,
+  connect_args={
+  "ssl": {
+            "ssl_ca": "/etc/ssl/cert.pem"}})
+  with engine.connect() as conn:
+    query_VM = text("DELETE FROM MPA_arrivaldeclaration where id > 0")
+    print("Deleted vessel_movement_UCE where id > 0")
+    result_VM = conn.execute(query_VM)
+    query_VCP = text("DELETE FROM MPA_vessel_data where id > 0")
+    result_VCP = conn.execute(query_VCP)
+    print("Deleted vessel_current_position_UCE where id > 0")
