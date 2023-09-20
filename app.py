@@ -103,7 +103,7 @@ def table_view_request():
   if g.user:
     email=session['email']
     delete_all_rows_table_view(session['gc'])
-    DB_queried_data = get_table_data(gsheet_cred_path)
+    DB_queried_data = get_table_data(session['gc'])
     table_df = pd.DataFrame(DB_queried_data[0])
     print(f"table_df  = {table_df }")
     print(f"table_df TABLE VIEW= {table_df.to_string(index=False, header=True)}")
