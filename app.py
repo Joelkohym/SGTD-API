@@ -102,7 +102,7 @@ def table_view():
 def table_view_request():
   if g.user:
     email=session['email']
-    delete_all_rows_table_view(session['gc'])
+    
     DB_queried_data = get_table_data(session['gc'])
     table_df = pd.DataFrame(DB_queried_data[0])
     print(f"table_df  = {table_df }")
@@ -173,7 +173,7 @@ def table_pull():
       session['TABLE_IMO_NOTFOUND'] = []
       #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
       #delete_all_rows_in_table(session['gc'])
-
+      delete_all_rows_table_view(session['gc'])
       user_vessel_imo = request.form['imo']
       #Split vessel_imo list into invdivual records
       input_list = [int(x) for x in user_vessel_imo.split(',')]
