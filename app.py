@@ -70,7 +70,6 @@ def login():
         session['gc']=gSheet
         session['IMO_NOTFOUND'] = []
         
-        print(f"SESSION DATA: Pitstop URL = {session['pitstop_url']}, API_KEY = {session['api_key']}, obID = {session['participant_id']}")
         msg = f"Login success for {email}, please enter Vessel IMO number(s)"
         print(f"Login success for {email}, redirect")
         return redirect(url_for('vessel_request', msg=msg))
@@ -120,7 +119,7 @@ def table_pull():
 
 
 
-@app.route("/table_view_request", methods=['GET','POST'])
+@app.route("/table_view_request/<imo>", methods=['GET','POST'])
 def table_view_request(imo):
   if g.user:
     email=session['email']
