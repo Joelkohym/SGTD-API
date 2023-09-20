@@ -287,6 +287,8 @@ def delete_all_rows_vessel_location(db_creds):
     #print("Deleted MPA_arrivaldeclaration where id > 0")
 
 
+
+
 def MPA_GET(api_response, gsheet_cred_path):
   
   data_list = json.loads(api_response)

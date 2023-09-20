@@ -76,36 +76,39 @@ def delete_all_rows_table_view(db_creds):
     print("Deleted vessel_current_position_UCE where id > 0")
 
 
-def get_data_from_vessel_due_to_arrive_and_depart(url_arrive, url_depart,gsheet_cred_path):
-  API_KEY_MPA = 'QgCv2UvINPRfFqbbH3yVHRVVyO8Iv5CG'
-  r_GET_arrive = requests.get(url_arrive, headers={'Apikey': API_KEY_MPA})
-   # Check the response
-  if r_GET_arrive.status_code == 200:
-    print("vessel_due_to_arrive Data retrieved successfully!")
-    #query and values
-    dueToArrive_Data = r_GET_arrive.text
-    arrive_df = pd.DataFrame(dueToArrive_Data)
-    #write in mysql
-  else:
-    print("Failed to get vessel_due_to_arrive data") 
+def get_data_from_vessel_due_to_arrive_and_depart(
+    url_arrive, url_depart, gsheet_cred_path
+):
+    API_KEY_MPA = "QgCv2UvINPRfFqbbH3yVHRVVyO8Iv5CG"
+    r_GET_arrive = requests.get(url_arrive, headers={"Apikey": API_KEY_MPA})
+    # Check the response
+    if r_GET_arrive.status_code == 200:
+        print("vessel_due_to_arrive Data retrieved successfully!")
+        # query and values
+        dueToArrive_Data = json.loads(r_GET_arrive.text)
+        # print(f"dueToArrive_Data = {dueToArrive_Data}")
+        arrive_df = pd.json_normalize(dueToArrive_Data)
+        print(f"arrive_df = {arrive_df}")
+        # write in mysql
+    else:
+        print("Failed to get vessel_due_to_arrive data")
 
-  r_GET_depart = requests.get(url_depart, headers={'Apikey': API_KEY_MPA})
-   # Check the response
-  if r_GET_depart.status_code == 200:
-    print("vessel_due_to_depart Data retrieved successfully!")
-    #query and values
-    dueToDepart_Data = r_GET_depart.text
-    depart_df = pd.DataFrame(dueToDepart_Data)
-    #write in mysql
-  else:
-    print("Failed to get vessel_due_to_depart data") 
+    r_GET_depart = requests.get(url_depart, headers={"Apikey": API_KEY_MPA})
+    # Check the response
+    if r_GET_depart.status_code == 200:
+        print("vessel_due_to_depart Data retrieved successfully!")
+        # query and values
+        dueToDepart_Data = json.loads(r_GET_depart.text)
+        # print(f"dueToDepart_Data = {dueToDepart_Data}")
+        depart_df = pd.json_normalize(dueToDepart_Data)
+        print(f"depart_df = {depart_df}")
+        # write in mysql
+    else:
+        print("Failed to get vessel_due_to_depart data")
 
-  df1 = pd.json_normalize(arrive_df)
-  print(df1)
-  df2 = pd.json_normalize(depart_df)
-  merged_df = df1.merge(df2, on="vesselParticulars.imoNumber", how="left")
-  print(merged_df)
-  return merged_df
+    merged_df = arrive_df.merge(depart_df, on="vesselParticulars.imoNumber", how="left")
+    print(merged_df)
+    return merged_df
     
 
 

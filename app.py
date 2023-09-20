@@ -122,6 +122,8 @@ def table_pull():
 @app.route("/table_view_request/<imo>", methods=['GET','POST'])
 def table_view_request(imo):
   if g.user:
+    imo = imo.split(",")
+    print(f"IMO NUMBER ==== {imo}")
     email=session['email']
     #GET data from MPA
     today_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -153,7 +155,7 @@ def table_view_request(imo):
             os.remove(f"templates/{f}")
       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
       newHTML = fr"templates/{current_datetime}mytable.html"
-      table_df.to_html(newHTML, index=False)
+      filtered_df.to_html(newHTML, index=False)
       with open(newHTML, 'r') as file:
         html_content = file.read()
       # Add the menu banner HTML code to the beginning of the file
