@@ -155,6 +155,7 @@ def table_view_request(imo):
             os.remove(f"templates/{f}")
       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
       newHTML = fr"templates/{current_datetime}mytable.html"
+      filtered_df.index = filtered_df.index + 1
       filtered_df.to_html(newHTML)
       with open(newHTML, 'r') as file:
         html_content = file.read()
