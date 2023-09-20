@@ -13,8 +13,8 @@ import random
 import time
 import pytz 
 import os
-from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement,new_vessel_current_position, get_map_data,delete_all_rows_vessel_location, MPA_GET,new_pilotage_service,MPA_GET_arrivaldeclaration
-from database_table import get_table_data, delete_all_rows_table_view
+from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement, new_vessel_current_position, get_map_data, delete_all_rows_vessel_location, MPA_GET, new_pilotage_service, MPA_GET_arrivaldeclaration
+from database_table import get_table_data, delete_all_rows_table_view, get_data_from_vessel_due_to_arrive_and_depart
 
 
 
@@ -89,6 +89,13 @@ def login():
     print("Requets == GET")
     return render_template('login.html')
 
+
+
+
+
+
+
+
 @app.route("/table_view", methods=['GET','POST'])
 def table_view():
   if g.user:
@@ -97,21 +104,40 @@ def table_view():
   else:
     return redirect(url_for('login'))
 
+@app.route("/api/table_pull", methods=['GET', 'POST'])
+def table_pull():
+  if g.user:
+    if request.method == 'POST':
+      session['IMO_NOTFOUND'] = []
+      session['TABLE_IMO_NOTFOUND'] = []
+      #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
+      #delete_all_rows_in_table(session['gc'])
+      delete_all_rows_table_view(session['gc'])
+      user_vessel_imo = request.form['imo']
+      #Split vessel_imo list into invdivual records
+
+      return redirect(url_for('table_view_request', imo = user_vessel_imo))
+
+
 
 @app.route("/table_view_request", methods=['GET','POST'])
-def table_view_request():
+def table_view_request(imo):
   if g.user:
     email=session['email']
-    
-    DB_queried_data = get_table_data(session['gc'])
-    table_df = pd.DataFrame(DB_queried_data[0])
-    print(f"table_df  = {table_df }")
-    print(f"table_df TABLE VIEW= {table_df.to_string(index=False, header=True)}")
-    
+    #GET data from MPA
+    today_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    url_MPA_due_to_arrive = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/duetoarrive/date/{today_datetime}/hours/99"
+    url_MPA_due_to_depart = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/duetodepart/date/{today_datetime}/hours/99"
+    MPA_arrive_depart_df = get_data_from_vessel_due_to_arrive_and_depart(url_MPA_due_to_arrive, url_MPA_due_to_depart,session['gc'])
+
+    #filter merged_df with imo from input form
+    # Filter the DataFrame based on imoNumbers
+    filtered_df = MPA_arrive_depart_df[MPA_arrive_depart_df["vesselParticulars.imoNumber"].isin(imo)]
+    print(f"filtered_df = {filtered_df}")
     with open('templates/Banner table.html', 'r') as file:
       menu_banner_html = file.read()
       
-    if table_df.empty:
+    if filtered_df.empty:
       print(f"Empty table_df................")
       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
       for f in os.listdir("templates/"):
@@ -161,62 +187,143 @@ def table_view_request():
       return render_template(newHTMLrender, user=session['email'], IMO_NOTFOUND = session['IMO_NOTFOUND'], TABLE_IMO_NOTFOUND = session['TABLE_IMO_NOTFOUND'])
   else:
     return redirect(url_for('login'))
+
+
+
     
 
 
 
-@app.route("/api/table_pull", methods=['GET', 'POST'])
-def table_pull():
-  if g.user:
-    if request.method == 'POST':
-      session['IMO_NOTFOUND'] = []
-      session['TABLE_IMO_NOTFOUND'] = []
-      #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
-      #delete_all_rows_in_table(session['gc'])
-      delete_all_rows_table_view(session['gc'])
-      user_vessel_imo = request.form['imo']
-      #Split vessel_imo list into invdivual records
-      input_list = [int(x) for x in user_vessel_imo.split(',')]
+
+
+
+
+
+
+
+
+# @app.route("/table_view_request", methods=['GET','POST'])
+# def table_view_request(imo):
+#   if g.user:
+#     email=session['email']
+    
+#     DB_queried_data = get_table_data(session['gc'])
+#     table_df = pd.DataFrame(DB_queried_data[0])
+#     print(f"table_df  = {table_df }")
+#     print(f"table_df TABLE VIEW= {table_df.to_string(index=False, header=True)}")
+    
+#     with open('templates/Banner table.html', 'r') as file:
+#       menu_banner_html = file.read()
       
-      print(f"user_vessel_imo from html = {user_vessel_imo}")
-      print(f"input_list from html = {input_list}")
-      #Loop through input IMO list
-      tic = time.perf_counter()
-      for vessel_imo in input_list:
-        print(f"IMO Number = {vessel_imo}")
+#     if table_df.empty:
+#       print(f"Empty table_df................")
+#       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
+#       for f in os.listdir("templates/"):
+#       #print(f)
+#         if "mytable.html" in f:
+#           print(f"*mytable.html file to be removed = {f}")
+#           os.remove(f"templates/{f}")
+#       return render_template('table_view.html')
+#     else:
+#       for f in os.listdir("templates/"):
+#         #print(f)
+#           if "mytable.html" in f:
+#             print(f"*mytable.html file to be removed = {f}")
+#             os.remove(f"templates/{f}")
+#       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
+#       newHTML = fr"templates/{current_datetime}mytable.html"
+#       table_df.to_html(newHTML, index=False)
+#       with open(newHTML, 'r') as file:
+#         html_content = file.read()
+#       # Add the menu banner HTML code to the beginning of the file
+#       html_content = menu_banner_html + html_content
+
+#       #Old method
+#       # html_content = html_content.replace(f"<thead>",f'<thead class="table-dark">',)
+#       # html_content = html_content.replace(f'<table border="1" class="dataframe">', f'<table id="example" class="table table-striped" style="width:100%">')
+#       # html_content = html_content.replace(f'</head>',f'</head><body><div class="container" style="width:100%">')
+#       # html_content = html_content.replace(f'</table>',f'</table></div><script>$(document).ready(function() {{$("#example").DataTable({{responsive: false,}});}});</script></body></html>')
+
+#       #Try new method
+#       html_content = html_content.replace(
+#     f'<table border="1" class="dataframe">',
+#     f'<table id="example" class="table table-striped table-bordered">',)
+
+#       html_content = html_content.replace(
+#           f"<thead>",
+#           f'<thead class="table-dark">',)
+#       html_content = html_content.replace(
+#           f"</table>",
+#           f'</table></div></div></div></div><script src="static/js/bootstrap.bundle.min.js"></script><script src="static/js/jquery-3.6.0.min.js"></script><script src="static/js/datatables.min.js"></script><script src="static/js/pdfmake.min.js"></script><script src="static/js/vfs_fonts.js"></script><script src="static/js/custom.js"></script></body></html>',)
+
+      
+#       # Write the modified HTML content back to the file
+#       with open(newHTML, 'w') as file:
+#           file.write(html_content)
+    
+#       newHTMLrender = f"{current_datetime}mytable.html"
+#       return render_template(newHTMLrender, user=session['email'], IMO_NOTFOUND = session['IMO_NOTFOUND'], TABLE_IMO_NOTFOUND = session['TABLE_IMO_NOTFOUND'])
+#   else:
+#     return redirect(url_for('login'))
+    
+
+
+
+
+
+
+# @app.route("/api/table_pull", methods=['GET', 'POST'])
+# def table_pull():
+#   if g.user:
+#     if request.method == 'POST':
+#       session['IMO_NOTFOUND'] = []
+#       session['TABLE_IMO_NOTFOUND'] = []
+#       #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
+#       #delete_all_rows_in_table(session['gc'])
+#       delete_all_rows_table_view(session['gc'])
+#       user_vessel_imo = request.form['imo']
+#       #Split vessel_imo list into invdivual records
+#       input_list = [int(x) for x in user_vessel_imo.split(',')]
+      
+#       print(f"user_vessel_imo from html = {user_vessel_imo}")
+#       print(f"input_list from html = {input_list}")
+#       #Loop through input IMO list
+#       tic = time.perf_counter()
+#       for vessel_imo in input_list:
+#         print(f"IMO Number = {vessel_imo}")
         
-        #url_vessel_movement = f"{session['pitstop_url']}/api/v1/data/pull/vessel_movement"
-        #url_vessel_current_position = f"{session['pitstop_url']}/api/v1/data/pull/vessel_current_position"
-        url_MPA = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/positions/imonumber/{vessel_imo}"
-        url_MPA_arrivaldeclaration = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/arrivaldeclaration/imonumber/{vessel_imo}"
+#         #url_vessel_movement = f"{session['pitstop_url']}/api/v1/data/pull/vessel_movement"
+#         #url_vessel_current_position = f"{session['pitstop_url']}/api/v1/data/pull/vessel_current_position"
+#         url_MPA = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/positions/imonumber/{vessel_imo}"
+#         url_MPA_arrivaldeclaration = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/arrivaldeclaration/imonumber/{vessel_imo}"
   
-        # Make the GET request
-        API_KEY_MPA = 'QgCv2UvINPRfFqbbH3yVHRVVyO8Iv5CG'
-        r_GET = requests.get(url_MPA, headers={'Apikey': API_KEY_MPA})
+#         # Make the GET request
+#         API_KEY_MPA = 'QgCv2UvINPRfFqbbH3yVHRVVyO8Iv5CG'
+#         r_GET = requests.get(url_MPA, headers={'Apikey': API_KEY_MPA})
 
-          # Check the response
-        if r_GET.status_code == 200:
-          print("Config Data retrieved successfully!")
-          MPA_GET(r_GET.text, session['gc'])
-        else:
-          TABLE_NOT_FOUND_LIST = session['TABLE_IMO_NOTFOUND']
-          TABLE_NOT_FOUND_LIST.append(vessel_imo)
-          print(f"SGTD PRINTING IMO_NOTFOUND1 = {TABLE_NOT_FOUND_LIST}")
-          session['TABLE_IMO_NOTFOUND'] = TABLE_NOT_FOUND_LIST
-          print(f"SGTD PRINTING IMO_NOTFOUND2 = {session['TABLE_IMO_NOTFOUND']}")
-          print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
-          print(r_GET.text) 
+#           # Check the response
+#         if r_GET.status_code == 200:
+#           print("Config Data retrieved successfully!")
+#           MPA_GET(r_GET.text, session['gc'])
+#         else:
+#           TABLE_NOT_FOUND_LIST = session['TABLE_IMO_NOTFOUND']
+#           TABLE_NOT_FOUND_LIST.append(vessel_imo)
+#           print(f"SGTD PRINTING IMO_NOTFOUND1 = {TABLE_NOT_FOUND_LIST}")
+#           session['TABLE_IMO_NOTFOUND'] = TABLE_NOT_FOUND_LIST
+#           print(f"SGTD PRINTING IMO_NOTFOUND2 = {session['TABLE_IMO_NOTFOUND']}")
+#           print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
+#           print(r_GET.text) 
 
-        r_GET_arrivaldeclaration = requests.get(url_MPA_arrivaldeclaration, headers={'Apikey': API_KEY_MPA})
-        if r_GET_arrivaldeclaration.status_code == 200:
-          print("Config Data retrieved successfully!")
-          MPA_GET_arrivaldeclaration(r_GET_arrivaldeclaration.text, session['gc'])
-        else:
-          print(f"Failed to get Config Data for arrivaldeclaration. Status code: {r_GET_arrivaldeclaration.status_code}")
-          print(r_GET_arrivaldeclaration.text) 
-      toc = time.perf_counter()
-      print(f"PULL duration for {len(input_list)} in {toc - tic:0.4f} seconds")
-      return redirect(url_for('table_view_request'))
+#         r_GET_arrivaldeclaration = requests.get(url_MPA_arrivaldeclaration, headers={'Apikey': API_KEY_MPA})
+#         if r_GET_arrivaldeclaration.status_code == 200:
+#           print("Config Data retrieved successfully!")
+#           MPA_GET_arrivaldeclaration(r_GET_arrivaldeclaration.text, session['gc'])
+#         else:
+#           print(f"Failed to get Config Data for arrivaldeclaration. Status code: {r_GET_arrivaldeclaration.status_code}")
+#           print(r_GET_arrivaldeclaration.text) 
+#       toc = time.perf_counter()
+#       print(f"PULL duration for {len(input_list)} in {toc - tic:0.4f} seconds")
+#       return redirect(url_for('table_view_request'))
 
 
 

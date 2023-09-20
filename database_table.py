@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, text
 import pandas as pd
 import os
 import json
+import requests
 
 # db_connection_string = os.environ['DB_CONNECTION_STRING']
 db_connection_string = os.environ['DB_CONNECTION_STRING']
@@ -73,3 +74,38 @@ def delete_all_rows_table_view(db_creds):
     query_VCP = text("DELETE FROM MPA_vessel_data where id > 0")
     result_VCP = conn.execute(query_VCP)
     print("Deleted vessel_current_position_UCE where id > 0")
+
+
+def get_data_from_vessel_due_to_arrive_and_depart(url_arrive, url_depart,gsheet_cred_path):
+  API_KEY_MPA = 'QgCv2UvINPRfFqbbH3yVHRVVyO8Iv5CG'
+  r_GET_arrive = requests.get(url_arrive, headers={'Apikey': API_KEY_MPA})
+   # Check the response
+  if r_GET_arrive.status_code == 200:
+    print("vessel_due_to_arrive Data retrieved successfully!")
+    #query and values
+    dueToArrive_Data = r_GET_arrive.text
+    arrive_df = pd.DataFrame(dueToArrive_Data)
+    #write in mysql
+  else:
+    print("Failed to get vessel_due_to_arrive data") 
+
+  r_GET_depart = requests.get(url_depart, headers={'Apikey': API_KEY_MPA})
+   # Check the response
+  if r_GET_depart.status_code == 200:
+    print("vessel_due_to_depart Data retrieved successfully!")
+    #query and values
+    dueToDepart_Data = r_GET_depart.text
+    depart_df = pd.DataFrame(dueToDepart_Data)
+    #write in mysql
+  else:
+    print("Failed to get vessel_due_to_depart data") 
+
+  df1 = pd.json_normalize(arrive_df)
+  print(df1)
+  df2 = pd.json_normalize(depart_df)
+  merged_df = df1.merge(df2, on="vesselParticulars.imoNumber", how="left")
+  print(merged_df)
+  return merged_df
+    
+
+

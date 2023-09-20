@@ -521,3 +521,15 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
 #     time_queried DATETIME default now(),
 #     PRIMARY KEY (`id`)
 # );
+
+
+# CREATE TABLE IF NOT EXISTS vessel_data (
+#         id INT AUTO_INCREMENT PRIMARY KEY,
+#         vessel_name VARCHAR(255),
+#         call_sign VARCHAR(255),
+#         imo_number VARCHAR(255),
+#         flag VARCHAR(255),
+#         due_to_arrive_time DATETIME,
+#         location_from VARCHAR(255),
+#         location_to VARCHAR(255)
+#     )
