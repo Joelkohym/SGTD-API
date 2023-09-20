@@ -107,7 +107,7 @@ def get_data_from_vessel_due_to_arrive_and_depart(
         print("Failed to get vessel_due_to_depart data")
 
     merged_df = arrive_df.merge(depart_df, on="vesselParticulars.imoNumber", how="left")
-    merged_df.drop(columns=['vesselParticulars.vesselName_y','vesselParticulars.vesselName_y','vesselParticulars.flag_y'],inplace=True)
+    merged_df.drop(columns=['vesselParticulars.vesselName_y','vesselParticulars.vesselName_y','vesselParticulars.flag_y','vesselParticulars.callSign_y'],inplace=True)
     print(merged_df)
     return merged_df
     
