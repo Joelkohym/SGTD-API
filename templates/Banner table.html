@@ -6,15 +6,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <script defer src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-  <script defer src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
-  <!-- <script src="templates/script.js"></script> -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/css/datatables.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+  <script src="static/js/bootstrap.bundle.min.js"></script>
+  <script src="static/js/jquery-3.6.0.min.js"></script>
+  <script src="static/js/datatables.min.js"></script>
+  <script src="static/js/pdfmake.min.js"></script>
+  <script src="static/js/vfs_fonts.js"></script>
+  <script src="static/js/custom.js"></script>
 
   <ul class="nav justify-content-end">
       <a class="nav-link active" aria-current="page" href="/table_view">Table View</a>
@@ -27,3 +29,13 @@
     <div style="font-weight: bold; text-decoration: underline; color: rgb(223, 55, 4);">IMO NOT FOUND: {{ IMO_NOTFOUND }} </div>
     <div style="font-weight: bold; text-decoration: underline; color: rgb(223, 55, 4);">TABLE IMO NOT FOUND: {{ TABLE_IMO_NOTFOUND }} </div></div> 
   </head>
+    <body>
+    <header class="header_part">
+        <!-- <img src="https://sgtradex.com/images/sgtradex-logo.svg" alt="" class="img-fluid"> -->
+        <h4>Vessel Query Table View</h4>
+    </header>
+    <!-- =======  Data-Table  = Start  ========================== -->
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="data_table">
