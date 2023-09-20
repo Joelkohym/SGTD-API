@@ -136,7 +136,7 @@ def table_view_request():
       html_content = menu_banner_html + html_content
       html_content = html_content.replace(f"<thead>",f'<thead class="table-dark">',)
       html_content = html_content.replace(f'<table border="1" class="dataframe">', f'<table id="example" class="table table-striped" style="width:100%">')
-      html_content = html_content.replace(f'</head>',f'</head><body><div class="container" style="width:500%">')
+      html_content = html_content.replace(f'</head>',f'</head><body><div class="container" style="width:100%">')
       html_content = html_content.replace(f'</table>',f'</table></div><script>$(document).ready(function() {{$("#example").DataTable({{responsive: false,}});}});</script></body></html>')
       # Write the modified HTML content back to the file
       with open(newHTML, 'w') as file:
