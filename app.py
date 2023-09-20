@@ -155,7 +155,7 @@ def table_view_request(imo):
             os.remove(f"templates/{f}")
       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
       newHTML = fr"templates/{current_datetime}mytable.html"
-      filtered_df.to_html(newHTML, index=False)
+      filtered_df.to_html(newHTML)
       with open(newHTML, 'r') as file:
         html_content = file.read()
       # Add the menu banner HTML code to the beginning of the file
