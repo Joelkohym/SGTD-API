@@ -133,7 +133,7 @@ def table_view_request(imo):
 
     #filter merged_df with imo from input form
     # Filter the DataFrame based on imoNumbers
-    filtered_df = MPA_arrive_depart_df[MPA_arrive_depart_df["vesselParticulars.imoNumber"].isin(imo)
+    filtered_df = MPA_arrive_depart_df[MPA_arrive_depart_df["vesselParticulars.imoNumber"].isin(imo)]
     print(f"filtered_df = {filtered_df}")
     with open('templates/Banner table.html', 'r') as file:
       menu_banner_html = file.read()
