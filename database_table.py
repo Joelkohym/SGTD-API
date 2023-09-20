@@ -51,7 +51,7 @@ def get_table_data(db_creds):
                    left_on=df2['imoNumber'],
                    right_on=df3['imo_number'],
                    how='inner')
-    df3.drop(columns=['id_x','id_y','imo_number', 'time_queried', 'timeStamp','latitude','longitude','deadweight', 'vesselDepth', 'heading'], inplace=True)
+    new_df.drop(columns=['id_x','id_y','imo_number', 'time_queried', 'timeStamp','latitude','longitude','deadweight', 'vesselDepth', 'heading'], inplace=True)
     if 'key_0' in new_df.columns:
       new_df.drop(columns=['key_0'], inplace=True)
     print(f"new_df= {new_df}")
