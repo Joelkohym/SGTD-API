@@ -162,30 +162,30 @@ def new_vessel_due_to_arrive(data, email, gsheet_cred_path):
   #Clean up entire VDA data array - can be 300+ into proper columns before storing in SQL DB
   # Insert each JSON object into the table
   values = []
-  insert_query = """
-      INSERT INTO vessel_due_to_arrive_UCE (vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to)
-      VALUES (%s, %s, %s, %s, %s, %s, %s)
-      """
-  # query_VDA = text("INSERT INTO vessel_due_to_arrive_UCE (vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to) VALUES (:vessel_name, :call_sign, :imo_number, :flag, :due_to_arrive_dt, :location_from, :location_to)")
+  # insert_query = """
+  #     INSERT INTO vessel_due_to_arrive_UCE (vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to)
+  #     VALUES (%s, %s, %s, %s, %s, %s, %s)
+  #     """
+  query_VDA = text("INSERT INTO vessel_due_to_arrive_UCE (vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to) VALUES (:vessel_name, :call_sign, :imo_number, :flag, :due_to_arrive_dt, :location_from, :location_to)")
+
   
+  for item in data:
+    vessel_particulars = item.get("vda_vessel_particulars", {})
+    vessel_name = vessel_particulars.get("vessel_nm", "")
+    call_sign = vessel_particulars.get("vessel_call_sign", "")
+    imo_number = vessel_particulars.get("vessel_imo_no", "")
+    flag = vessel_particulars.get("vessel_flag", "")
+    due_to_arrive_dt = item.get("vda_vessel_due_to_arrive_dt", "")
+    location_from = item.get("vda_vessel_location_from", "")
+    location_to = item.get("vda_vessel_location_to", "")
+
+    #values = (vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to)
+    #values.append((vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to))
+    values.append({'vessel_name': vessel_name, 'call_sign': call_sign, 'imo_number': imo_number, 'flag': flag, 'due_to_arrive_dt': due_to_arrive_dt, 'location_from': location_from, 'location_to': location_to})
+
   with engine_VDA.connect() as conn:
-    for item in data:
-      vessel_particulars = item.get("vda_vessel_particulars", {})
-      vessel_name = vessel_particulars.get("vessel_nm", "")
-      call_sign = vessel_particulars.get("vessel_call_sign", "")
-      imo_number = vessel_particulars.get("vessel_imo_no", "")
-      flag = vessel_particulars.get("vessel_flag", "")
-      due_to_arrive_dt = item.get("vda_vessel_due_to_arrive_dt", "")
-      location_from = item.get("vda_vessel_location_from", "")
-      location_to = item.get("vda_vessel_location_to", "")
-
-      # values = (vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to)
-      values.append((vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to))
-      # values.append({'vessel_name':vessel_name, 'call_sign':call_sign, 'imo_number':imo_number, 'flag':flag, 'due_to_arrive_dt':due_to_arrive_dt, 'location_from':location_from, 'location_to':location_to})
-
-# Insert all rows in a single query
-      # cursor.executemany(query_VDA, values)
-      result = conn.executemany(insert_query, values)
+    result = conn.execute(query_VDA, values)
+    #result = conn.executemany(insert_query, values)
 
     
     
