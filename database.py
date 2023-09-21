@@ -156,7 +156,16 @@ def new_pilotage_service(data, email, gsheet_cred_path):
   return 1
 
 
+def new_vessel_due_to_arrive(data, email, gsheet_cred_path):
+  engine_pilot = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
+  with engine_pilot.connect() as conn:
+    query_pilot = text("INSERT INTO pilotage_service_UCE (     pilotage_cst_dt_time,pilotage_arrival_dt_time,pilotage_onboard_dt_time,pilotage_start_dt_time,pilotage_end_dt_time,pilotage_nm,pilotage_imo,pilotage_loc_to_code,pilotage_loc_from_code) VALUES (:pilotage_cst_dt_time, :pilotage_arrival_dt_time, :pilotage_onboard_dt_time, :pilotage_start_dt_time, :pilotage_end_dt_time, :pilotage_nm, :pilotage_imo, :pilotage_loc_to_code, :pilotage_loc_from_code)")
+    
+    values_pilot = {'pilotage_cst_dt_time':data['pilotage_cst_dt_time'],'pilotage_arrival_dt_time':data['pilotage_arrival_dt_time'],'pilotage_onboard_dt_time':data['pilotage_onboard_dt_time'],'pilotage_start_dt_time': data['pilotage_start_dt_time'],'pilotage_end_dt_time': data['pilotage_end_dt_time'],'pilotage_nm':data['pilotage_nm'],'pilotage_imo': data['pilotage_imo'],'pilotage_loc_to_code':data['pilotage_loc_to_code'],'pilotage_loc_from_code':data['pilotage_loc_from_code']}
 
+    result = conn.execute(query_pilot, values_pilot)
+  print("New pilotage_service execute success")
+  return 1
 
 
 

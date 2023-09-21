@@ -125,8 +125,8 @@ def table_pull():
         
         payload = {
           "participants": [{
-            "id": "1817878d-c468-411b-8fe1-698eca7170dd",
-            "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
+            "id": "string",
+            "name": "string",
             "meta": {
               "data_ref_id": session['email']
             }
@@ -145,13 +145,13 @@ def table_pull():
         data = json.loads(json_string)
         
         
-        response_pilotage_service = requests.post(url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
-        if response_vessel_current_position.status_code == 200:
+        response_pilotage_service = requests.post(url_pilotage_service,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
+        if response_pilotage_service.status_code == 200:
           #print(f"Response JSON = {response_vessel_current_position.json()}")
-          print("Pull vessel_current_position success.")
+          print("Pull pilotage service success.")
         else:
           print(
-            f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
+            f"Failed to PULL pilotage service data. Status code: {response_pilotage_service.status_code}"
           )
       toc = time.perf_counter()
       print(f"PULL duration for pilotage service {len(input_list)} in {toc - tic:0.4f} seconds")
@@ -159,6 +159,7 @@ def table_pull():
 
 
       #========================PULL vessel_due_to_arrive by date===========================
+      url_vessel_due_to_arrive = f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
       today_datetime = datetime.now().strftime("%Y-%m-%d")
       # Define your local time zone (UTC+9)
       local_timezone = pytz.timezone("Asia/Singapore")
@@ -209,13 +210,13 @@ def table_pull():
         data = json.loads(json_string)
         
         
-        response_pilotage_service = requests.post(url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
-        if response_vessel_current_position.status_code == 200:
+        response_vessel_due_to_arrive = requests.post(url_vessel_due_to_arrive,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
+        if response_vessel_due_to_arrive.status_code == 200:
           #print(f"Response JSON = {response_vessel_current_position.json()}")
-          print("Pull vessel_current_position success.")
+          print("Pull vessel_due_to_arrive success.")
         else:
           print(
-            f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
+            f"Failed to PULL vessel_due_to_arrive data. Status code: {response_vessel_due_to_arrive.status_code}"
           )
       toc = time.perf_counter()
       print(f"PULL duration for vessel_due_to_arrive {len(input_list)} in {toc - tic:0.4f} seconds")
@@ -438,6 +439,38 @@ def Vessel_data_pull():
 
 
 ##########################################################MySQL DB#############################################################################################
+@app.route("/api/vessel_due_to_arrive_db/receive/<email_url>", methods=['POST'])
+def RECEIVE_Vessel_due_to_arrive(email_url):
+  email = email_url
+  receive_details_data = receive_details(email)
+  #print(f"Vessel_current_position_receive:   Receive_details from database.py {receive_details(email)}")
+  API_KEY = receive_details_data[1]
+  participant_id = receive_details_data[2]
+  pitstop_url = receive_details_data[3]
+  gsheet_cred_path = receive_details_data[4]
+
+  data = request.data # Get the raw data from the request body
+  
+  print(f"Vessel_due_to_arrive = {data}")
+
+  data_str = data.decode('utf-8')  # Decode data as a UTF-8 string
+  # Convert the JSON string to a Python dictionary
+  data_dict = json.loads(data_str)
+  row_data_vessel_due_to_arrive = data_dict['payload']
+  print(f"row_data_vessel_due_to_arrive = {row_data_vessel_due_to_arrive}")
+
+  result = new_vessel_due_to_arrive(row_data_vessel_due_to_arrive, email, gsheet_cred_path)
+  if result == 1:
+    # Append the data as a new row
+    return f"vessel_due_to_arrive Data saved to Google Sheets.{row_data_vessel_due_to_arrive}"
+  else:
+    return f"Email doesn't exists, unable to add data"
+
+
+
+
+
+
 @app.route("/api/pilotage_service_db/receive/<email_url>", methods=['POST'])
 def RECEIVE_Pilotage_service(email_url):
   email = email_url
@@ -461,7 +494,7 @@ def RECEIVE_Pilotage_service(email_url):
   result = new_pilotage_service(data, email, gsheet_cred_path)
   if result == 1:
     # Append the data as a new row
-    return f"Vessel Current Location Data saved to Google Sheets.{row_data_pilotage_service}"
+    return f"pilotage_service Data saved to Google Sheets.{row_data_pilotage_service}"
   else:
     return f"Email doesn't exists, unable to add data"
 
