@@ -462,7 +462,7 @@ def Vessel_data_pull():
 
 ##########################################################MySQL DB#############################################################################################
 @app.route("/api/pilotage_service_db/receive/<email_url>", methods=['POST'])
-def Pilotage_service(email_url):
+def RECEIVE_Pilotage_service(email_url):
   email = email_url
   receive_details_data = receive_details(email)
   #print(f"Vessel_current_position_receive:   Receive_details from database.py {receive_details(email)}")
@@ -482,17 +482,17 @@ def Pilotage_service(email_url):
   print(f"row_data_Pilotage service = {row_data_pilotage_service}")
 
   result = new_pilotage_service(data, email, gsheet_cred_path)
-  # if result == 1:
-  #   # Append the data as a new row
-  #   return f"Vessel Current Location Data saved to Google Sheets.{row_data_pilotage_service}"
-  # else:
-  #   return f"Email doesn't exists, unable to add data"
+  if result == 1:
+    # Append the data as a new row
+    return f"Vessel Current Location Data saved to Google Sheets.{row_data_pilotage_service}"
+  else:
+    return f"Email doesn't exists, unable to add data"
 
 
 
 
 @app.route("/api/vessel_current_position_db/receive/<email_url>", methods=['POST'])
-def Vessel_current_position(email_url):
+def RECEIVE_Vessel_current_position(email_url):
     email = email_url
     receive_details_data = receive_details(email)
     #print(f"Vessel_current_position_receive:   Receive_details from database.py {receive_details(email)}")
@@ -519,7 +519,7 @@ def Vessel_current_position(email_url):
 
 
 @app.route("/api/vessel_movement_db/receive/<email_url>", methods=['POST'])
-def Vessel_movement_receive(email_url):
+def RECEIVE_Vessel_movement(email_url):
     email = email_url
     receive_details_data = receive_details(email)
     #print(f"Vessel_movement_receive:  Receive_details from database.py {receive_details(email)}")
