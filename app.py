@@ -180,7 +180,7 @@ def table_view_request(imo):
           file.write(html_content)
     
       newHTMLrender = f"{current_datetime}mytable.html"
-      return render_template(newHTMLrender, user=session['email'], IMO_NOTFOUND = session['IMO_NOTFOUND'], TABLE_IMO_NOTFOUND = session['TABLE_IMO_NOTFOUND'])
+      return render_template(newHTMLrender)
   else:
     return redirect(url_for('login'))
 
