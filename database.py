@@ -99,53 +99,11 @@ def new_vessel_current_position(data, email, gsheet_cred_path):
   engine_vcp = create_engine(gsheet_cred_path,connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}})
   with engine_vcp.connect() as conn:
     query_vcp = text("""
-    INSERT INTO vessel_current_position_UCE (
-        vessel_nm,
-        vessel_imo_no,
-        vessel_call_sign,
-        vessel_flag,
-        vessel_length,
-        vessel_depth,
-        vessel_type,
-        vessel_grosstonnage,
-        vessel_nettonnage,
-        vessel_deadweight,
-        vessel_mmsi_number,
-        vessel_year_built,
-        vessel_latitude,
-        vessel_longitude,
-        vessel_latitude_degrees,
-        vessel_longitude_degrees,
-        vessel_speed,
-        vessel_course,
-        vessel_heading,
-        vessel_time_stamp
-    ) VALUES (
-        :vessel_nm,
-        :vessel_imo_no,
-        :vessel_call_sign,
-        :vessel_flag,
-        :vessel_length,
-        :vessel_depth,
-        :vessel_type,
-        :vessel_grosstonnage,
-        :vessel_nettonnage,
-        :vessel_deadweight,
-        :vessel_mmsi_number,
-        :vessel_year_built,
-        :vessel_latitude,
-        :vessel_longitude,
-        :vessel_latitude_degrees,
-        :vessel_longitude_degrees,
-        :vessel_speed,
-        :vessel_course,
-        :vessel_heading,
-        :vessel_time_stamp
+    INSERT INTO vessel_current_position_UCE (vessel_nm,vessel_imo_no,vessel_call_sign,vessel_flag,vessel_length,vessel_depth,vessel_type,vessel_grosstonnage,vessel_nettonnage,vessel_deadweight,vessel_mmsi_number,vessel_year_built,vessel_latitude,vessel_longitude,vessel_latitude_degrees,vessel_longitude_degrees,vessel_speed,vessel_course,vessel_heading,vessel_time_stamp
+    ) VALUES (:vessel_nm,:vessel_imo_no,:vessel_call_sign,:vessel_flag,:vessel_length,:vessel_depth,:vessel_type,:vessel_grosstonnage,:vessel_nettonnage,:vessel_deadweight,:vessel_mmsi_number,:vessel_year_built,:vessel_latitude,:vessel_longitude,:vessel_latitude_degrees,:vessel_longitude_degrees,:vessel_speed,:vessel_course,:vessel_heading,:vessel_time_stamp
     )
 """)
-        
 
-# Define the data dictionary
     values_vcp = {
     'vessel_nm': data['vessel_particulars'][0]['vessel_nm'],
     'vessel_imo_no': data['vessel_particulars'][0]['vessel_imo_no'],

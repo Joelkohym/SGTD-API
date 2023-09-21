@@ -122,8 +122,10 @@ def table_pull():
 @app.route("/table_view_request/<imo>", methods=['GET','POST'])
 def table_view_request(imo):
   if g.user:
-    imo = imo.split(",")
-    print(f"IMO NUMBER ==== {imo}")
+    
+    imo_list = imo.split(",")
+    print(f"IMO list ==== {imo_list}")
+    
     email=session['email']
     #GET data from MPA
     today_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -133,7 +135,7 @@ def table_view_request(imo):
 
     #filter merged_df with imo from input form
     # Filter the DataFrame based on imoNumbers
-    filtered_df = MPA_arrive_depart_df[MPA_arrive_depart_df["vesselParticulars.imoNumber"].isin(imo)]
+    filtered_df = MPA_arrive_depart_df[MPA_arrive_depart_df["vesselParticulars.imoNumber"].isin(imo_list)]
     print(f"filtered_df = {filtered_df}")
     with open('templates/Banner table.html', 'r') as file:
       menu_banner_html = file.read()
@@ -180,6 +182,50 @@ def table_view_request(imo):
           file.write(html_content)
     
       newHTMLrender = f"{current_datetime}mytable.html"
+
+
+      #========================PULL pilotage_service===========================
+      input_list = [int(x) for x in imo.split(',')]
+      print(f"Pilotage service input_list from html = {input_list}")
+    
+      url_pilotage_service = f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
+      #Loop through input IMO list
+      tic = time.perf_counter()
+      for vessel_imo in input_list:
+        
+        payload = {
+          "participants": [{
+            "id": "1817878d-c468-411b-8fe1-698eca7170dd",
+            "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
+            "meta": {
+              "data_ref_id": session['email']
+            }
+          }],
+          "parameters": {
+            "pilotage_imo": str(vessel_imo)
+          },
+          "on_behalf_of": [{
+            "id": session['participant_id']
+          }]
+        }
+        
+        json_string = json.dumps(
+          payload, indent=4)  # Convert payload dictionary to JSON string
+        # Rest of the code to send the JSON payload to the API
+        data = json.loads(json_string)
+        
+        
+        response_pilotage_service = requests.post(url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
+        if response_vessel_current_position.status_code == 200:
+          print(f"Response JSON = {response_vessel_current_position.json()}")
+          print("Pull vessel_current_position success.")
+        else:
+          print(
+            f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
+          )
+        #========================PULL pilotage_service===========================
+
+    
       return render_template(newHTMLrender)
   else:
     return redirect(url_for('login'))
