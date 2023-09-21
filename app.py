@@ -159,7 +159,7 @@ def table_pull():
 
 
       #========================PULL vessel_due_to_arrive by date===========================
-      url_vessel_due_to_arrive = f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
+      url_vessel_due_to_arrive = f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
       today_datetime = datetime.now().strftime("%Y-%m-%d")
       # Define your local time zone (UTC+9)
       local_timezone = pytz.timezone("Asia/Singapore")
