@@ -13,7 +13,7 @@ import random
 import time
 import pytz 
 import os
-from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement, new_vessel_current_position, get_map_data, delete_all_rows_vessel_location, MPA_GET, new_pilotage_service, MPA_GET_arrivaldeclaration
+from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement, new_vessel_current_position, get_map_data, delete_all_rows_vessel_location, MPA_GET, new_pilotage_service, MPA_GET_arrivaldeclaration, new_vessel_due_to_arrive
 from database_table import get_table_data, delete_all_rows_table_view, get_data_from_vessel_due_to_arrive_and_depart
 
 
@@ -221,6 +221,8 @@ def table_pull():
       toc = time.perf_counter()
       print(f"PULL duration for vessel_due_to_arrive {len(input_list)} in {toc - tic:0.4f} seconds")
       #========================PULL vessel_due_to_arrive===========================
+
+      
       return redirect(url_for('table_view_request', imo = user_vessel_imo))
 
 
@@ -438,7 +440,7 @@ def Vessel_data_pull():
 
 
 
-##########################################################MySQL DB#############################################################################################
+##########################################################RECEIVE in MySQL DB#############################################################################################
 @app.route("/api/vessel_due_to_arrive_db/receive/<email_url>", methods=['POST'])
 def RECEIVE_Vessel_due_to_arrive(email_url):
   email = email_url
