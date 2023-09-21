@@ -5,7 +5,7 @@ import re
 import requests
 import json
 import pygsheets
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 import leafmap.foliumap as leafmap
 import folium
@@ -114,7 +114,112 @@ def table_pull():
       delete_all_rows_table_view(session['gc'])
       user_vessel_imo = request.form['imo']
       #Split vessel_imo list into invdivual records
+      input_list = [int(x) for x in user_vessel_imo.split(',')]
+      print(f"Pilotage service input_list from html = {input_list}")
+      
+      #========================PULL pilotage_service by vessel imo===========================
+      url_pilotage_service = f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
+      #Loop through input IMO list
+      tic = time.perf_counter()
+      for vessel_imo in input_list:
+        
+        payload = {
+          "participants": [{
+            "id": "1817878d-c468-411b-8fe1-698eca7170dd",
+            "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
+            "meta": {
+              "data_ref_id": session['email']
+            }
+          }],
+          "parameters": {
+            "pilotage_imo": str(vessel_imo)
+          },
+          "on_behalf_of": [{
+            "id": session['participant_id']
+          }]
+        }
+        
+        json_string = json.dumps(
+          payload, indent=4)  # Convert payload dictionary to JSON string
+        # Rest of the code to send the JSON payload to the API
+        data = json.loads(json_string)
+        
+        
+        response_pilotage_service = requests.post(url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
+        if response_vessel_current_position.status_code == 200:
+          #print(f"Response JSON = {response_vessel_current_position.json()}")
+          print("Pull vessel_current_position success.")
+        else:
+          print(
+            f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
+          )
+      toc = time.perf_counter()
+      print(f"PULL duration for pilotage service {len(input_list)} in {toc - tic:0.4f} seconds")
+      #========================PULL pilotage_service===========================
 
+
+      #========================PULL vessel_due_to_arrive by date===========================
+      today_datetime = datetime.now().strftime("%Y-%m-%d")
+      # Define your local time zone (UTC+9)
+      local_timezone = pytz.timezone("Asia/Singapore")
+      # Get the current date and time in UTC
+      current_utc_datetime = datetime.now(pytz.utc)
+      # Convert the current UTC time to your local time zone
+      current_local_datetime = current_utc_datetime.astimezone(local_timezone)
+      # Calculate tomorrow's date in your local time zone
+      tomorrow_local_datetime = (current_utc_datetime + timedelta(days=1)).astimezone(local_timezone)
+      # Calculate the day after tomorrow's date in your local time zone
+      day_after_tomorrow_local_datetime = (current_utc_datetime + timedelta(days=2)).astimezone(local_timezone)
+      print("Current Local Date and Time:",current_local_datetime.strftime("%Y-%m-%d"),)
+      today_date = current_local_datetime.strftime("%Y-%m-%d")
+      print("Tomorrow's Local Date:", tomorrow_local_datetime.strftime("%Y-%m-%d"))
+      tomorrow_date = tomorrow_local_datetime.strftime("%Y-%m-%d")
+      print("Day After Tomorrow's Local Date:",day_after_tomorrow_local_datetime.strftime("%Y-%m-%d"),)
+      dayafter_date = day_after_tomorrow_local_datetime.strftime("%Y-%m-%d")
+
+      #Loop through 3 days
+      tic = time.perf_counter()
+      for i in range(3):
+        if i = 0:
+          pull_date = today_date
+        elif i = 1:
+          pull_date = tomorrow_date
+        elif i = 2:
+          pull_date = dayafter_date
+          
+        payload = {
+          "participants": [{
+            "id": "1817878d-c468-411b-8fe1-698eca7170dd",
+            "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
+            "meta": {
+              "data_ref_id": session['email']
+            }
+          }],
+          "parameters": {
+            "vda_vessel_due_to_arrive_dt": str(pull_date)
+          },
+          "on_behalf_of": [{
+            "id": session['participant_id']
+          }]
+        }
+        
+        json_string = json.dumps(
+          payload, indent=4)  # Convert payload dictionary to JSON string
+        # Rest of the code to send the JSON payload to the API
+        data = json.loads(json_string)
+        
+        
+        response_pilotage_service = requests.post(url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
+        if response_vessel_current_position.status_code == 200:
+          #print(f"Response JSON = {response_vessel_current_position.json()}")
+          print("Pull vessel_current_position success.")
+        else:
+          print(
+            f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
+          )
+      toc = time.perf_counter()
+      print(f"PULL duration for vessel_due_to_arrive {len(input_list)} in {toc - tic:0.4f} seconds")
+      #========================PULL vessel_due_to_arrive===========================
       return redirect(url_for('table_view_request', imo = user_vessel_imo))
 
 
@@ -182,190 +287,12 @@ def table_view_request(imo):
           file.write(html_content)
     
       newHTMLrender = f"{current_datetime}mytable.html"
-
-
-      #========================PULL pilotage_service===========================
-      input_list = [int(x) for x in imo.split(',')]
-      print(f"Pilotage service input_list from html = {input_list}")
-    
-      url_pilotage_service = f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
-      #Loop through input IMO list
-      tic = time.perf_counter()
-      for vessel_imo in input_list:
-        
-        payload = {
-          "participants": [{
-            "id": "1817878d-c468-411b-8fe1-698eca7170dd",
-            "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
-            "meta": {
-              "data_ref_id": session['email']
-            }
-          }],
-          "parameters": {
-            "pilotage_imo": str(vessel_imo)
-          },
-          "on_behalf_of": [{
-            "id": session['participant_id']
-          }]
-        }
-        
-        json_string = json.dumps(
-          payload, indent=4)  # Convert payload dictionary to JSON string
-        # Rest of the code to send the JSON payload to the API
-        data = json.loads(json_string)
-        
-        
-        response_pilotage_service = requests.post(url_vessel_current_position,json=data, headers={'SGTRADEX-API-KEY': session['api_key']})
-        if response_vessel_current_position.status_code == 200:
-          print(f"Response JSON = {response_vessel_current_position.json()}")
-          print("Pull vessel_current_position success.")
-        else:
-          print(
-            f"Failed to PULL vessel_current_position data. Status code: {response_vessel_current_position.status_code}"
-          )
-        #========================PULL pilotage_service===========================
-
-    
       return render_template(newHTMLrender)
   else:
     return redirect(url_for('login'))
 
 
 
-    
-
-
-
-
-
-
-
-
-
-
-
-# @app.route("/table_view_request", methods=['GET','POST'])
-# def table_view_request(imo):
-#   if g.user:
-#     email=session['email']
-    
-#     DB_queried_data = get_table_data(session['gc'])
-#     table_df = pd.DataFrame(DB_queried_data[0])
-#     print(f"table_df  = {table_df }")
-#     print(f"table_df TABLE VIEW= {table_df.to_string(index=False, header=True)}")
-    
-#     with open('templates/Banner table.html', 'r') as file:
-#       menu_banner_html = file.read()
-      
-#     if table_df.empty:
-#       print(f"Empty table_df................")
-#       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
-#       for f in os.listdir("templates/"):
-#       #print(f)
-#         if "mytable.html" in f:
-#           print(f"*mytable.html file to be removed = {f}")
-#           os.remove(f"templates/{f}")
-#       return render_template('table_view.html')
-#     else:
-#       for f in os.listdir("templates/"):
-#         #print(f)
-#           if "mytable.html" in f:
-#             print(f"*mytable.html file to be removed = {f}")
-#             os.remove(f"templates/{f}")
-#       current_datetime = datetime.now().strftime('%Y%m%d%H%M%S')
-#       newHTML = fr"templates/{current_datetime}mytable.html"
-#       table_df.to_html(newHTML, index=False)
-#       with open(newHTML, 'r') as file:
-#         html_content = file.read()
-#       # Add the menu banner HTML code to the beginning of the file
-#       html_content = menu_banner_html + html_content
-
-#       #Old method
-#       # html_content = html_content.replace(f"<thead>",f'<thead class="table-dark">',)
-#       # html_content = html_content.replace(f'<table border="1" class="dataframe">', f'<table id="example" class="table table-striped" style="width:100%">')
-#       # html_content = html_content.replace(f'</head>',f'</head><body><div class="container" style="width:100%">')
-#       # html_content = html_content.replace(f'</table>',f'</table></div><script>$(document).ready(function() {{$("#example").DataTable({{responsive: false,}});}});</script></body></html>')
-
-#       #Try new method
-#       html_content = html_content.replace(
-#     f'<table border="1" class="dataframe">',
-#     f'<table id="example" class="table table-striped table-bordered">',)
-
-#       html_content = html_content.replace(
-#           f"<thead>",
-#           f'<thead class="table-dark">',)
-#       html_content = html_content.replace(
-#           f"</table>",
-#           f'</table></div></div></div></div><script src="static/js/bootstrap.bundle.min.js"></script><script src="static/js/jquery-3.6.0.min.js"></script><script src="static/js/datatables.min.js"></script><script src="static/js/pdfmake.min.js"></script><script src="static/js/vfs_fonts.js"></script><script src="static/js/custom.js"></script></body></html>',)
-
-      
-#       # Write the modified HTML content back to the file
-#       with open(newHTML, 'w') as file:
-#           file.write(html_content)
-    
-#       newHTMLrender = f"{current_datetime}mytable.html"
-#       return render_template(newHTMLrender, user=session['email'], IMO_NOTFOUND = session['IMO_NOTFOUND'], TABLE_IMO_NOTFOUND = session['TABLE_IMO_NOTFOUND'])
-#   else:
-#     return redirect(url_for('login'))
-    
-
-
-
-
-
-
-# @app.route("/api/table_pull", methods=['GET', 'POST'])
-# def table_pull():
-#   if g.user:
-#     if request.method == 'POST':
-#       session['IMO_NOTFOUND'] = []
-#       session['TABLE_IMO_NOTFOUND'] = []
-#       #Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
-#       #delete_all_rows_in_table(session['gc'])
-#       delete_all_rows_table_view(session['gc'])
-#       user_vessel_imo = request.form['imo']
-#       #Split vessel_imo list into invdivual records
-#       input_list = [int(x) for x in user_vessel_imo.split(',')]
-      
-#       print(f"user_vessel_imo from html = {user_vessel_imo}")
-#       print(f"input_list from html = {input_list}")
-#       #Loop through input IMO list
-#       tic = time.perf_counter()
-#       for vessel_imo in input_list:
-#         print(f"IMO Number = {vessel_imo}")
-        
-#         #url_vessel_movement = f"{session['pitstop_url']}/api/v1/data/pull/vessel_movement"
-#         #url_vessel_current_position = f"{session['pitstop_url']}/api/v1/data/pull/vessel_current_position"
-#         url_MPA = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/positions/imonumber/{vessel_imo}"
-#         url_MPA_arrivaldeclaration = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/arrivaldeclaration/imonumber/{vessel_imo}"
-  
-#         # Make the GET request
-#         API_KEY_MPA = 'QgCv2UvINPRfFqbbH3yVHRVVyO8Iv5CG'
-#         r_GET = requests.get(url_MPA, headers={'Apikey': API_KEY_MPA})
-
-#           # Check the response
-#         if r_GET.status_code == 200:
-#           print("Config Data retrieved successfully!")
-#           MPA_GET(r_GET.text, session['gc'])
-#         else:
-#           TABLE_NOT_FOUND_LIST = session['TABLE_IMO_NOTFOUND']
-#           TABLE_NOT_FOUND_LIST.append(vessel_imo)
-#           print(f"SGTD PRINTING IMO_NOTFOUND1 = {TABLE_NOT_FOUND_LIST}")
-#           session['TABLE_IMO_NOTFOUND'] = TABLE_NOT_FOUND_LIST
-#           print(f"SGTD PRINTING IMO_NOTFOUND2 = {session['TABLE_IMO_NOTFOUND']}")
-#           print(f"Failed to get Config Data. Status code: {r_GET.status_code}")
-#           print(r_GET.text) 
-
-#         r_GET_arrivaldeclaration = requests.get(url_MPA_arrivaldeclaration, headers={'Apikey': API_KEY_MPA})
-#         if r_GET_arrivaldeclaration.status_code == 200:
-#           print("Config Data retrieved successfully!")
-#           MPA_GET_arrivaldeclaration(r_GET_arrivaldeclaration.text, session['gc'])
-#         else:
-#           print(f"Failed to get Config Data for arrivaldeclaration. Status code: {r_GET_arrivaldeclaration.status_code}")
-#           print(r_GET_arrivaldeclaration.text) 
-#       toc = time.perf_counter()
-#       print(f"PULL duration for {len(input_list)} in {toc - tic:0.4f} seconds")
-#       return redirect(url_for('table_view_request'))
 
 
 
@@ -401,6 +328,10 @@ def register():
   if request.method == 'GET':
     return render_template('register.html')
   return render_template('register.html')
+
+
+
+
 
 
 
@@ -498,7 +429,7 @@ def Vessel_data_pull():
             f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
           )
       toc = time.perf_counter()
-      print(f"PULL duration for {len(input_list)} in {toc - tic:0.4f} seconds")
+      print(f"PULL duration for vessel map query {len(input_list)} in {toc - tic:0.4f} seconds")
       return redirect(url_for('Vessel_map'))
       
     return render_template('vessel_request.html')

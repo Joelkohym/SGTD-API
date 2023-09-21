@@ -26,7 +26,7 @@ def get_table_data(db_creds):
     result_VCP = conn.execute(query)
     result_all_VCP = result_VCP.fetchall()
     column_names_VCP = result_VCP.keys() 
-    print(result_all_VCP)
+    #print(result_all_VCP)
     print(f"length of result_all_VCP = {len(result_all_VCP)}")
     df2 = pd.DataFrame(result_all_VCP, columns=column_names_VCP)
     # sorting by first name
@@ -37,12 +37,12 @@ def get_table_data(db_creds):
     result_ETA = conn.execute(query)
     result_all_ETA = result_ETA.fetchall()
     column_names_ETA = result_ETA.keys() 
-    print(result_all_ETA)
+    #print(result_all_ETA)
     print(f"length of result_all_ETA = {len(result_all_ETA)}")
     df3 = pd.DataFrame(result_all_ETA, columns=column_names_ETA)
     df3.drop_duplicates(subset="imo_number", keep='last', inplace=True)
-    print(f"df3 = {df3}")
-    print(f"df2= {df2}")
+    #print(f"df3 = {df3}")
+    #print(f"df2= {df2}")
     df3.drop(columns=['call_sign','flag','vessel_name','purpose'], inplace=True)
     #   df3.rename(columns={'key_0': 'renamed_key_0'}, inplace=True)
     # if 'key_0' in df2.columns:
@@ -69,11 +69,17 @@ def delete_all_rows_table_view(db_creds):
             "ssl_ca": "/etc/ssl/cert.pem"}})
   with engine.connect() as conn:
     query_VM = text("DELETE FROM MPA_arrivaldeclaration where id > 0")
-    print("Deleted vessel_movement_UCE where id > 0")
     result_VM = conn.execute(query_VM)
+    print("Deleted vessel_movement_UCE where id > 0")
     query_VCP = text("DELETE FROM MPA_vessel_data where id > 0")
     result_VCP = conn.execute(query_VCP)
     print("Deleted vessel_current_position_UCE where id > 0")
+    query_VDA = text("DELETE FROM MPA_vessel_due_to_arrive where id > 0")
+    result_VDA = conn.execute(query_VDA)
+    print("Deleted MPA_vessel_due_to_arrive where id > 0")
+    query_PS = text("DELETE FROM pilotage_service_UCE where id > 0")
+    result_PS = conn.execute(query_PS)
+    print("Deleted pilotage_service_UCE where id > 0")
 
 
 def get_data_from_vessel_due_to_arrive_and_depart(
@@ -101,7 +107,7 @@ def get_data_from_vessel_due_to_arrive_and_depart(
         dueToDepart_Data = json.loads(r_GET_depart.text)
         # print(f"dueToDepart_Data = {dueToDepart_Data}")
         depart_df = pd.json_normalize(dueToDepart_Data)
-        print(f"depart_df = {depart_df}")
+        #print(f"depart_df = {depart_df}")
         # write in mysql
     else:
         print("Failed to get vessel_due_to_depart data")
