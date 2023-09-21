@@ -162,32 +162,34 @@ def new_vessel_due_to_arrive(data, email, gsheet_cred_path):
   #Clean up entire VDA data array - can be 300+ into proper columns before storing in SQL DB
   # Insert each JSON object into the table
   values = []
+  insert_query = """
+      INSERT INTO vessel_due_to_arrive_UCE (vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to)
+      VALUES (%s, %s, %s, %s, %s, %s, %s)
+      """
+  # query_VDA = text("INSERT INTO vessel_due_to_arrive_UCE (vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to) VALUES (:vessel_name, :call_sign, :imo_number, :flag, :due_to_arrive_dt, :location_from, :location_to)")
+  
   with engine_VDA.connect() as conn:
     for item in data:
-      vessel_particulars = item.get("vesselParticulars", {})
-      vessel_name = vessel_particulars.get("vesselName", "")
-      call_sign = vessel_particulars.get("callSign", "")
-      imo_number = vessel_particulars.get("imoNumber", "")
-      flag = vessel_particulars.get("flag", "")
+      vessel_particulars = item.get("vda_vessel_particulars", {})
+      vessel_name = vessel_particulars.get("vessel_nm", "")
+      call_sign = vessel_particulars.get("vessel_call_sign", "")
+      imo_number = vessel_particulars.get("vessel_imo_no", "")
+      flag = vessel_particulars.get("vessel_flag", "")
       due_to_arrive_dt = item.get("vda_vessel_due_to_arrive_dt", "")
       location_from = item.get("vda_vessel_location_from", "")
       location_to = item.get("vda_vessel_location_to", "")
-  
-      insert_query = """
-      INSERT INTO vessel_data (vesselName, callSign, imoNumber, flag, vda_vessel_due_to_arrive_dt, vda_vessel_location_from, vda_vessel_location_to)
-      VALUES (%s, %s, %s, %s, %s, %s, %s)
-      """
-  
+
       # values = (vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to)
       values.append((vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to))
+      # values.append({'vessel_name':vessel_name, 'call_sign':call_sign, 'imo_number':imo_number, 'flag':flag, 'due_to_arrive_dt':due_to_arrive_dt, 'location_from':location_from, 'location_to':location_to})
 
 # Insert all rows in a single query
-      # cursor.executemany(insert_query, values)
+      # cursor.executemany(query_VDA, values)
       result = conn.executemany(insert_query, values)
 
-    # query_pilot = text("INSERT INTO pilotage_service_UCE (     pilotage_cst_dt_time,pilotage_arrival_dt_time,pilotage_onboard_dt_time,pilotage_start_dt_time,pilotage_end_dt_time,pilotage_nm,pilotage_imo,pilotage_loc_to_code,pilotage_loc_from_code) VALUES (:pilotage_cst_dt_time, :pilotage_arrival_dt_time, :pilotage_onboard_dt_time, :pilotage_start_dt_time, :pilotage_end_dt_time, :pilotage_nm, :pilotage_imo, :pilotage_loc_to_code, :pilotage_loc_from_code)")
     
-    # values_pilot = {'pilotage_cst_dt_time':data['pilotage_cst_dt_time'],'pilotage_arrival_dt_time':data['pilotage_arrival_dt_time'],'pilotage_onboard_dt_time':data['pilotage_onboard_dt_time'],'pilotage_start_dt_time': data['pilotage_start_dt_time'],'pilotage_end_dt_time': data['pilotage_end_dt_time'],'pilotage_nm':data['pilotage_nm'],'pilotage_imo': data['pilotage_imo'],'pilotage_loc_to_code':data['pilotage_loc_to_code'],'pilotage_loc_from_code':data['pilotage_loc_from_code']}
+    
+    
 
     # result = conn.execute(query_pilot, values_pilot)
 
