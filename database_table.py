@@ -75,10 +75,10 @@ def delete_all_rows_table_view(db_creds):
         db_creds, connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}}
     )
     with engine.connect() as conn:
-        query_VM = text("DELETE FROM MPA_arrivaldeclaration where id > 0")
-        result_VM = conn.execute(query_VM)
-        print("Deleted vessel_movement_UCE where id > 0")
-        query_VCP = text("DELETE FROM MPA_vessel_data where id > 0")
+        query_arrivaldeclaration = text("DELETE FROM MPA_arrivaldeclaration where id > 0")
+        result_arrivaldeclaration = conn.execute(query_arrivaldeclaration)
+        print("Deleted MPA_arrivaldeclaration where id > 0")
+        query_VCP = text("DELETE FROM MPA_vessel_data(location) where id > 0")
         result_VCP = conn.execute(query_VCP)
         print("Deleted MPA_vessel_data where id > 0")
         query_VDA = text("DELETE FROM vessel_due_to_arrive_UCE where id > 0")
