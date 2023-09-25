@@ -72,7 +72,8 @@ def login():
 
                 msg = f"Login success for {email}, please enter Vessel IMO number(s)"
                 print(f"Login success for {email}, redirect")
-                return redirect(url_for("vessel_request", msg=msg))
+                #return redirect(url_for("vessel_request", msg=msg))
+                return redirect(url_for("table_view"))
                 # return render_template('vessel_request.html', msg=msg, email=email)
             else:
                 msg = "Invalid credentials, please try again.."
