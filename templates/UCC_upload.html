@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Vessel Request Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    /* Style for the navigation buttons */
+
+/* Style for the upload button */
+.upload-button {
+        color: #fff; /* Text color */
+        background-color: #c645c8; /* Background color */
+        padding: 10px 20px; /* Padding */
+        margin: 5px; /* Margin */
+        border: none; /* Remove border */
+        border-radius: 5px; /* Rounded corners */
+        text-decoration: none; /* Remove underline */
+        cursor: pointer; /* Add cursor pointer on hover */
+        transition: background-color 0.2s; /* Smooth transition for background color */
+    }
+    /* Change the upload button style on hover */
+.upload-button:hover {
+        background-color: #0056b3; /* New background color on hover */
+    }
+
+
+
+
+
+
+/* Style for the "Choose Files" input button */
+/* You can customize these styles as needed */
+input[type="file"] {
+    display: none; /* Hide the default file input button */
+}
+
+.custom-file-input {
+    color: #fff; /* Text color */
+    background-color: #c645c8; /* Background color */
+    padding: 10px 20px; /* Padding */
+    margin: 5px; /* Margin */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    cursor: pointer; /* Add cursor pointer on hover */
+    transition: background-color 0.2s; /* Smooth transition for background color */
+}
+
+/* Style the custom file input label */
+.custom-file-input-label {
+    display: inline-block;
+    background-color: #c645c8;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+/* Change the custom file input label style on hover */
+.custom-file-input-label:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+.nav-container {
+    display: flex; /* Use flexbox for layout */
+    justify-content: flex-end; /* Align items to the right side */
+}
+.nav-item {
+        color: #fff; /* Text color */
+        background-color: #000000; /* Background color */
+        padding: 10px 20px; /* Padding */
+        margin: 5px; /* Margin */
+        border-radius: 5px; /* Rounded corners */
+        text-decoration: none; /* Remove underline */
+        transition: background-color 0.2s; /* Smooth transition for background color */
+    }
+  
+    /* Hover effect for the navigation buttons */
+.nav-item:hover {
+        background-color: #ffffff; /* New background color on hover */
+        text-shadow: 0 0 5px #000; /* Text shadow on hover */
+    }
+</style>
+  
+
+
+    <title>Upload Multiple files : GFG</title>
+</head>
+<body>
+    <div class="text-center">
+        <img src="https://sgtradex.com/images/sgtradex-logo.svg" alt="SGTD Image" class="img-fluid center-image" style="width: 10rem">
+      </div>
+      
+    
+      <div class="nav-container">
+          <a class="nav-item" aria-current="page" href="/table_view">Table View</a>
+          <a class="nav-item" aria-current="page" href="/vessel_request/Redirect from Vessel Map">Vessel Query</a>
+          <a class="nav-item" aria-current="page" href="/UCC_upload">Trianglar Module</a>
+          <a class="nav-item" aria-current="page" href="/logout">Logout</a>
+    </div>
+    <form action = "/api/triangular_upload" method="POST" enctype="multipart/form-data">
+    <label class="custom-file-input-label" for="fileInput">Choose Files</label>
+    <input type="file" id="fileInput" name="files[]" multiple class="custom-file-input" accept=".csv"  />
+    <input type="submit" value="Upload" class="upload-button">
+    </form>
+    <ul id="fileList"></ul>
+</body>
+
+
+    <script>
+        // Function to update the list of selected files
+        function updateFileList() {
+            const fileList = document.getElementById('fileList');
+            const fileInput = document.getElementById('fileInput');
+            fileList.innerHTML = ''; // Clear the existing list
+    
+            for (const file of fileInput.files) {
+                const listItem = document.createElement('li');
+                listItem.textContent = file.name;
+                fileList.appendChild(listItem);
+            }
+        }
+    
+        // Listen for changes in the file input
+        const fileInput = document.getElementById('fileInput');
+        fileInput.addEventListener('change', updateFileList);
+    </script>
+
+</html>

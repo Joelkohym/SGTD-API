@@ -806,6 +806,42 @@ def Vessel_map():
     return redirect(url_for("login"))
 
 
+####################################  START UPLOAD UCC #############################################
+@app.route("/UCC_upload")
+def UCC_upload():
+    if g.user:
+        email = session["email"]
+        return render_template("UCC_upload.html", email=email)
+    else:
+        return redirect(url_for("login"))
+
+
+@app.route("/api/triangular_upload", methods=["POST"])
+def triangular_upload():
+    if g.user:
+        if request.method == "POST":
+            # Get the list of files from webpage
+            files = request.files.getlist("files[]")  # Use "files[]" as the key
+
+            # Iterate for each file in the files list and save them
+            for file in files:
+                if file and file.filename.endswith(".csv"):  # Check if it's a CSV file
+                    print(file.filename)
+                    
+                    file.save(file.filename)
+                else:
+                    return "<h1>Invalid file format. Please upload only CSV files.</h1>"
+            return "<h1>Files Uploaded Successfully.!</h1>"
+
+
+####################################  END UPLOAD UCC  ###############################################
+
+
+
+
+
+
+
 @app.before_request
 def before_request():
     g.user = None
