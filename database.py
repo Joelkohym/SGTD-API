@@ -279,11 +279,11 @@ def get_map_data(db_creds):
         # Select vessel_movement_UCE
         # query = text("select * from vessel_movement_UCE")
         # result_VM = conn.execute(query)
-        result_all_VM = result_VM.fetchall()
-        column_names_VM = result_VM.keys()
-        print(result_all_VM)
-        print(f"length of result_all_VM = {len(result_all_VM)}")
-        df1 = pd.DataFrame(result_all_VM, columns=column_names_VM)
+        # result_all_VM = result_VM.fetchall()
+        # column_names_VM = result_VM.keys()
+        # print(result_all_VM)
+        # print(f"length of result_all_VM = {len(result_all_VM)}")
+        # df1 = pd.DataFrame(result_all_VM, columns=column_names_VM)
 
         # Select MPA_vessel_data
         query = text("select * from MPA_vessel_data")
@@ -312,9 +312,10 @@ def get_map_data(db_creds):
         if "key_0" in new_df.columns:
             new_df.drop(columns=["key_0"], inplace=True)
         new_df.drop(columns=["id_x", "id_y", "imo_number"], inplace=True)
-        print(f"Final Result all vm = {[df1, new_df]}")
-        return [df1, new_df]
-
+        # print(f"Final Result all vm = {[df1, new_df]}")
+        # return [df1, new_df]
+        print(f"Final Result all vm = {[new_df]}")
+        return [new_df]
 
 def delete_all_rows_vessel_location(db_creds):
     print(

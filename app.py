@@ -667,8 +667,8 @@ def Vessel_map():
         print(f"VESSEL MAP PRINTING IMO_NOTFOUND = {session['IMO_NOTFOUND']}")
         email = session["email"]
         DB_queried_data = get_map_data(session["gc"])
-        df1 = pd.DataFrame(DB_queried_data[0])
-        df2 = pd.DataFrame(DB_queried_data[1])
+        # df1 = pd.DataFrame(DB_queried_data[0])
+        df2 = pd.DataFrame(DB_queried_data[0])
         # df1 = get_map_data(gsheet_cred_path)[0]
         # print(f"df1 = {df1}")
         # print(f"df2 = {df2}")
@@ -716,32 +716,33 @@ def Vessel_map():
         else:
             # Edit here, remove df1 and merge df, keep df2. Alter drop coulmns based on print
             print(f"df2 WITHOUT VESSEL MOVEMENT = {df2}")
-            merged_df = pd.merge(
-                df2,
-                df1,
-                left_on=df2["imoNumber"],
-                right_on=df1["vessel_imo_no"],
-                how="outer",
-            )
-            print(f"Merged df  VESSEL MAP == {merged_df}")
-            merged_df.drop(
-                columns=[
-                    "key_0",
-                    "id_x",
-                    "id_y",
-                    "vessel_nm",
-                    "vessel_imo_no",
-                    "vessel_flag",
-                    "vessel_call_sign",
-                    "yearBuilt",
-                ],
-                inplace=True,
-            )
-            # sort & drop duplicates
-            # sorting by first name
-            merged_df.drop_duplicates(subset="imoNumber", keep="last", inplace=True)
+            # merged_df = pd.merge(
+            #     df2,
+            #     df1,
+            #     left_on=df2["imoNumber"],
+            #     right_on=df1["vessel_imo_no"],
+            #     how="outer",
+            # )
+            # print(f"Merged df  VESSEL MAP == {merged_df}")
+            # merged_df.drop(
+            #     columns=[
+            #         "key_0",
+            #         "id_x",
+            #         "id_y",
+            #         "vessel_nm",
+            #         "vessel_imo_no",
+            #         "vessel_flag",
+            #         "vessel_call_sign",
+            #         "yearBuilt",
+            #     ],
+            #     inplace=True,
+            # )
+            # # sort & drop duplicates
+            # # sorting by first name
+            # merged_df.drop_duplicates(subset="imoNumber", keep="last", inplace=True)
 
             df = merged_df
+            df = df2
             print(f"Vessel_map Merged DF = {df}")
             print(f"Vessel_map Longitiude = {df['longitudeDegrees']}")
             longitude = list(df["longitudeDegrees"])
