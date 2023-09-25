@@ -277,8 +277,8 @@ def get_map_data(db_creds):
     )
     with engine.connect() as conn:
         # Select vessel_movement_UCE
-        query = text("select * from vessel_movement_UCE")
-        result_VM = conn.execute(query)
+        # query = text("select * from vessel_movement_UCE")
+        # result_VM = conn.execute(query)
         result_all_VM = result_VM.fetchall()
         column_names_VM = result_VM.keys()
         print(result_all_VM)
@@ -324,9 +324,9 @@ def delete_all_rows_vessel_location(db_creds):
         db_creds, connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}}
     )
     with engine.connect() as conn:
-        query_VM = text("DELETE FROM vessel_movement_UCE where id > 0")
-        result_VM = conn.execute(query_VM)
-        print("Deleted vessel_movement_UCE where id > 0")
+        # query_VM = text("DELETE FROM vessel_movement_UCE where id > 0")
+        # result_VM = conn.execute(query_VM)
+        # print("Deleted vessel_movement_UCE where id > 0")
         query_VCP = text("DELETE FROM vessel_current_position_UCE where id > 0")
         result_VCP = conn.execute(query_VCP)
         print("Deleted vessel_current_position_UCE where id > 0")
