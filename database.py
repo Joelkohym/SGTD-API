@@ -311,6 +311,7 @@ def get_map_data(db_creds):
         )
         if "key_0" in new_df.columns:
             new_df.drop(columns=["key_0"], inplace=True)
+        new_df.drop(columns=["id_x", "id_y", "imo_number"], inplace=True)
         print(f"Final Result all vm = {[df1, new_df]}")
         return [df1, new_df]
 
