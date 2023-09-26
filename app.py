@@ -53,7 +53,7 @@ def login():
             email = request.form["email"]
             password = request.form["password"]
             login_data = validate_login(email, password)
-            print(f"Validate_login value returned = {validate_login(email, password)}")
+            #print(f"Validate_login value returned = {validate_login(email, password)}")
             if len(login_data) == 5:
                 id = login_data[0]
                 API_KEY = login_data[1]
