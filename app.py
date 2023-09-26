@@ -740,7 +740,7 @@ def Vessel_map():
             )
             newHTML = f"templates/{current_datetime}mymap.html"
             newHTMLwotemp = f"{current_datetime}mymap.html"
-            print(f"new html file created = {newHTML}")
+            #print(f"new html file created = {newHTML}")
             m.to_html(newHTML)
             with open(newHTML, "r") as file:
                 html_content = file.read()
@@ -755,7 +755,7 @@ def Vessel_map():
 
         else:
             # Edit here, remove df1 and merge df, keep df2. Alter drop coulmns based on print
-            print(f"df2 WITHOUT VESSEL MOVEMENT = {df2}")
+            #print(f"df2 WITHOUT VESSEL MOVEMENT = {df2}")
             # merged_df = pd.merge(
             #     df2,
             #     df1,
@@ -781,9 +781,9 @@ def Vessel_map():
             # # sorting by first name
             # merged_df.drop_duplicates(subset="imoNumber", keep="last", inplace=True)
 
-            df = merged_df
+            # df = merged_df
             df = df2
-            print(f"Vessel_map Merged DF = {df}")
+            #print(f"Vessel_map Merged DF = {df}")
             print(f"Vessel_map Longitiude = {df['longitudeDegrees']}")
             longitude = list(df["longitudeDegrees"])
             print(f"Latitiude = {df['latitudeDegrees']}")
