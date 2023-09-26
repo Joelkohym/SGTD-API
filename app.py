@@ -112,49 +112,56 @@ def table_pull():
             input_list = [int(x) for x in user_vessel_imo.split(",")]
             print(f"Pilotage service input_list from html = {input_list}")
 
+
+
+          
             # ========================              START PULL pilotage_service by vessel imo                   ===========================
-            url_pilotage_service = (
-                f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
-            )
-            # Loop through input IMO list
-            tic = time.perf_counter()
-            for vessel_imo in input_list:
-                payload = {
-                    "participants": [
-                        {
-                            "id": "string",
-                            "name": "string",
-                            "meta": {"data_ref_id": session["email"]},
-                        }
-                    ],
-                    "parameters": {"pilotage_imo": str(vessel_imo)},
-                    "on_behalf_of": [{"id": session["participant_id"]}],
-                }
+            # url_pilotage_service = (
+            #     f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
+            # )
+            # # Loop through input IMO list
+            # tic = time.perf_counter()
+            # for vessel_imo in input_list:
+            #     payload = {
+            #         "participants": [
+            #             {
+            #                 "id": "string",
+            #                 "name": "string",
+            #                 "meta": {"data_ref_id": session["email"]},
+            #             }
+            #         ],
+            #         "parameters": {"pilotage_imo": str(vessel_imo)},
+            #         "on_behalf_of": [{"id": session["participant_id"]}],
+            #     }
 
-                json_string = json.dumps(
-                    payload, indent=4
-                )  # Convert payload dictionary to JSON string
-                # Rest of the code to send the JSON payload to the API
-                data = json.loads(json_string)
+            #     json_string = json.dumps(
+            #         payload, indent=4
+            #     )  # Convert payload dictionary to JSON string
+            #     # Rest of the code to send the JSON payload to the API
+            #     data = json.loads(json_string)
 
-                response_pilotage_service = requests.post(
-                    url_pilotage_service,
-                    json=data,
-                    headers={"SGTRADEX-API-KEY": session["api_key"]},
-                )
-                if response_pilotage_service.status_code == 200:
-                    # print(f"Response JSON = {response_vessel_current_position.json()}")
-                    print("Pull pilotage service success.")
-                else:
-                    print(
-                        f"Failed to PULL pilotage service data. Status code: {response_pilotage_service.status_code}"
-                    )
-            toc = time.perf_counter()
-            print(
-                f"PULL duration for pilotage service {len(input_list)} in {toc - tic:0.4f} seconds"
-            )
+            #     response_pilotage_service = requests.post(
+            #         url_pilotage_service,
+            #         json=data,
+            #         headers={"SGTRADEX-API-KEY": session["api_key"]},
+            #     )
+            #     if response_pilotage_service.status_code == 200:
+            #         # print(f"Response JSON = {response_vessel_current_position.json()}")
+            #         print("Pull pilotage service success.")
+            #     else:
+            #         print(
+            #             f"Failed to PULL pilotage service data. Status code: {response_pilotage_service.status_code}"
+            #         )
+            # toc = time.perf_counter()
+            # print(
+            #     f"PULL duration for pilotage service {len(input_list)} in {toc - tic:0.4f} seconds"
+            # )
             # ========================          END PULL pilotage_service                         ===========================
 
+
+
+
+          
             # ========================          START PULL vessel_due_to_arrive by date            ===========================
             url_vessel_due_to_arrive = (
                 f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
@@ -234,7 +241,6 @@ def table_pull():
                 f"PULL duration for vessel_due_to_arrive {len(input_list)} in {toc - tic:0.4f} seconds"
             )
             # ========================    END PULL vessel_due_to_arrive         ===========================
-
             return redirect(url_for("table_view_request", imo=user_vessel_imo))
 
 
