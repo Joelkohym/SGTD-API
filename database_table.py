@@ -40,7 +40,7 @@ def get_table_data(db_creds):
         df3.drop_duplicates(subset="imo_number", keep="last", inplace=True)
         # print(f"df3 = {df3}")
         # print(f"df2= {df2}")
-        df3.drop(columns=["call_sign", "flag", "vessel_name", "purpose"], inplace=True)
+        df3.drop(columns=["call_sign", "flag", "vessel_name"], inplace=True)
         #   df3.rename(columns={'key_0': 'renamed_key_0'}, inplace=True)
         # if 'key_0' in df2.columns:
         #   df2.drop(columns=['key_0'], inplace=True)
