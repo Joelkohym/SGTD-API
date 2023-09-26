@@ -465,7 +465,7 @@ def Vessel_data_pull():
                     headers={"SGTRADEX-API-KEY": session["api_key"]},
                 )
                 if PULL_vessel_current_position.status_code == 200:
-                    print(f"Response JSON = {PULL_vessel_current_position.json()}")
+                    #print(f"Response JSON = {PULL_vessel_current_position.json()}")
                     print("Pull vessel_current_position success.")
                 else:
                     print(
@@ -479,7 +479,7 @@ def Vessel_data_pull():
                     headers={"SGTRADEX-API-KEY": session["api_key"]},
                 )
                 if PULL_vessel_due_to_arrive.status_code == 200:
-                    print(f"Response JSON = {PULL_vessel_due_to_arrive .json()}")
+                    #print(f"Response JSON = {PULL_vessel_due_to_arrive .json()}")
                     print("Pull vessel_due_to_arrive success.")
                 else:
                     print(
@@ -524,13 +524,13 @@ def RECEIVE_Vessel_due_to_arrive(email_url):
 
     data = request.data  # Get the raw data from the request body
 
-    print(f"Vessel_due_to_arrive = {data}")
+    #print(f"Vessel_due_to_arrive = {data}")
 
     data_str = data.decode("utf-8")  # Decode data as a UTF-8 string
     # Convert the JSON string to a Python dictionary
     data_dict = json.loads(data_str)
     row_data_vessel_due_to_arrive = data_dict["payload"]
-    print(f"row_data_vessel_due_to_arrive = {row_data_vessel_due_to_arrive}")
+    #print(f"row_data_vessel_due_to_arrive = {row_data_vessel_due_to_arrive}")
 
     result = new_vessel_due_to_arrive(
         row_data_vessel_due_to_arrive, email, gsheet_cred_path
@@ -554,13 +554,13 @@ def RECEIVE_Pilotage_service(email_url):
 
     data = request.data  # Get the raw data from the request body
 
-    print(f"Pilotage service = {data}")
+    #print(f"Pilotage service = {data}")
 
     data_str = data.decode("utf-8")  # Decode data as a UTF-8 string
     # Convert the JSON string to a Python dictionary
     data_dict = json.loads(data_str)
     row_data_pilotage_service = data_dict["payload"][-1]
-    print(f"row_data_Pilotage service = {row_data_pilotage_service}")
+    #print(f"row_data_Pilotage service = {row_data_pilotage_service}")
 
     result = new_pilotage_service(data, email, gsheet_cred_path)
     if result == 1:
@@ -585,7 +585,7 @@ def RECEIVE_Vessel_current_position(email_url):
 
     data = request.data  # Get the raw data from the request body
 
-    print(f"Vessel_current_position = {data}")
+    #print(f"Vessel_current_position = {data}")
 
     data_str = data.decode("utf-8")  # Decode data as a UTF-8 string
     # Convert the JSON string to a Python dictionary
