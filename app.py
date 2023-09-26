@@ -218,19 +218,12 @@ def table_pull():
                     "on_behalf_of": [{"id": session["participant_id"]}],
                 }
 
-                json_string = json.dumps(
-                    payload, indent=4
-                )  # Convert payload dictionary to JSON string
+                json_string = json.dumps(payload, indent=4)  # Convert payload dictionary to JSON string
                 # Rest of the code to send the JSON payload to the API
                 data = json.loads(json_string)
 
-                response_vessel_due_to_arrive = requests.post(
-                    url_vessel_due_to_arrive,
-                    json=data,
-                    headers={"SGTRADEX-API-KEY": session["api_key"]},
-                )
+                response_vessel_due_to_arrive = requests.post(url_vessel_due_to_arrive,json=data,headers={"SGTRADEX-API-KEY": session["api_key"]},)
                 if response_vessel_due_to_arrive.status_code == 200:
-                    # print(f"Response JSON = {response_vessel_current_position.json()}")
                     print("Pull vessel_due_to_arrive success.")
                 else:
                     print(
