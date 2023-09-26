@@ -237,8 +237,10 @@ def table_pull():
             # ========================    END PULL vessel_due_to_arrive         ===========================
             return redirect(url_for("table_view_request", imo=user_vessel_imo))
         else:
+          print("TABLE_PULL Method <> POST")
           return redirect(url_for("login"))
     else:
+      print("TABLE_PULL g.user is not valid")
       return redirect(url_for("login"))
 
 
