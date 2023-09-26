@@ -75,7 +75,7 @@ def new_registration(data):
 
 
 def validate_login(email, password):
-    print(f"printing data from validate_login: email = {email}, password = {password}")
+    #print(f"printing data from validate_login: email = {email}, password = {password}")
 
     with engine.connect() as conn:
         query = text(
