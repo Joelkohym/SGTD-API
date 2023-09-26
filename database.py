@@ -304,7 +304,7 @@ def get_map_data(db_creds):
         print(result_all_ETA)
         print(f"length of result_all_ETA = {len(result_all_ETA)}")
         df3 = pd.DataFrame(result_all_ETA, columns=column_names_ETA)
-        df3.drop(columns=["call_sign", "flag", "vessel_name", "purpose"], inplace=True)
+        df3.drop(columns=["call_sign", "flag", "vessel_name"], inplace=True)
         df3.drop_duplicates(subset="imo_number", keep="last", inplace=True)
         new_df = pd.merge(
             df2, df3, left_on=df2["imoNumber"], right_on=df3["imo_number"], how="inner"
@@ -316,6 +316,7 @@ def get_map_data(db_creds):
         # return [df1, new_df]
         print(f"Final Result all vm = {[new_df]}")
         return [new_df]
+
 
 def delete_all_rows_vessel_location(db_creds):
     print(
@@ -450,6 +451,7 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
     with engine_MPA_arrivaldeclaration.connect() as conn:
         MPA_arrivaldeclaration = conn.execute(query, values)
     return MPA_arrivaldeclaration
+
 
 
 
