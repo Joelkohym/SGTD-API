@@ -236,6 +236,8 @@ def table_pull():
             )
             # ========================    END PULL vessel_due_to_arrive         ===========================
             return redirect(url_for("table_view_request", imo=user_vessel_imo))
+    else:
+        return redirect(url_for("login"))
 
 
 @app.route("/table_view_request/<imo>", methods=["GET", "POST"])

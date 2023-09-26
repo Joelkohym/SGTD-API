@@ -84,12 +84,12 @@ def validate_login(email, password):
         values = {"email": email, "password": password}
         check_login = conn.execute(query, values)
         login_entry = check_login.all()[0]
-        print(f"check_login == {login_entry}")
-        print(f"check_login TYPE == {type(login_entry)}")
-        print(f"check_login_API == {login_entry[3]}")
+        #print(f"check_login == {login_entry}")
+        #print(f"check_login TYPE == {type(login_entry)}")
+        #print(f"check_login_API == {login_entry[3]}")
         result_login = len(login_entry)
-        print(login_entry[3], login_entry[4], login_entry[5])
-        print(f"result_login == {result_login}")
+        #print(login_entry[3], login_entry[4], login_entry[5])
+        #print(f"result_login == {result_login}")
         if result_login > 1:
             print("Login success")
             return (
