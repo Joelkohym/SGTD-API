@@ -236,10 +236,10 @@ def new_vessel_due_to_arrive(data, email, gsheet_cred_path):
     for item in data:
         print(f"new_vessel_due_to_arrive Items in data: {item}")
         vessel_particulars = item["vda_vessel_particulars"]
-        vessel_name = vessel_particulars["vessel_nm"]
-        call_sign = vessel_particulars["vessel_call_sign"]
-        imo_number = vessel_particulars["vessel_imo_no"]
-        flag = vessel_particulars["vessel_flag"]
+        vessel_name = vessel_particulars[0]["vessel_nm"]
+        call_sign = vessel_particulars[0]["vessel_call_sign"]
+        imo_number = vessel_particulars[0]["vessel_imo_no"]
+        flag = vessel_particulars[0]["vessel_flag"]
         due_to_arrive_dt = item["vda_vessel_due_to_arrive_dt"]
         location_from = item["vda_vessel_location_from"]
         location_to = item["vda_vessel_location_to"]
