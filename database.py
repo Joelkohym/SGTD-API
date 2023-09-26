@@ -222,8 +222,6 @@ def new_vessel_due_to_arrive(data, email, gsheet_cred_path):
         gsheet_cred_path, connect_args={"ssl": {"ssl_ca": "/etc/ssl/cert.pem"}}
     )
 
-    # Clean up entire VDA data array - can be 300+ into proper columns before storing in SQL DB
-    # Insert each JSON object into the table
     values = []
     # insert_query = """
     #     INSERT INTO vessel_due_to_arrive_UCE (vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to)
@@ -236,13 +234,21 @@ def new_vessel_due_to_arrive(data, email, gsheet_cred_path):
     for item in data:
         print(f"new_vessel_due_to_arrive Items in data: {item}")
         vessel_particulars = item["vda_vessel_particulars"]
+        print(f"vessel_particulars Items in data: {vessel_particulars}")
         vessel_name = vessel_particulars[0]["vessel_nm"]
+        print(f"vessel_name Items in data: {vessel_name}")
         call_sign = vessel_particulars[0]["vessel_call_sign"]
+        print(f"call_sign Items in data: {call_sign}")
         imo_number = vessel_particulars[0]["vessel_imo_no"]
+        print(f"imo_number Items in data: {imo_number}")
         flag = vessel_particulars[0]["vessel_flag"]
+        print(f"flag Items in data: {flag}")
         due_to_arrive_dt = item["vda_vessel_due_to_arrive_dt"]
+        print(f"due_to_arrive_dt Items in data: {due_to_arrive_dt}")
         location_from = item["vda_vessel_location_from"]
+        print(f"location_from Items in data: {location_from}")
         location_to = item["vda_vessel_location_to"]
+        print(f"location_to Items in data: {location_to}")
 
 
         # values = (vessel_name, call_sign, imo_number, flag, due_to_arrive_dt, location_from, location_to)
@@ -260,10 +266,11 @@ def new_vessel_due_to_arrive(data, email, gsheet_cred_path):
         )
 
     with engine_VDA.connect() as conn:
-        result = conn.execute(query_VDA, values)
+      result = conn.execute(query_VDA, values)
+      conn.commit()
         # result = conn.executemany(insert_query, values)
         # result = conn.execute(query_pilot, values_pilot)
-
+    print(f"VDA Values list = {values}")
     print("New new_vessel_due_to_arrive execute success")
     return 1
 

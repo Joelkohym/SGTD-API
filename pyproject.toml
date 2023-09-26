@@ -15,6 +15,8 @@ geopandas = "0.13.2"
 Flask-SQLAlchemy = "^3.0.5"
 Flask-Login = "^0.6.2"
 pymysql = "1.1.0"
+Flask-MySQLdb = "^1.0.1"
+folium = "^0.14.0"
 
 [tool.poetry.dev-dependencies]
 
