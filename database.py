@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, text
 import pandas as pd
 import os
 import json
+from datetime import datetime
 
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
@@ -244,6 +245,7 @@ def new_vessel_due_to_arrive(data, email, gsheet_cred_path):
         flag = vessel_particulars[0]["vessel_flag"]
         print(f"flag Items in data: {flag}")
         due_to_arrive_dt = item["vda_vessel_due_to_arrive_dt"]
+        due_to_arrive_dt = datetime.fromisoformat(due_to_arrive_dt.replace('Z', '+00:00')).strftime('%Y-%m-%d %H:%M:%S')
         print(f"due_to_arrive_dt Items in data: {due_to_arrive_dt}")
         location_from = item["vda_vessel_location_from"]
         print(f"location_from Items in data: {location_from}")
