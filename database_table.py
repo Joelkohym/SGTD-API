@@ -78,7 +78,7 @@ def delete_all_rows_table_view(db_creds):
         query_arrivaldeclaration = text("DELETE FROM MPA_arrivaldeclaration where id > 0")
         result_arrivaldeclaration = conn.execute(query_arrivaldeclaration)
         print("Deleted MPA_arrivaldeclaration where id > 0")
-        query_VCP = text("DELETE FROM MPA_vessel_data(location) where id > 0")
+        query_VCP = text("DELETE FROM MPA_vessel_data where id > 0")
         result_VCP = conn.execute(query_VCP)
         print("Deleted MPA_vessel_data where id > 0")
         query_VDA = text("DELETE FROM vessel_due_to_arrive_UCE where id > 0")
@@ -87,6 +87,17 @@ def delete_all_rows_table_view(db_creds):
         query_PS = text("DELETE FROM pilotage_service_UCE where id > 0")
         result_PS = conn.execute(query_PS)
         print("Deleted pilotage_service_UCE where id > 0")
+
+    with engine.connect() as conn:
+        # query_VM = text("DELETE FROM vessel_movement_UCE where id > 0")
+        # result_VM = conn.execute(query_VM)
+        # print("Deleted vessel_movement_UCE where id > 0")
+        query_VCP = text("DELETE FROM vessel_current_position_UCE where id > 0")
+        result_VCP = conn.execute(query_VCP)
+        print("Deleted vessel_current_position_UCE where id > 0")
+        query_MPA = text("DELETE FROM MPA_vessel_data WHERE id > 0")
+        result_MPA = conn.execute(query_MPA)
+        print("Deleted MPA_vessel_data where id > 0")
 
 
 def get_data_from_vessel_due_to_arrive_and_depart(

@@ -107,7 +107,7 @@ def table_pull():
             # Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
             print(f'Session gc = {session["gc"]}')
             ############################   MIGHT NEED TO UNCOMMENT   ##############
-            #delete_all_rows_table_view(session["gc"])
+            delete_all_rows_table_view(session["gc"])
             user_vessel_imo = request.form["imo"]
             # Split vessel_imo list into invdivual records
             input_list = [int(x) for x in user_vessel_imo.split(",")]
@@ -515,7 +515,7 @@ def Vessel_data_pull():
     return redirect(url_for("login"))
 
 
-##########################################################RECEIVE in MySQL DB#############################################################################################
+##########################################################     RECEIVE in MySQL DB#############################################################################################
 
 
 # https://sgtd-api.onrender.com/api/vessel_due_to_arrive_db/receive/test@sgtradex.com
