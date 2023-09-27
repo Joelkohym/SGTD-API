@@ -530,7 +530,7 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
 
 
 
-# #CREATE TABLE vessel_movement_UCE (
+# CREATE TABLE vessel_movement_UCE (
 # 	id int NOT NULL AUTO_INCREMENT,
 #     vessel_nm VARCHAR(255),
 #     vessel_imo_no VARCHAR(255),
@@ -549,7 +549,7 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
 #     PRIMARY KEY (`id`)
 # );
 
-# #CREATE TABLE vessel_current_position_UCE (
+# CREATE TABLE vessel_current_position_UCE (
 # 	id int NOT NULL AUTO_INCREMENT,
 #     vessel_nm VARCHAR(255),
 #     vessel_imo_no VARCHAR(255),
@@ -617,13 +617,13 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
 # );
 
 
-# CREATE TABLE IF NOT EXISTS vessel_data (
+# CREATE TABLE IF NOT EXISTS vessel_due_to_arrive_UCE (
 #         id INT AUTO_INCREMENT PRIMARY KEY,
 #         vessel_name VARCHAR(255),
 #         call_sign VARCHAR(255),
 #         imo_number VARCHAR(255),
 #         flag VARCHAR(255),
-#         due_to_arrive_time DATETIME,
+#         due_to_arrive_dt DATETIME,
 #         location_from VARCHAR(255),
 #         location_to VARCHAR(255)
 #     )

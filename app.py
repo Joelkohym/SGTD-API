@@ -397,7 +397,7 @@ def Vessel_data_pull():
                     print("Config Data retrieved successfully!")
                     print(r_GET.text)
                     # Store GET data from MPA into MPA_vessel_data table table
-                    MPA_GET(r_GET.text, session["gc"])
+                    # MPA_GET(r_GET.text, session["gc"])
                 else:
                     NOT_FOUND_LIST = session["IMO_NOTFOUND"]
                     NOT_FOUND_LIST.append(vessel_imo)
