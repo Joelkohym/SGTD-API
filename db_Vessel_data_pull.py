@@ -86,7 +86,8 @@ def PULL_GET_VCP_VDA_MPA(
       if session_participant_id == "49f04a6f-f157-479b-b211-18931fad4ca4":
         payload_id = "1817878d-c468-411b-8fe1-698eca7170dd"
       else:
-        payload_id = "4c22b7a7-b583-4b6a-baae-e9f38d94beed"  
+        payload_id = "4c22b7a7-b583-4b6a-baae-e9f38d94beed" 
+
       payload = {
             "participants": [
                 {
