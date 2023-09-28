@@ -136,7 +136,25 @@ def merge_arrivedepart_declaration_df(filtered_df_before, Declaration_df):
             "vesselParticulars.vesselName",
             "vesselParticulars.callSign",
             "vesselParticulars.flag",
+             # to be removed once purpose is fixed
+            "location",
+            "grid",
+            "agent",
+            "reportedArrivalTime",
+            "locationFrom",
+            "purpose",
         ],
+        inplace=True,
+    )
+
+    filtered_df.rename(
+        columns={
+            "vesselParticulars.vesselName_x": "vesselName",
+            "vesselParticulars.callSign_x": "callSign",
+            "vesselParticulars.flag_x": "flag",
+            # To be reviewed in future
+            "locationTo": "locationFrom",
+        },
         inplace=True,
     )
 
