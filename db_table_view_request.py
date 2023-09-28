@@ -152,6 +152,7 @@ def merge_arrivedepart_declaration_df(filtered_df_before, Declaration_df):
             "vesselParticulars.vesselName_x": "vesselName",
             "vesselParticulars.callSign_x": "callSign",
             "vesselParticulars.flag_x": "flag",
+            "vesselParticulars.imoNumber": "IMO number",
             "dueToDepart": "dueToDepartTime",
             # To be reviewed in future
             "locationTo": "locationFrom",
