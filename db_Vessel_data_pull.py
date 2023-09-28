@@ -83,12 +83,11 @@ def PULL_GET_VCP_VDA_MPA(
             print(r_GET_arrivaldeclaration.text)
         ##################### END Make the GET request for MPA_arrivaldeclaration table ETA  #####################
         # ========================    PULL payload for vessel_current_position and vessel_movement    ===========================
-      if session_participant_id == "49f04a6f-f157-479b-b211-18931fad4ca4":
-        payload_id = "1817878d-c468-411b-8fe1-698eca7170dd"
-      else:
-        payload_id = "4c22b7a7-b583-4b6a-baae-e9f38d94beed" 
-
-      payload = {
+        if session_participant_id == "49f04a6f-f157-479b-b211-18931fad4ca4":
+            payload_id = "1817878d-c468-411b-8fe1-698eca7170dd"
+        else:
+            payload_id = "4c22b7a7-b583-4b6a-baae-e9f38d94beed"
+        payload = {
             "participants": [
                 {
                     "id": payload_id,
