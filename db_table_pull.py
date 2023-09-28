@@ -29,21 +29,25 @@ def delete_all_rows_table_view(db_creds):
 
 
 def PULL_pilotage_service(
-    url_pilotage_service, input_list, session_participants_id, session_api_key
+    url_pilotage_service, input_list, session_participant_id, session_api_key
 ):
     # Loop through input IMO list
     tic = time.perf_counter()
+    if session_participant_id == "49f04a6f-f157-479b-b211-18931fad4ca4":
+      payload_id = "1817878d-c468-411b-8fe1-698eca7170dd"
+    else:
+      payload_id = "4c22b7a7-b583-4b6a-baae-e9f38d94beed"
     for vessel_imo in input_list:
         payload = {
             "participants": [
                 {
-                    "id": "string",
+                    "id": payload_id,
                     "name": "string",
                     "meta": {"data_ref_id": ""},
                 }
             ],
             "parameters": {"pilotage_imo": str(vessel_imo)},
-            "on_behalf_of": [{"id": session_participants_id}],
+            "on_behalf_of": [{"id": session_participant_id}],
         }
 
         json_string = json.dumps(
@@ -73,7 +77,7 @@ def PULL_pilotage_service(
 
 #Pull 2 days after today for record in SGTD
 def PULL_vessel_due_to_arrive(
-    url_vessel_due_to_arrive, session_participants_id, session_api_key
+    url_vessel_due_to_arrive, session_participant_id, session_api_key
 ):
     # Define your local time zone (UTC+9)
     local_timezone = pytz.timezone("Asia/Singapore")
@@ -113,17 +117,20 @@ def PULL_vessel_due_to_arrive(
     #         pull_date = dayafter_date
   # to remove commented out and store the payload into for loop for 3 days
     pull_date = dayafter_date
-
+    if session_participant_id == "49f04a6f-f157-479b-b211-18931fad4ca4":
+      payload_id = "1817878d-c468-411b-8fe1-698eca7170dd"
+    else:
+      payload_id = "4c22b7a7-b583-4b6a-baae-e9f38d94beed"
     payload = {
         "participants": [
             {
-                "id": "1817878d-c468-411b-8fe1-698eca7170dd",
+                "id": payload_id,
                 "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
                 "meta": {"data_ref_id": ""},
             }
         ],
         "parameters": {"vda_vessel_due_to_arrive_dt": str(pull_date)},
-        "on_behalf_of": [{"id": session_participants_id}],
+        "on_behalf_of": [{"id": session_participant_id}],
     }
 
     json_string = json.dumps(
