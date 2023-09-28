@@ -84,7 +84,7 @@ def login():
                 msg = f"Login success for {email}, please enter Vessel IMO number(s)"
                 print(f"Login success for {email}, redirect")
                 return redirect(url_for("table_view"))
-                # return render_template('vessel_request.html', msg=msg, email=email)
+
             else:
                 msg = "Invalid credentials, please try again.."
                 print("Invalid credentials, reset login")
@@ -93,8 +93,7 @@ def login():
             msg = "Invalid credentials, please try again."
             print("Invalid credentials, reset login")
             return render_template("login.html", msg=msg)
-            # if request.data['username'] and request.data['password'] in db:
-            #   user_data = load_data_from_db()
+
     if request.method == "GET":
         print("Requets == GET")
         return render_template("login.html")
@@ -257,8 +256,6 @@ def Vessel_data_pull():
 
 
 
-
-
 @app.route("/vessel_request/<msg>", methods=["GET", "POST"])
 def vessel_request(msg):
     if g.user:
@@ -268,16 +265,6 @@ def vessel_request(msg):
         return redirect(url_for("login"))
 
 
-@app.route("/vessel_request/<msg>", methods=["GET", "POST"])
-def vessel_request(msg):
-    if g.user:
-        email = session["email"]
-        return render_template("vessel_request.html", msg=msg, email=email)
-    else:
-        return redirect(url_for("login"))
-
-
-# 9490820 / 9929297
 # ====================================####################MAP DB##############################========================================
 @app.route("/api/vessel_map", methods=["GET", "POST"])
 def Vessel_map():
@@ -285,7 +272,7 @@ def Vessel_map():
         print(f"VESSEL MAP PRINTING IMO_NOTFOUND = {session['IMO_NOTFOUND']}")
         DB_queried_data = get_map_data(session["gc"])
         df1 = pd.DataFrame(DB_queried_data[0])
-        print(f"df2 VESSEL MAP = {df1.to_string(index=False, header=True)}")
+        print(f"df1 VESSEL MAP = {df1.to_string(index=False, header=True)}")
 
         display_data = display_map(df1)
         if display_data[0] == 1:
