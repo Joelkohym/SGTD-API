@@ -147,3 +147,8 @@ def PULL_vessel_due_to_arrive(
     toc = time.perf_counter()
     print(f"PULL duration for vessel_due_to_arrive in {toc - tic:0.4f} seconds")
     # ========================    END PULL vessel_due_to_arrive         ===========================
+
+
+def validate_imo(imo):
+    # Check if imo is a string of exactly 7 integers
+    return imo.isdigit() and len(imo) == 7

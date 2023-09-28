@@ -19,6 +19,7 @@ from db_table_pull import (
     delete_all_rows_table_view,
     PULL_pilotage_service,
     PULL_vessel_due_to_arrive,
+    validate_imo
 )
 from db_table_view_request import (
     get_data_from_MPA_Vessel_Arrival_Declaration,
@@ -118,32 +119,38 @@ def table_pull():
             print(f'Session gc = {session["gc"]}')
             delete_all_rows_table_view(session["gc"])
             user_vessel_imo = request.form["imo"]
-            # Split vessel_imo list into invdivual records
-            input_list = [int(x) for x in user_vessel_imo.split(",")]
-            print(f"Pilotage service input_list from html = {input_list}")
+            try:
+                # Split vessel_imo list into invdivual records
+                input_list = [int(x) for x in user_vessel_imo.split(",")]
+                print(f"Pilotage service input_list from html = {input_list}")
 
-            # ========================              START PULL pilotage_service by vessel imo                   ===========================
-            # url_pilotage_service = (
-            #     f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
-            # )
-            # PULL_pilotage_service(
-            #     url_pilotage_service,
-            #     input_list,
-            #     session["participant_id"],
-            #     session["api_key"],
-            # )
-            # ========================          END PULL pilotage_service                         ===========================
+                # ========================              START PULL pilotage_service by vessel imo                   ===========================
+                # url_pilotage_service = (
+                #     f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
+                # )
+                # PULL_pilotage_service(
+                #     url_pilotage_service,
+                #     input_list,
+                #     session["participant_id"],
+                #     session["api_key"],
+                # )
+                # ========================          END PULL pilotage_service                         ===========================
 
-            # ========================          START PULL vessel_due_to_arrive by date            ===========================
-            url_vessel_due_to_arrive = (
-                f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
-            )
-            PULL_vessel_due_to_arrive(
-                url_vessel_due_to_arrive, session["participant_id"], session["api_key"]
-            )
-            # ========================    END PULL vessel_due_to_arrive         ===========================
+                # ========================          START PULL vessel_due_to_arrive by date            ===========================
+                # url_vessel_due_to_arrive = (
+                #     f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
+                # )
+                # PULL_vessel_due_to_arrive(
+                #     url_vessel_due_to_arrive, session["participant_id"], session["api_key"]
+                # )
+                # ========================    END PULL vessel_due_to_arrive         ===========================
 
-            return redirect(url_for("table_view_request", imo=user_vessel_imo))
+                return redirect(url_for("table_view_request", imo=user_vessel_imo))
+            except:
+                return render_template(
+                    "table_view.html",
+                    msg="Invalid IMO. Please ensure at IMO is valid.",
+                )
         else:
             print("TABLE_PULL Method <> POST")
             return redirect(url_for("login"))
@@ -154,6 +161,7 @@ def table_pull():
 @app.route("/table_view_request/<imo>", methods=["GET", "POST"])
 def table_view_request(imo):
     if g.user:
+      try:
         imo_list = imo.split(",")
         print(f"IMO ==== {imo}")
         print(f"IMO list ==== {imo_list}")
@@ -177,6 +185,11 @@ def table_view_request(imo):
         else:
             print(f"merge_arrivedepart_declaration_df = {render_html}")
             return render_template(render_html)
+      except:
+        return render_template(
+            "table_view.html",
+            msg="Something went wrong, please ensure IMO Number is valid.",
+        )
     else:
         return redirect(url_for("login"))
 
@@ -229,28 +242,32 @@ def Vessel_data_pull():
             delete_all_rows_vessel_location(session["gc"])
             user_vessel_imo = request.form["vessel_imo"]
             # Split vessel_imo list into invdivual records
-            input_list = [int(x) for x in user_vessel_imo.split(",")]
-
-            print(f"user_vessel_imo from html = {user_vessel_imo}")
-            print(f"input_list from html = {input_list}")
-            # Loop through input IMO list
-            tic = time.perf_counter()
-            # ============= GET 2 API's from MPA: VCP + VDA ===================
-            # ============= PULL 2 API's from SGTD: VCP + VDA =================
-            PULL_GET_VCP_VDA_MPA(
-                input_list,
-                session["pitstop_url"],
-                session["gc"],
-                session["participant_id"],
-                session["api_key"],
-                session["IMO_NOTFOUND"],
-            )
-            toc = time.perf_counter()
-            print(
-                f"PULL duration for vessel map query {len(input_list)} in {toc - tic:0.4f} seconds"
-            )
-            return redirect(url_for("Vessel_map"))
-
+            try:
+                input_list = [int(x) for x in user_vessel_imo.split(",")]
+                print(f"user_vessel_imo from html = {user_vessel_imo}")
+                print(f"input_list from html = {input_list}")
+                # Loop through input IMO list
+                tic = time.perf_counter()
+                # ============= GET 2 API's from MPA: VCP + VDA ===================
+                # ============= PULL 2 API's from SGTD: VCP + VDA =================
+                PULL_GET_VCP_VDA_MPA(
+                    input_list,
+                    session["pitstop_url"],
+                    session["gc"],
+                    session["participant_id"],
+                    session["api_key"],
+                    session["IMO_NOTFOUND"],
+                )
+                toc = time.perf_counter()
+                print(
+                    f"PULL duration for vessel map query {len(input_list)} in {toc - tic:0.4f} seconds"
+                )
+                return redirect(url_for("Vessel_map"))
+            except:
+                return render_template(
+                    "vessel_request.html",
+                    msg="Invalid IMO. Please ensure IMO is valid.",
+                )
         return render_template("vessel_request.html")
     return redirect(url_for("login"))
 
