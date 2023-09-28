@@ -112,6 +112,8 @@ def PULL_vessel_due_to_arrive(
     #     elif i == 2:
     #         pull_date = dayafter_date
   # to remove commented out and store the payload into for loop for 3 days
+    pull_date = dayafter_date
+
     payload = {
         "participants": [
             {
