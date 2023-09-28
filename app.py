@@ -137,12 +137,12 @@ def table_pull():
                 # ========================          END PULL pilotage_service                         ===========================
 
                 # ========================          START PULL vessel_due_to_arrive by date            ===========================
-                # url_vessel_due_to_arrive = (
-                #     f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
-                # )
-                # PULL_vessel_due_to_arrive(
-                #     url_vessel_due_to_arrive, session["participant_id"], session["api_key"]
-                # )
+                url_vessel_due_to_arrive = (
+                    f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
+                )
+                PULL_vessel_due_to_arrive(
+                    url_vessel_due_to_arrive, session["participant_id"], session["api_key"]
+                )
                 # ========================    END PULL vessel_due_to_arrive         ===========================
 
                 return redirect(url_for("table_view_request", imo=user_vessel_imo))
