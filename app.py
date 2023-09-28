@@ -120,32 +120,32 @@ def table_pull():
             delete_all_rows_table_view(session["gc"])
             user_vessel_imo = request.form["imo"]
             try:
-                # Split vessel_imo list into invdivual records
-                input_list = [int(x) for x in user_vessel_imo.split(",")]
-                print(f"Pilotage service input_list from html = {input_list}")
+              # Split vessel_imo list into invdivual records
+              input_list = [int(x) for x in user_vessel_imo.split(",")]
+              print(f"Pilotage service input_list from html = {input_list}")
 
-                # ========================              START PULL pilotage_service by vessel imo                   ===========================
-                # url_pilotage_service = (
-                #     f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
-                # )
-                # PULL_pilotage_service(
-                #     url_pilotage_service,
-                #     input_list,
-                #     session["participant_id"],
-                #     session["api_key"],
-                # )
-                # ========================          END PULL pilotage_service                         ===========================
+              # ========================              START PULL pilotage_service by vessel imo                   ===========================
+              # url_pilotage_service = (
+              #     f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
+              # )
+              # PULL_pilotage_service(
+              #     url_pilotage_service,
+              #     input_list,
+              #     session["participant_id"],
+              #     session["api_key"],
+              # )
+              # ========================          END PULL pilotage_service                         ===========================
 
-                # ========================          START PULL vessel_due_to_arrive by date            ===========================
-                url_vessel_due_to_arrive = (
-                    f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
-                )
-                PULL_vessel_due_to_arrive(
-                    url_vessel_due_to_arrive, session["participant_id"], session["api_key"]
-                )
-                # ========================    END PULL vessel_due_to_arrive         ===========================
+              # ========================          START PULL vessel_due_to_arrive by date            ===========================
+              url_vessel_due_to_arrive = (
+                  f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
+              )
+              PULL_vessel_due_to_arrive(
+                  url_vessel_due_to_arrive, session["participant_id"], session["api_key"]
+              )
+              # ========================    END PULL vessel_due_to_arrive         ===========================
 
-                return redirect(url_for("table_view_request", imo=user_vessel_imo))
+              return redirect(url_for("table_view_request", imo=user_vessel_imo))
             except:
                 return render_template(
                     "table_view.html",
