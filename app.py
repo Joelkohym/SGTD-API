@@ -13,7 +13,8 @@ import random
 import time
 import pytz 
 import os
-from database import load_data_from_db, new_registration, validate_login, receive_details, new_vessel_movement, new_vessel_current_position, get_map_data, delete_all_rows_vessel_location, MPA_GET, new_pilotage_service, MPA_GET_arrivaldeclaration, new_vessel_due_to_arrive
+from db_Vessel_map import get_map_data, display_map
+from db_Vessel_data_pull import delete_all_rows_vessel_location, PULL_GET_VCP_VDA_MPA
 from db_table_pull import (
     delete_all_rows_table_view,
     PULL_pilotage_service,
@@ -24,6 +25,16 @@ from db_table_view_request import (
     get_data_from_vessel_due_to_arrive_and_depart,
     merge_arrivedepart_declaration_df,
 )
+from database import (
+    new_registration,
+    validate_login,
+    receive_details,
+    new_vessel_movement,
+    new_vessel_current_position,
+    new_pilotage_service,
+    new_vessel_due_to_arrive,
+)
+
 
 
 app = Flask(__name__)
@@ -43,14 +54,6 @@ engine = create_engine(
   connect_args={
   "ssl": {
             "ssl_ca": "/etc/ssl/cert.pem"}})
-
-
-colors = [
-"red","blue","green","purple","orange","darkred","lightred","beige","darkblue","darkgreen","cadetblue","darkpurple","white","pink","lightblue","lightgreen","gray","black","lightgray"
-]
-
-
-
     
 @app.route("/")
 @app.route("/login", methods=["GET", "POST"])
@@ -133,12 +136,12 @@ def table_pull():
             # ========================          END PULL pilotage_service                         ===========================
 
             # ========================          START PULL vessel_due_to_arrive by date            ===========================
-            # url_vessel_due_to_arrive = (
-            #     f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
-            # )
-            # PULL_vessel_due_to_arrive(
-            #     url_vessel_due_to_arrive, session["participant_id"], session["api_key"]
-            # )
+            url_vessel_due_to_arrive = (
+                f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
+            )
+            PULL_vessel_due_to_arrive(
+                url_vessel_due_to_arrive, session["participant_id"], session["api_key"]
+            )
             # ========================    END PULL vessel_due_to_arrive         ===========================
 
             return redirect(url_for("table_view_request", imo=user_vessel_imo))
@@ -222,7 +225,6 @@ def register():
 def Vessel_data_pull():
     if g.user:
         if request.method == "POST":
-            current_datetime = datetime.now().strftime("%Y-%m-%d")
             session["IMO_NOTFOUND"] = []
             # Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
             delete_all_rows_vessel_location(session["gc"])
@@ -234,138 +236,16 @@ def Vessel_data_pull():
             print(f"input_list from html = {input_list}")
             # Loop through input IMO list
             tic = time.perf_counter()
-            for vessel_imo in input_list:
-                print(f"IMO Number = {vessel_imo}")
-
-                url_vessel_movement = (
-                    f"{session['pitstop_url']}/api/v1/data/pull/vessel_movement"
-                )
-                url_vessel_current_position = (
-                    f"{session['pitstop_url']}/api/v1/data/pull/vessel_current_position"
-                )
-                url_vessel_due_to_arrive = (
-                    f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
-                )
-                url_MPA = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/positions/imonumber/{vessel_imo}"
-                url_MPA_arrivaldeclaration = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/arrivaldeclaration/imonumber/{vessel_imo}"
-
-                ##################### Make the GET request for MPA_vessel_data table LOCATION VCP ALT  #####################
-                API_KEY_MPA = os.environ['MPA_API']
-                r_GET = requests.get(url_MPA, headers={"Apikey": API_KEY_MPA})
-
-                # Check the response
-                if r_GET.status_code == 200:
-                    print("Config Data retrieved successfully!")
-                    print(r_GET.text)
-                    # Store GET data from MPA into MPA_vessel_data table table
-                    # MPA_GET(r_GET.text, session["gc"])
-                else:
-                    NOT_FOUND_LIST = session["IMO_NOTFOUND"]
-                    NOT_FOUND_LIST.append(vessel_imo)
-                    print(f"SGTD PRINTING IMO_NOTFOUND1 = {NOT_FOUND_LIST}")
-                    session["IMO_NOTFOUND"] = NOT_FOUND_LIST
-                    print(f"SGTD PRINTING IMO_NOTFOUND2 = {session['IMO_NOTFOUND']}")
-                    print(f"r_GET.text = {r_GET.text}")
-                    print(
-                        f"Failed to get Config Data. Status code: {r_GET.status_code}"
-                    )
-                    print(r_GET.text)
-
-                ##################### Make the GET request for MPA_arrivaldeclaration table ETA  #####################
-                r_GET_arrivaldeclaration = requests.get(
-                    url_MPA_arrivaldeclaration, headers={"Apikey": API_KEY_MPA}
-                )
-                if r_GET_arrivaldeclaration.status_code == 200:
-                    print("Config Data retrieved successfully!")
-                    print(r_GET_arrivaldeclaration.text)
-
-                    # Store GET data from MPA into MPA_arrivaldeclaration table
-                    MPA_GET_arrivaldeclaration(
-                        r_GET_arrivaldeclaration.text, session["gc"]
-                    )
-                else:
-                    print(
-                        f"Failed to get Config Data for arrivaldeclaration. Status code: {r_GET_arrivaldeclaration.status_code}"
-                    )
-                    print(r_GET_arrivaldeclaration.text)
-
-                # ========================    PULL payload for vessel_current_position and vessel_movement    ===========================
-                payload = {
-                    "participants": [
-                        {
-                            "id": "1817878d-c468-411b-8fe1-698eca7170dd",
-                            "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
-                            "meta": {"data_ref_id": session["email"]},
-                        }
-                    ],
-                    "parameters": {"vessel_imo_no": str(vessel_imo)},
-                    "on_behalf_of": [{"id": session["participant_id"]}],
-                }
-
-                payload_VDA = {
-                    "participants": [
-                        {
-                            "id": "1817878d-c468-411b-8fe1-698eca7170dd",
-                            "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
-                            "meta": {"data_ref_id": session["email"]},
-                        }
-                    ],
-                    "parameters": {"vda_vessel_due_to_arrive_dt": current_datetime},
-                    "on_behalf_of": [{"id": session["participant_id"]}],
-                }
-
-                json_string = json.dumps(
-                    payload, indent=4
-                )  # Convert payload dictionary to JSON string
-                # Rest of the code to send the JSON payload to the API
-                data = json.loads(json_string)
-
-                json_string_VDA = json.dumps(
-                    payload_VDA, indent=4
-                )  # Convert payload dictionary to JSON string
-                # Rest of the code to send the JSON payload to the API
-                data_VDA = json.loads(json_string_VDA)
-
-                # ========================    PULL vessel_current_position     ===========================
-                PULL_vessel_current_position = requests.post(
-                    url_vessel_current_position,
-                    json=data,
-                    headers={"SGTRADEX-API-KEY": session["api_key"]},
-                )
-                if PULL_vessel_current_position.status_code == 200:
-                    #print(f"Response JSON = {PULL_vessel_current_position.json()}")
-                    print("Pull vessel_current_position success.")
-                else:
-                    print(
-                        f"Failed to PULL vessel_current_position data. Status code: {PULL_vessel_current_position.status_code}"
-                    )
-
-                # ========================    PULL vessel_due_to_arrive    ===========================
-                PULL_vessel_due_to_arrive = requests.post(
-                    url_vessel_due_to_arrive,
-                    json=data_VDA,
-                    headers={"SGTRADEX-API-KEY": session["api_key"]},
-                )
-                if PULL_vessel_due_to_arrive.status_code == 200:
-                    #print(f"Response JSON = {PULL_vessel_due_to_arrive .json()}")
-                    print("Pull vessel_due_to_arrive success.")
-                else:
-                    print(
-                        f"Failed to PULL vessel_due_to_arrive data. Status code: {PULL_vessel_due_to_arrive.status_code}"
-                    )
-                # ========================    PULL vessel_movement     =====================================
-                # response_vessel_movement = requests.post(
-                #     url_vessel_movement,
-                #     json=data,
-                #     headers={"SGTRADEX-API-KEY": session["api_key"]},
-                # )
-                # if response_vessel_movement.status_code == 200:
-                #     print("Pull vessel_movement success.")
-                # else:
-                #     print(
-                #         f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
-                #     )
-
+            # ============= GET 2 API's from MPA: VCP + VDA ===================
+            # ============= PULL 2 API's from SGTD: VCP + VDA =================
+            PULL_GET_VCP_VDA_MPA(
+                input_list,
+                session["pitstop_url"],
+                session["gc"],
+                session["participant_id"],
+                session["api_key"],
+                session["IMO_NOTFOUND"],
+            )
             toc = time.perf_counter()
             print(
                 f"PULL duration for vessel map query {len(input_list)} in {toc - tic:0.4f} seconds"
@@ -374,6 +254,89 @@ def Vessel_data_pull():
 
         return render_template("vessel_request.html")
     return redirect(url_for("login"))
+
+
+
+
+
+@app.route("/vessel_request/<msg>", methods=["GET", "POST"])
+def vessel_request(msg):
+    if g.user:
+        email = session["email"]
+        return render_template("vessel_request.html", msg=msg, email=email)
+    else:
+        return redirect(url_for("login"))
+
+
+@app.route("/vessel_request/<msg>", methods=["GET", "POST"])
+def vessel_request(msg):
+    if g.user:
+        email = session["email"]
+        return render_template("vessel_request.html", msg=msg, email=email)
+    else:
+        return redirect(url_for("login"))
+
+
+# 9490820 / 9929297
+# ====================================####################MAP DB##############################========================================
+@app.route("/api/vessel_map", methods=["GET", "POST"])
+def Vessel_map():
+    if g.user:
+        print(f"VESSEL MAP PRINTING IMO_NOTFOUND = {session['IMO_NOTFOUND']}")
+        DB_queried_data = get_map_data(session["gc"])
+        df1 = pd.DataFrame(DB_queried_data[0])
+        print(f"df2 VESSEL MAP = {df1.to_string(index=False, header=True)}")
+
+        display_data = display_map(df1)
+        if display_data[0] == 1:
+            return render_template(
+                display_data[1],
+                user=session["email"],
+                IMO_NOTFOUND=session["IMO_NOTFOUND"],
+            )
+
+        else:
+            return render_template(
+                display_data[1],
+                user=session["email"],
+                IMO_NOTFOUND=session["IMO_NOTFOUND"],
+            )
+    print("G.user doesn't exists, redirect to login")
+    return redirect(url_for("login"))
+
+
+####################################  START UPLOAD UCC #############################################
+@app.route("/UCC_upload")
+def UCC_upload():
+    if g.user:
+        email = session["email"]
+        return render_template("UCC_upload.html", email=email)
+    else:
+        return redirect(url_for("login"))
+
+
+@app.route("/api/triangular_upload", methods=["POST"])
+def triangular_upload():
+    if g.user:
+        if request.method == "POST":
+            # Get the list of files from webpage
+            files = request.files.getlist("files[]")  # Use "files[]" as the key
+
+            # Iterate for each file in the files list and save them
+            for file in files:
+                if file and file.filename.endswith(".csv"):  # Check if it's a CSV file
+                    print(file.filename)
+
+                    file.save(file.filename)
+                else:
+                    return "<h1>Invalid file format. Please upload only CSV files.</h1>"
+            return "<h1>Files Uploaded Successfully.!</h1>"
+
+
+####################################  END UPLOAD UCC  ###############################################
+
+
+
 
 
 ##########################################################     RECEIVE in MySQL DB#############################################################################################
@@ -555,195 +518,6 @@ def RECEIVE_Vessel_movement(email_url):
 
 
 ##########################################################MySQL DB#############################################################################################
-
-
-@app.route("/vessel_request/<msg>", methods=["GET", "POST"])
-def vessel_request(msg):
-    if g.user:
-        email = session["email"]
-        return render_template("vessel_request.html", msg=msg, email=email)
-    else:
-        return redirect(url_for("login"))
-
-
-# 9490820 / 9929297
-# ====================================####################MAP DB##############################========================================
-@app.route("/api/vessel_map", methods=["GET", "POST"])
-def Vessel_map():
-    if g.user:
-        print(f"VESSEL MAP PRINTING IMO_NOTFOUND = {session['IMO_NOTFOUND']}")
-        email = session["email"]
-        DB_queried_data = get_map_data(session["gc"])
-        # df1 = pd.DataFrame(DB_queried_data[0])
-        df2 = pd.DataFrame(DB_queried_data[0])
-        # df1 = get_map_data(gsheet_cred_path)[0]
-        # print(f"df1 = {df1}")
-        # print(f"df2 = {df2}")
-        # print(f"df1 VESSEL MAP = {df1.to_string(index=False, header=True)}")
-        # df2 = get_map_data(gsheet_cred_path)[1]
-        print(f"df2 VESSEL MAP = {df2.to_string(index=False, header=True)}")
-        with open("templates/Banner.html", "r") as file:
-            menu_banner_html = file.read()
-
-        if df2.empty:
-            print(f"Empty df1 or empty df2................")
-            current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
-            for f in os.listdir("templates/"):
-                # print(f)
-                if "mymap.html" in f:
-                    print(f"*mymap.html file to be removed = {f}")
-                    os.remove(f"templates/{f}")
-
-            m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
-            regions = "templates/SG_anchorages.geojson"
-            m.add_geojson(
-                regions,
-                layer_name="SG Anchorages",
-                style={
-                    "color": (random.choice(colors)),
-                    "fill": True,
-                    "fillOpacity": 0.05,
-                },
-            )
-            newHTML = f"templates/{current_datetime}mymap.html"
-            newHTMLwotemp = f"{current_datetime}mymap.html"
-            print(f"new html file created = {newHTML}")
-            m.to_html(newHTML)
-            with open(newHTML, "r") as file:
-                html_content = file.read()
-            html_content = menu_banner_html + html_content
-            with open(newHTML, "w") as file:
-                file.write(html_content)
-            return render_template(
-                newHTMLwotemp,
-                user=session["email"],
-                IMO_NOTFOUND=session["IMO_NOTFOUND"],
-            )
-
-        else:
-            # Edit here, remove df1 and merge df, keep df2. Alter drop coulmns based on print
-            print(f"df2 WITHOUT VESSEL MOVEMENT = {df2}")
-            # merged_df = pd.merge(
-            #     df2,
-            #     df1,
-            #     left_on=df2["imoNumber"],
-            #     right_on=df1["vessel_imo_no"],
-            #     how="outer",
-            # )
-            # print(f"Merged df  VESSEL MAP == {merged_df}")
-            # merged_df.drop(
-            #     columns=[
-            #         "key_0",
-            #         "id_x",
-            #         "id_y",
-            #         "vessel_nm",
-            #         "vessel_imo_no",
-            #         "vessel_flag",
-            #         "vessel_call_sign",
-            #         "yearBuilt",
-            #     ],
-            #     inplace=True,
-            # )
-
-            # sort & drop duplicates
-            # # sorting by first name
-            # merged_df.drop_duplicates(subset="imoNumber", keep="last", inplace=True)
-
-            df = df2
-            print(f"Vessel_map Merged DF = {df}")
-            print(f"Vessel_map Longitiude = {df['longitudeDegrees']}")
-            longitude = list(df["longitudeDegrees"])
-            print(f"Latitiude = {df['latitudeDegrees']}")
-            latitude = list(df["latitudeDegrees"])
-            m = folium.Map(location=[1.257167, 103.897], zoom_start=9)
-            color_mapping = {}
-            # Add several markers to the map
-            for index, row in df.iterrows():
-                imo_number = row["imoNumber"]
-                # Assign a color to the imoNumber, cycling through the available colors
-                if imo_number not in color_mapping:
-                    color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
-                icon_color = color_mapping[imo_number]
-                icon_html = f'<i class="fa fa-arrow-up" style="color: {icon_color}; font-size: 24px; transform: rotate({row["heading"]}deg);"></i>'
-                popup_html = f"<b>Vessel Info</b><br>"
-                for key, value in row.items():
-                    popup_html += f"<b>{key}:</b> {value}<br>"
-                folium.Marker(
-                    location=[row["latitudeDegrees"], row["longitudeDegrees"]],
-                    popup=folium.Popup(html=popup_html, max_width=300),
-                    icon=folium.DivIcon(html=icon_html),
-                    angle=float(row["heading"]),
-                    spin=True,
-                ).add_to(m)
-            # Geojson url
-            geojson_url = "templates/SG_anchorages.geojson"
-
-            # Desired styles
-            style = {"fillColor": "red", "color": "blueviolet"}
-
-            # Geojson
-            folium.GeoJson(
-                data=geojson_url, name="geojson", style_function=lambda x: style
-            ).add_to(m)
-
-            for f in os.listdir("templates/"):
-                # print(f)
-                if "mymap.html" in f:
-                    print(f"*mymap.html file to be removed = {f}")
-                    os.remove(f"templates/{f}")
-
-            current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
-            newHTML = rf"templates/{current_datetime}mymap.html"
-            m.save(newHTML)
-            with open(newHTML, "r") as file:
-                html_content = file.read()
-            # Add the menu banner HTML code to the beginning of the file
-            html_content = menu_banner_html + html_content
-            # Write the modified HTML content back to the file
-            with open(newHTML, "w") as file:
-                file.write(html_content)
-
-            newHTMLrender = f"{current_datetime}mymap.html"
-            return render_template(
-                newHTMLrender,
-                user=session["email"],
-                IMO_NOTFOUND=session["IMO_NOTFOUND"],
-            )
-    print("G.user doesn't exists, redirect to login")
-    return redirect(url_for("login"))
-
-
-####################################  START UPLOAD UCC #############################################
-@app.route("/UCC_upload")
-def UCC_upload():
-    if g.user:
-        email = session["email"]
-        return render_template("UCC_upload.html", email=email)
-    else:
-        return redirect(url_for("login"))
-
-
-@app.route("/api/triangular_upload", methods=["POST"])
-def triangular_upload():
-    if g.user:
-        if request.method == "POST":
-            # Get the list of files from webpage
-            files = request.files.getlist("files[]")  # Use "files[]" as the key
-
-            # Iterate for each file in the files list and save them
-            for file in files:
-                if file and file.filename.endswith(".csv"):  # Check if it's a CSV file
-                    print(file.filename)
-
-                    file.save(file.filename)
-                else:
-                    return "<h1>Invalid file format. Please upload only CSV files.</h1>"
-            return "<h1>Files Uploaded Successfully.!</h1>"
-
-
-####################################  END UPLOAD UCC  ###############################################
-
-
 @app.before_request
 def before_request():
     g.user = None
