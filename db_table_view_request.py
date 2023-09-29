@@ -52,7 +52,7 @@ def get_data_from_MPA_Vessel_Arrival_Declaration(input_list):
                 print("No records with reported arrival times found.")
     # Apply the mapping to the "purpose" column in Declaration_df
 
-    Declaration_df["purpose"] = Declaration_df["purpose"].apply(map_purpose)
+    #Declaration_df["purpose"] = Declaration_df["purpose"].apply(map_purpose)
     return Declaration_df
     # ======================== END GET MPA Vessel Arrival Declaration by IMO Number =============
 
