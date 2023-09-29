@@ -52,25 +52,25 @@ def get_data_from_MPA_Vessel_Arrival_Declaration(input_list):
                 print("No records with reported arrival times found.")
     # Apply the mapping to the "purpose" column in Declaration_df
 
-    #Declaration_df["purpose"] = Declaration_df["purpose"].apply(map_purpose)
+    Declaration_df["purpose"] = Declaration_df["purpose"].apply(map_purpose)
     return Declaration_df
     # ======================== END GET MPA Vessel Arrival Declaration by IMO Number =============
 
 
 def map_purpose(row):
     indicators = [
-        "#1 indicator – Loading / Unloading Cargo",
-        "#2 indicator – Loading / Unloading Passengers",
-        "#3 indicator – Taking Bunker",
-        "#4 indicator – Taking Ship Supplies",
-        "#5 indicator – Changing Crew",
-        "#6 indicator – Shipyard Repair",
-        "#7 indicator – Offshore Support",
-        "#8 indicator – Not Used",
-        "#9 indicator – Other Afloat Activities",
+        "#1 Loading / Unloading Cargo",
+        "#2 Loading / Unloading Passengers",
+        "#3 Taking Bunker",
+        "#4 Taking Ship Supplies",
+        "#5 Changing Crew",
+        "#6 Shipyard Repair",
+        "#7 Offshore Support",
+        "#8 Not Used",
+        "#9 Other Afloat Activities",
     ]
     selected_indicators = []
-    for i, value in enumerate(row):
+    for i, value in enumerate(row.split(",")):
         if value == "Y":
             selected_indicators.append(indicators[i])
     if not selected_indicators:
