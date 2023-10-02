@@ -73,7 +73,7 @@ def PULL_GET_VCP_VDA_MPA(
         )
         if r_GET_arrivaldeclaration.status_code == 200:
             print("Config Data retrieved successfully!")
-            print(r_GET_arrivaldeclaration.text)
+            #print(r_GET_arrivaldeclaration.text)
 
             # Store GET data from MPA into MPA_arrivaldeclaration table
             MPA_GET_arrivaldeclaration(r_GET_arrivaldeclaration.text, session_gc)
@@ -157,7 +157,7 @@ def PULL_VCP_VDA_SGTD(
         headers={"SGTRADEX-API-KEY": session_api_key},
     )
     if PULL_vessel_current_position.status_code == 200:
-        print(f"Response JSON = {PULL_vessel_current_position.json()}")
+        #print(f"Response JSON = {PULL_vessel_current_position.json()}")
         print("Pull vessel_current_position success.")
     else:
         print(
@@ -171,7 +171,7 @@ def PULL_VCP_VDA_SGTD(
         headers={"SGTRADEX-API-KEY": session_api_key},
     )
     if PULL_vessel_due_to_arrive.status_code == 200:
-        print(f"Response JSON = {PULL_vessel_due_to_arrive .json()}")
+        #print(f"Response JSON = {PULL_vessel_due_to_arrive .json()}")
         print("Pull vessel_due_to_arrive success.")
     else:
         print(
@@ -195,9 +195,9 @@ def PULL_VCP_VDA_SGTD(
 def MPA_GET(api_response, gsheet_cred_path):
     data_list = json.loads(api_response)
     #print(f"API response = {(data_list)}")
-    print(f"API response[0] = {data_list[0]}")
+    #print(f"API response[0] = {data_list[0]}")
     vessel_data = data_list[0]["vesselParticulars"]
-    print(f"vessel_data = {vessel_data}")
+    #print(f"vessel_data = {vessel_data}")
     print(f"vessel_data['vesselName'] = {vessel_data['vesselName']}")
     print(f"vessel_data['callSign'] = {vessel_data['callSign']}")
     latitude = data_list[0]["latitude"]
