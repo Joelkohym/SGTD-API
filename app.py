@@ -359,7 +359,9 @@ def triangular_upload():
 # https://sgtd-api.onrender.com/api/vessel_due_to_arrive_db/receive/test@sgtradex.com
 @app.route("/api/vessel_due_to_arrive_db/receive/<email_url>", methods=["POST"])
 def RECEIVE_Vessel_due_to_arrive(email_url):
+    
     email = email_url
+    print(f"Received Vessel_due_to_arrive from {email_url}")
     receive_details_data = receive_details(email)
     # print(f"Vessel_current_position_receive:   Receive_details from database.py {receive_details(email)}")
     API_KEY = receive_details_data[1]
@@ -390,6 +392,7 @@ def RECEIVE_Vessel_due_to_arrive(email_url):
 @app.route("/api/pilotage_service_db/receive/<email_url>", methods=["POST"])
 def RECEIVE_Pilotage_service(email_url):
     email = email_url
+    print(f"Received Pilotage_service from {email_url}")
     receive_details_data = receive_details(email)
     # print(f"Vessel_current_position_receive:   Receive_details from database.py {receive_details(email)}")
     API_KEY = receive_details_data[1]
@@ -420,7 +423,9 @@ def RECEIVE_Pilotage_service(email_url):
 # https://sgtd-api.onrender.com/api/vessel_current_position_db/receive/test@sgtradex.com
 @app.route("/api/vessel_current_position_db/receive/<email_url>", methods=["POST"])
 def RECEIVE_Vessel_current_position(email_url):
+  
     email = email_url
+    print(f"Received Vessel_current_position from {email_url}")
     receive_details_data = receive_details(email)
     # print(f"Vessel_current_position_receive:   Receive_details from database.py {receive_details(email)}")
     API_KEY = receive_details_data[1]
@@ -451,6 +456,7 @@ def RECEIVE_Vessel_current_position(email_url):
 @app.route("/api/vessel_movement_db/receive/<email_url>", methods=["POST"])
 def RECEIVE_Vessel_movement(email_url):
     email = email_url
+    print(f"Received Vessel_movement from {email_url}")
     receive_details_data = receive_details(email)
     # print(f"Vessel_movement_receive:  Receive_details from database.py {receive_details(email)}")
     API_KEY = receive_details_data[1]
