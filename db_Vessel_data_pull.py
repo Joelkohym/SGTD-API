@@ -82,7 +82,8 @@ def PULL_GET_VCP_VDA_MPA(
                 f"Failed to get Config Data for arrivaldeclaration. Status code: {r_GET_arrivaldeclaration.status_code}"
             )
             print(r_GET_arrivaldeclaration.text)
-        ##################### END Make the GET request for MPA_arrivaldeclaration table ETA: Threaded   #####################
+        ##################### END Make the GET request for MPA_arrivaldeclaration table ETA   #####################
+        ##################### START PULL SGTD VCP and VDA: Threaded  #####################
         print("Start PULL_SGTD_VCP_VDA thread...")
         print(datetime.now())
         threading.Thread(
@@ -98,7 +99,7 @@ def PULL_GET_VCP_VDA_MPA(
         ).start()
         print("End PULL_SGTD_VCP_VDA  thread...")
         print(datetime.now())
-
+        ##################### END PULL SGTD VCP and VDA: Threaded  #####################
 
 def PULL_VCP_VDA_SGTD(
     session_participant_id,
@@ -108,7 +109,7 @@ def PULL_VCP_VDA_SGTD(
     url_vessel_due_to_arrive,
     session_api_key,
 ):
-    # ========================    PULL payload for vessel_current_position and vessel_movement: Threaded     ===========================
+    # ========================    PULL payload for vessel_current_position and vessel_movement===========================
   
     if session_participant_id == "49f04a6f-f157-479b-b211-18931fad4ca4":
         payload_id = "1817878d-c468-411b-8fe1-698eca7170dd"
