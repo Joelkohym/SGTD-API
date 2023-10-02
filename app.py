@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, g
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash, g
 from flask_mysqldb import MySQL
 from sqlalchemy import create_engine, text
 import re
