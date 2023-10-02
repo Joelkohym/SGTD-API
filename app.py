@@ -538,7 +538,7 @@ def RECEIVE_Vessel_movement(email_url):
 
 
 @app.route("/api/others/receive/<email_url>", methods=["POST"])
-def RECEIVE_Vessel_movement(email_url):
+def RECEIVE_Others(email_url):
     email = email_url
     return print(f"Received others from {email_url}")
 
