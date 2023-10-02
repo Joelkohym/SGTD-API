@@ -540,7 +540,8 @@ def RECEIVE_Vessel_movement(email_url):
 @app.route("/api/others/receive/<email_url>", methods=["POST"])
 def RECEIVE_Others(email_url):
     email = email_url
-    return print(f"Received others from {email_url}")
+    response_data = {"message": f"Received others from {email_url}"}
+    return jsonify(response_data)
 
 ##########################################################MySQL DB#############################################################################################
 @app.before_request
