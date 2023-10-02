@@ -244,12 +244,13 @@ def MPA_GET(api_response, gsheet_cred_path):
 
 def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
     data_list = json.loads(api_response)
-    print(f"API response = {(data_list)}")
-    print(f"API response[0] = {data_list[0]}")
-
+    # print(f"API response = {(data_list)}")
+    print(f"MPA_GET_arrivaldeclaration API response[0] = {data_list[0]}")
+    declaration_df = pd.DataFrame()
     # Initialize variables to keep track of the latest record and time
     latest_record = None
     latest_time = None
+    declaration_list = []
     # Iterate through the list of records
     for record in data_list:
         reported_arrival_time = record.get("reportedArrivalTime")
@@ -264,8 +265,12 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
         # Print the latest record
     if latest_record:
         print(json.dumps(latest_record, indent=4))
+
     else:
         print("No records with reported arrival times found.")
+
+    if "purpose" in latest_record:
+        latest_record["purpose"] = map_purpose(latest_record["purpose"])
 
     # Your JSON data
     vessel_data = latest_record
@@ -302,3 +307,25 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
     with engine_MPA_arrivaldeclaration.connect() as conn:
         MPA_arrivaldeclaration = conn.execute(query, values)
     return MPA_arrivaldeclaration
+
+
+def map_purpose(row):
+    indicators = [
+        "#1 Loading / Unloading Cargo",
+        "#2 Loading / Unloading Passengers",
+        "#3 Taking Bunker",
+        "#4 Taking Ship Supplies",
+        "#5 Changing Crew",
+        "#6 Shipyard Repair",
+        "#7 Offshore Support",
+        "#8 Not Used",
+        "#9 Other Afloat Activities",
+    ]
+    selected_indicators = []
+    for i, value in enumerate(row.split(",")):
+        if value == "Y":
+            selected_indicators.append(indicators[i])
+    if not selected_indicators:
+        return "No Purpose Specified"
+    # If none of the values are 'Y', return a default value (you can change this as needed)
+    return ", ".join(selected_indicators)
