@@ -137,7 +137,7 @@ def table_pull():
               # )
               # ========================          END PULL pilotage_service                         ===========================
 
-              # ========================          START PULL vessel_due_to_arrive by date            ===========================
+              # ========================          START PULL vessel_due_to_arrive by date: Threaded            ===========================
               url_vessel_due_to_arrive = (
                   f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
               )
@@ -153,10 +153,7 @@ def table_pull():
               ).start()
               print("End PULL_vessel_due_to_arrive thread...")
               print(datetime.now())
-              # PULL_vessel_due_to_arrive(
-              #     url_vessel_due_to_arrive, session["participant_id"], session["api_key"]
-              # )
-              # ========================    END PULL vessel_due_to_arrive         ===========================
+              # ========================    END PULL vessel_due_to_arrive: Threaded          ===========================
 
               return redirect(url_for("table_view_request", imo=user_vessel_imo))
             except:
