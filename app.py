@@ -13,6 +13,7 @@ import random
 import time
 import pytz 
 import os
+import threading
 from db_Vessel_map import get_map_data, display_map
 from db_Vessel_data_pull import delete_all_rows_vessel_location, PULL_GET_VCP_VDA_MPA
 from db_table_pull import (
@@ -140,9 +141,21 @@ def table_pull():
               url_vessel_due_to_arrive = (
                   f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
               )
-              PULL_vessel_due_to_arrive(
-                  url_vessel_due_to_arrive, session["participant_id"], session["api_key"]
-              )
+              print("Start PULL_vessel_due_to_arrive thread...")
+              print(datetime.now())
+              threading.Thread(
+                  target=PULL_vessel_due_to_arrive,
+                  args=(
+                      url_vessel_due_to_arrive,
+                      session["participant_id"],
+                      session["api_key"],
+                  ),
+              ).start()
+              print("End PULL_vessel_due_to_arrive thread...")
+              print(datetime.now())
+              # PULL_vessel_due_to_arrive(
+              #     url_vessel_due_to_arrive, session["participant_id"], session["api_key"]
+              # )
               # ========================    END PULL vessel_due_to_arrive         ===========================
 
               return redirect(url_for("table_view_request", imo=user_vessel_imo))

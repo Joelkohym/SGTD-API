@@ -4,6 +4,7 @@ import os
 import json
 from datetime import datetime
 import requests
+import threading
 
 
 def delete_all_rows_vessel_location(db_creds):
@@ -82,86 +83,111 @@ def PULL_GET_VCP_VDA_MPA(
             )
             print(r_GET_arrivaldeclaration.text)
         ##################### END Make the GET request for MPA_arrivaldeclaration table ETA  #####################
-        # ========================    PULL payload for vessel_current_position and vessel_movement    ===========================
-        if session_participant_id == "49f04a6f-f157-479b-b211-18931fad4ca4":
-            payload_id = "1817878d-c468-411b-8fe1-698eca7170dd"
-        else:
-            payload_id = "4c22b7a7-b583-4b6a-baae-e9f38d94beed"
-        payload = {
-            "participants": [
-                {
-                    "id": payload_id,
-                    "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
-                    "meta": {"data_ref_id": ""},
-                }
-            ],
-            "parameters": {"vessel_imo_no": str(vessel_imo)},
-            "on_behalf_of": [{"id": session_participant_id}],
-        }
+        print("Start PULL_SGTD_VCP_VDA thread...")
+        print(datetime.now())
+        threading.Thread(
+            target=PULL_VCP_VDA_SGTD,
+            args=(
+                session_participant_id,
+                vessel_imo,
+                current_datetime,
+                url_vessel_current_position,
+                url_vessel_due_to_arrive,
+                session_api_key,
+            ),
+        ).start()
+        print("End PULL_SGTD_VCP_VDA  thread...")
+        print(datetime.now())
 
-        payload_VDA = {
-            "participants": [
-                {
-                    "id": payload_id,
-                    "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
-                    "meta": {"data_ref_id": ""},
-                }
-            ],
-            "parameters": {"vda_vessel_due_to_arrive_dt": current_datetime},
-            "on_behalf_of": [{"id": session_participant_id}],
-        }
 
-        json_string = json.dumps(
-            payload, indent=4
-        )  # Convert payload dictionary to JSON string
-        # Rest of the code to send the JSON payload to the API
-        data = json.loads(json_string)
+def PULL_VCP_VDA_SGTD(
+    session_participant_id,
+    vessel_imo,
+    current_datetime,
+    url_vessel_current_position,
+    url_vessel_due_to_arrive,
+    session_api_key,
+):
+    # ========================    PULL payload for vessel_current_position and vessel_movement    ===========================
+    if session_participant_id == "49f04a6f-f157-479b-b211-18931fad4ca4":
+        payload_id = "1817878d-c468-411b-8fe1-698eca7170dd"
+    else:
+        payload_id = "4c22b7a7-b583-4b6a-baae-e9f38d94beed"
+    payload = {
+        "participants": [
+            {
+                "id": payload_id,
+                "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
+                "meta": {"data_ref_id": ""},
+            }
+        ],
+        "parameters": {"vessel_imo_no": str(vessel_imo)},
+        "on_behalf_of": [{"id": session_participant_id}],
+    }
 
-        json_string_VDA = json.dumps(
-            payload_VDA, indent=4
-        )  # Convert payload dictionary to JSON string
-        # Rest of the code to send the JSON payload to the API
-        data_VDA = json.loads(json_string_VDA)
-        # ========================    PULL vessel_current_position     ===========================
-        PULL_vessel_current_position = requests.post(
-            url_vessel_current_position,
-            json=data,
-            headers={"SGTRADEX-API-KEY": session_api_key},
+    payload_VDA = {
+        "participants": [
+            {
+                "id": payload_id,
+                "name": "MARITIME AND PORT AUTHORITY OF SINGAPORE",
+                "meta": {"data_ref_id": ""},
+            }
+        ],
+        "parameters": {"vda_vessel_due_to_arrive_dt": current_datetime},
+        "on_behalf_of": [{"id": session_participant_id}],
+    }
+
+    json_string = json.dumps(
+        payload, indent=4
+    )  # Convert payload dictionary to JSON string
+    # Rest of the code to send the JSON payload to the API
+    data = json.loads(json_string)
+
+    json_string_VDA = json.dumps(
+        payload_VDA, indent=4
+    )  # Convert payload dictionary to JSON string
+    # Rest of the code to send the JSON payload to the API
+    data_VDA = json.loads(json_string_VDA)
+    # ========================    PULL vessel_current_position     ===========================
+    PULL_vessel_current_position = requests.post(
+        url_vessel_current_position,
+        json=data,
+        headers={"SGTRADEX-API-KEY": session_api_key},
+    )
+    if PULL_vessel_current_position.status_code == 200:
+        print(f"Response JSON = {PULL_vessel_current_position.json()}")
+        print("Pull vessel_current_position success.")
+    else:
+        print(
+            f"Failed to PULL vessel_current_position data. Status code: {PULL_vessel_current_position.status_code}"
         )
-        if PULL_vessel_current_position.status_code == 200:
-            print(f"Response JSON = {PULL_vessel_current_position.json()}")
-            print("Pull vessel_current_position success.")
-        else:
-            print(
-                f"Failed to PULL vessel_current_position data. Status code: {PULL_vessel_current_position.status_code}"
-            )
 
-        # ========================    PULL vessel_due_to_arrive    ===========================
-        PULL_vessel_due_to_arrive = requests.post(
-            url_vessel_due_to_arrive,
-            json=data_VDA,
-            headers={"SGTRADEX-API-KEY": session_api_key},
+    # ========================    PULL vessel_due_to_arrive    ===========================
+    PULL_vessel_due_to_arrive = requests.post(
+        url_vessel_due_to_arrive,
+        json=data_VDA,
+        headers={"SGTRADEX-API-KEY": session_api_key},
+    )
+    if PULL_vessel_due_to_arrive.status_code == 200:
+        print(f"Response JSON = {PULL_vessel_due_to_arrive .json()}")
+        print("Pull vessel_due_to_arrive success.")
+    else:
+        print(
+            f"Failed to PULL vessel_due_to_arrive data. Status code: {PULL_vessel_due_to_arrive.status_code}"
         )
-        if PULL_vessel_due_to_arrive.status_code == 200:
-            print(f"Response JSON = {PULL_vessel_due_to_arrive .json()}")
-            print("Pull vessel_due_to_arrive success.")
-        else:
-            print(
-                f"Failed to PULL vessel_due_to_arrive data. Status code: {PULL_vessel_due_to_arrive.status_code}"
-            )
-        # ========================    PULL vessel_movement     =====================================
-        # response_vessel_movement = requests.post(
-        #     url_vessel_movement,
-        #     json=data,
-        #     headers={"SGTRADEX-API-KEY": session["api_key"]},
-        # )
-        # if response_vessel_movement.status_code == 200:
-        #     print("Pull vessel_movement success.")
-        # else:
-        #     print(
-        #         f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
-        #     )
-
+    # ========================    PULL vessel_movement     =====================================
+    # response_vessel_movement = requests.post(
+    #     url_vessel_movement,
+    #     json=data,
+    #     headers={"SGTRADEX-API-KEY": session["api_key"]},
+    # )
+    # if response_vessel_movement.status_code == 200:
+    #     print("Pull vessel_movement success.")
+    # else:
+    #     print(
+    #         f"Failed to PULL vessel_movement data. Status code: {response_vessel_movement.status_code}"
+    #     )
+        
 
 # Store data into MPA_vessel_data from GET
 def MPA_GET(api_response, gsheet_cred_path):
