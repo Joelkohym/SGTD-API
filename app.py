@@ -537,7 +537,7 @@ def RECEIVE_Vessel_movement(email_url):
         return f"Email doesn't exists, unable to add data"
 
 
-@app.route("/api/others/<email_url>", methods=["POST"])
+@app.route("/api/others/receive/<email_url>", methods=["POST"])
 def RECEIVE_Vessel_movement(email_url):
     email = email_url
     return print(f"Received others from {email_url}")
