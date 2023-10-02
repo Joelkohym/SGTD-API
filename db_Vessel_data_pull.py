@@ -194,7 +194,7 @@ def PULL_VCP_VDA_SGTD(
 # Store data into MPA_vessel_data from GET
 def MPA_GET(api_response, gsheet_cred_path):
     data_list = json.loads(api_response)
-    print(f"API response = {(data_list)}")
+    #print(f"API response = {(data_list)}")
     print(f"API response[0] = {data_list[0]}")
     vessel_data = data_list[0]["vesselParticulars"]
     print(f"vessel_data = {vessel_data}")
