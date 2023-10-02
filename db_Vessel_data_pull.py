@@ -246,7 +246,7 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
     data_list = json.loads(api_response)
     # print(f"API response = {(data_list)}")
     print(f"MPA_GET_arrivaldeclaration API response[0] = {data_list[0]}")
-    declaration_df = pd.DataFrame()
+
     # Initialize variables to keep track of the latest record and time
     latest_record = None
     latest_time = None
