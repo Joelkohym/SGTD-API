@@ -4,7 +4,7 @@ import os
 import json
 import requests
 from datetime import datetime
-
+import pytz
 
 def get_data_from_MPA_Vessel_Arrival_Declaration(input_list):
     Declaration_df = pd.DataFrame()
@@ -82,7 +82,15 @@ def map_purpose(row):
 # get VDA from MPA API
 def get_data_from_vessel_due_to_arrive_and_depart():
     print("Start of get_data_from_vessel_due_to_arrive_and_depart........")
-    today_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Define your local time zone (UTC+9)
+    local_timezone = pytz.timezone("Asia/Singapore")
+    # Get the current date and time in UTC
+    current_utc_datetime = datetime.now(pytz.utc)
+    # Convert the current UTC time to your local time zone
+    current_local_datetime = current_utc_datetime.astimezone(local_timezone)
+  
+    today_datetime = current_local_datetime.strftime("%Y-%m-%d %H:%M:%S")
     url_MPA_due_to_arrive = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/duetoarrive/date/{today_datetime}/hours/99"
     url_MPA_due_to_depart = f"https://sg-mdh-api.mpa.gov.sg/v1/vessel/duetodepart/date/{today_datetime}/hours/99"
     API_KEY_MPA = "QgCv2UvINPRfFqbbH3yVHRVVyO8Iv5CG"
