@@ -95,7 +95,7 @@ def get_data_from_vessel_due_to_arrive_and_depart():
         # print(f"dueToArrive_Data = {dueToArrive_Data}")
         arrive_df = pd.json_normalize(dueToArrive_Data)
         print(f"arrive_df = {arrive_df}")
-        print(arrive_df.iloc[200:206])
+        print(arrive_df.iloc[400:410])
         # write in mysql
     else:
         print("Failed to get vessel_due_to_arrive data")
