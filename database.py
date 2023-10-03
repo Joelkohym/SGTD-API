@@ -272,7 +272,7 @@ def new_vessel_due_to_arrive(data, email, gsheet_cred_path):
       conn.commit()
         # result = conn.executemany(insert_query, values)
         # result = conn.execute(query_pilot, values_pilot)
-    print(f"VDA Values list = {values}")
+    #print(f"VDA Values list = {values}")
     print("New new_vessel_due_to_arrive execute success")
     return 1
 
@@ -301,7 +301,7 @@ def get_map_data(db_creds):
         result_VCP = conn.execute(query)
         result_all_VCP = result_VCP.fetchall()
         column_names_VCP = result_VCP.keys()
-        print(result_all_VCP)
+        #print(result_all_VCP)
         print(f"length of result_all_VCP = {len(result_all_VCP)}")
         df2 = pd.DataFrame(result_all_VCP, columns=column_names_VCP)
         # sorting by first name
@@ -312,7 +312,7 @@ def get_map_data(db_creds):
         result_ETA = conn.execute(query)
         result_all_ETA = result_ETA.fetchall()
         column_names_ETA = result_ETA.keys()
-        print(result_all_ETA)
+        #print(result_all_ETA)
         print(f"length of result_all_ETA = {len(result_all_ETA)}")
         df3 = pd.DataFrame(result_all_ETA, columns=column_names_ETA)
         df3.drop(columns=["call_sign", "flag", "vessel_name"], inplace=True)
@@ -351,10 +351,10 @@ def delete_all_rows_vessel_location(db_creds):
 # Store data into MPA_vessel_data from GET
 def MPA_GET(api_response, gsheet_cred_path):
     data_list = json.loads(api_response)
-    print(f"API response = {(data_list)}")
+    #print(f"API response = {(data_list)}")
     print(f"API response[0] = {data_list[0]}")
     vessel_data = data_list[0]["vesselParticulars"]
-    print(f"vessel_data = {vessel_data}")
+    #print(f"vessel_data = {vessel_data}")
     print(f"vessel_data['vesselName'] = {vessel_data['vesselName']}")
     print(f"vessel_data['callSign'] = {vessel_data['callSign']}")
     latitude = data_list[0]["latitude"]
@@ -404,7 +404,7 @@ def MPA_GET(api_response, gsheet_cred_path):
 
 def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
     data_list = json.loads(api_response)
-    print(f"API response = {(data_list)}")
+    #print(f"API response = {(data_list)}")
     print(f"API response[0] = {data_list[0]}")
 
     # Initialize variables to keep track of the latest record and time
