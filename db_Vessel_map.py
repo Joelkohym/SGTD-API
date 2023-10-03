@@ -149,8 +149,12 @@ def display_map(df1):
         style = {"fillColor": "red", "color": "blueviolet"}
 
         # Geojson
-        folium.GeoJson(
-            data=geojson_url, name="geojson", style_function=lambda x: style
+        geojson_layer = folium.GeoJson(
+            data=geojson_url,
+            name="geojson",
+            style_function=lambda x: style,
+            highlight_function=lambda x: {"fillOpacity": 0.3},
+            popup=folium.GeoJsonPopup(fields=["NAME"], aliases=["Name"]),
         ).add_to(m)
 
         for f in os.listdir("templates/"):
