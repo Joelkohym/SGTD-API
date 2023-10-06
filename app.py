@@ -565,7 +565,7 @@ def after_request(response):
 
 # Configure Swagger UI
 SWAGGER_URL = "/swagger"
-API_URL = "http://127.0.0.1:5000/swagger.json"
+API_URL = "https://sgtd-api.onrender.com//swagger.json"
 swaggerui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL, API_URL, config={"app_name": "SGTD Vessel Query API Swagger"}
 )
