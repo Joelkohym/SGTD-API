@@ -158,7 +158,7 @@ def table_pull():
             except:
                 return render_template(
                     "table_view.html",
-                    msg="Invalid IMO. Please ensure at IMO is valid.",
+                    msg="No information found, please try another IMO.",
                 )
         else:
             print("TABLE_PULL Method <> POST")
