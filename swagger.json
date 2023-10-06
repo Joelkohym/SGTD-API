@@ -16,7 +16,7 @@
   "paths": {
     "/table_view": {
       "get": {
-        "summary": "Query table request page. Linked to Query Table button.",
+        "summary": "return render_template('table_view.html', email=email)",
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -27,7 +27,7 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "email": {
+                      "/templates/table_view.html": {
                         "type": "string"
                       }
                     }
@@ -42,7 +42,7 @@
     },
     "/table_view_request/{imo}": {
       "get": {
-        "summary": "Get Table View by IMO",
+        "summary": "get_data_from_MPA_Vessel_Arrival_Declaration(imo_list) & get_data_from_vessel_due_to_arrive_and_depart() & merge_arrivedepart_declaration_df(filtered_df_before, Declaration_df) >>> return render_template('table_view.html')",
         "parameters": [
           {
             "name": "imo",
@@ -64,7 +64,7 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "email": {
+                      "render template /templates/table_view.html": {
                         "type": "string"
                       }
                     }
@@ -90,7 +90,7 @@
     },
     "/vessel_request/{msg}": {
       "get": {
-        "summary": "Vessel Request",
+        "summary": "return render_template('vessel_request.html', msg=msg, email=email)",
         "parameters": [
           {
             "name": "msg",
@@ -109,7 +109,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "render template /templates/vessel_request.html": {
                       "type": "string"
                     }
                   }
@@ -123,7 +123,7 @@
     },
     "/api/vessel_map": {
       "get": {
-        "summary": "Vessel Map",
+        "summary": "get_map_data(session['gc']) = df1 & display_map(df1) >>> return render_template(display_data[1])",
         "responses": {
           "200": {
             "description": "Successful vessel map request",
@@ -132,7 +132,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "render template /templates/yyyymmddhhmmssmymap": {
                       "type": "string"
                     }
                   }
@@ -180,8 +180,8 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string"
+                    "receive vessel_due_to_arrive Data Element from SGTD json": {
+                      "type": "json"
                     }
                   }
                 }
@@ -228,8 +228,8 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string"
+                    "receive pilotage_service Data Element from SGTD json": {
+                      "type": "json"
                     }
                   }
                 }
@@ -276,8 +276,8 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string"
+                    "receive vessel_current_position Data Element from SGTD json": {
+                      "type": "json"
                     }
                   }
                 }
@@ -324,8 +324,8 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string"
+                    "receive vessel_movement Element from SGTD json": {
+                      "type": "json"
                     }
                   }
                 }
@@ -372,8 +372,8 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string"
+                    "receive any other Data Element from SGTD json": {
+                      "type": "json"
                     }
                   }
                 }
@@ -434,7 +434,7 @@
     },
     "/api/table_pull": {
       "post": {
-        "summary": "Table PULL Query",
+        "summary": "delete_all_rows_table_view(session['gc']) & PULL_vessel_due_to_arrive(PULL VDA from SGTD) >>> return redirect(url_for('table_view_request', imo=user_vessel_imo)). Pulls IMO from MPA and SGTD and displays it on yyymmddhhmmssmytable.html",
         "requestBody": {
           "required": true,
           "content": {
@@ -453,7 +453,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Pulls IMO from MPA and SGTD and displays it on yyymmddhhmmssmytable.html",
             "content": {
               "application/json": {
                 "schema": {
@@ -518,7 +518,7 @@
     },
     "/api/vessel": {
       "post": {
-        "summary": "Vessel Data Pull",
+        "summary": "PULL and GET VCP & VDA from SGTD and MPA redirects to /api/vessel_map",
         "requestBody": {
           "required": true,
           "content": {
@@ -543,7 +543,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "PULL and GET VCP & VDA from SGTD and MPA redirects to /api/vessel_map": {
                       "type": "string"
                     }
                   }
