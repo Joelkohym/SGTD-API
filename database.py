@@ -77,11 +77,14 @@ def new_registration(data):
 
 def validate_login(email, password):
     #print(f"printing data from validate_login: email = {email}, password = {password}")
-
+    print("validating....")
+    print(f"Email = {email}")
+    print(f"Email = {password}")
     with engine.connect() as conn:
         query = text(
             "SELECT * FROM userDB WHERE email = :email AND password = :password"
         )
+        print(f"Validate login query return....")
         values = {"email": email, "password": password}
         check_login = conn.execute(query, values)
         login_entry = check_login.all()[0]

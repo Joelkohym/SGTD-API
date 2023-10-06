@@ -4,7 +4,6 @@ from sqlalchemy import create_engine, text
 import re
 import requests
 import json
-import pygsheets
 from datetime import datetime, timedelta
 import pandas as pd
 import leafmap.foliumap as leafmap
