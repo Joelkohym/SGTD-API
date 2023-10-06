@@ -39,7 +39,7 @@ body {
     font-family: 'Roboto', sans-serif;
     font-family: 'Poppins', sans-serif;
     font-family: 'Rubik', sans-serif;
-    padding: 200px 0;
+    padding: 190px 0;
 }
 
 h1,
@@ -84,8 +84,8 @@ label::selection,
 .btn::selection,
 .navbar::selection,
 .navbar-brand::selection {
-    color: #000000;
-    background: #ffffff;
+    color: #fff;
+    background: #187fcc;
     text-shadow: 1px 1px 1px #333;
 }
 
@@ -171,8 +171,8 @@ p {
 
 .totop:hover {
     line-height: 40px;
-    color: #000000;
-    background: #ffffff;
+    color: #fff;
+    background: #194274;
     text-shadow: 0 0 5px #000;
 }
 

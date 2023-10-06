@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <title>Register page</title>
+  <div class="text-center">
+    <img src="static/SGTRADEX LOGO.png" class="img-fluid" alt="Your Image">
+  </div>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -11,48 +14,50 @@
 </head>
 <body>
 
-  <div class="banner" style="background-color: rgb(116, 116, 116);">
-    <div class="d-flex justify-content-between align-items-center">
-      <div>
-        <img src="static/SGTRADEX LOGO.png" class="img-fluid" alt="Your Image">
-      </div>
-    </div>
-  </div>
-
 <div class="container">
     <div class=" row justify-content-center">
         <div class="col-sm-6 mt-4">
             <h2>Register form</h2>
-            <form action="{{ url_for('register') }}" method="POST">
+            <form action="/register" method="POST">
                 <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" required class="form-control" id="email" placeholder="Enter email" name="email">
+                <label for="username_">Email:</label>
+                <input type="email" required class="form-control" id="username_" placeholder="Enter email" name="username_">
                 </div>
             
                 <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" required class="form-control" id="password" placeholder="Enter password" name="password">
+                <label for="password_">Password:</label>
+                <input type="password" required class="form-control" id="password_" placeholder="Enter password" name="password_">
                 </div>
 
                 <div class="form-group">
-                <label for="api_key">API Key:</label>
-                <input type="text" required class="form-control" id="api_key" placeholder="Enter SGTD pitstop API KEY" name="api_key">
+                <label for="api_key_">API Key:</label>
+                <input type="text" required class="form-control" id="api_key_" placeholder="Enter SGTD pitstop API KEY" name="api_key_">
                 </div>
 
 
                 <div class="form-group">
-                <label for="participant_id">Participant ID:</label>
-                <input type="text" required class="form-control" id="participant_id" placeholder="Enter SGTD pitstop Participant ID" name="participant_id">
+                <label for="participant_id_">Participant ID:</label>
+                <input type="text" required class="form-control" id="participant_id_" placeholder="Enter SGTD pitstop Participant ID" name="participant_id_">
                 </div>
 
                 <div class="form-group">
-                <label for="gsheet_cred_path">Gsheet cred path:</label>
-                <input type="text" required class="form-control" id="gsheet_cred_path" placeholder="Enter gsheet_cred_path" name="gsheet_cred_path">
+                <label for="on_behalf_id_">On behalf ID:</label>
+                <input type="text" required class="form-control" id="on_behalf_id_" placeholder="Enter SGTD pitstop On Behalf Of Id" name="on_behalf_id_">
                 </div>
 
                 <div class="form-group">
-                <label for="pitstop_url">Pitstop URL:</label>
-                <input type="url" required class="form-control" id="pitstop_url" placeholder="Enter Pitstop URL" name="pitstop_url">
+                <label for="gsheet_cred_path_">Gsheet cred path:</label>
+                <input type="text" required class="form-control" id="gsheet_cred_path_" placeholder="Enter gsheet_cred_path_" name="gsheet_cred_path_">
+                </div>
+
+                <div class="form-group">
+                <label for="pitstop_">Pitstop URL:</label>
+                <input type="url" required class="form-control" id="pitstop_" placeholder="Enter Pitstop URL" name="pitstop_">
+                </div>
+
+                <div class="form-group">
+                <label for="company_">Company:</label>
+                <input type="text" class="form-control" id="company_" placeholder="Enter Company Name" name="company_">
                 </div>
 
                 <button type="submit" class="btn btn-dark">Submit</button>
