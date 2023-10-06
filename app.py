@@ -36,7 +36,7 @@ from database import (
     new_pilotage_service,
     new_vessel_due_to_arrive,
 )
-
+from flask_swagger_ui import get_swaggerui_blueprint
 
 
 app = Flask(__name__)

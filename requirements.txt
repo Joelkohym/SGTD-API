@@ -10,3 +10,4 @@ pymysql
 Flask-MySQLdb
 pytz
 folium
+flask-swagger-ui
