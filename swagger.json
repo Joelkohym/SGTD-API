@@ -434,7 +434,7 @@
     },
     "/api/table_pull": {
       "post": {
-        "summary": "delete_all_rows_table_view(session['gc']) & PULL_vessel_due_to_arrive(PULL VDA from SGTD) >>> return redirect(url_for('table_view_request', imo=user_vessel_imo)). Pulls IMO from MPA and SGTD and displays it on yyymmddhhmmssmytable.html",
+        "summary": "delete_all_rows_table_view(session['gc']) & PULL_vessel_due_to_arrive(PULL VDA from SGTD) >>> return redirect(url_for('table_view_request', imo=user_vessel_imo)).",
         "requestBody": {
           "required": true,
           "content": {
@@ -518,7 +518,7 @@
     },
     "/api/vessel": {
       "post": {
-        "summary": "PULL and GET VCP & VDA from SGTD and MPA redirects to /api/vessel_map",
+        "summary": "delete_all_rows_vessel_location(session['gc']) & PULL_GET_VCP_VDA_MPA >>> return redirect(url_for('Vessel_map'))",
         "requestBody": {
           "required": true,
           "content": {
