@@ -1,1 +1,0 @@
-# SGTD-API
