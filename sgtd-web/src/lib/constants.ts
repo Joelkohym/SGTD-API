@@ -6,3 +6,11 @@ export const formFieldTypes = {
     button: "button",
     submit: "submit",
   };
+
+export const AppRoutes = {
+  Home : "/home",
+  Login : "/",
+  Register: "/register",
+  VesselQuery: "/vesselQuery"
+
+}

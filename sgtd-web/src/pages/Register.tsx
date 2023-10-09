@@ -1,7 +1,7 @@
 import React from 'react'
 import { sharedButtonStyle, sharedFlexCenter,Image, sharedFlexSpaceBetween } from '../styles/global'
 import FormController from '../components/FormController'
-import { formFieldTypes } from '../lib/constants';
+import { AppRoutes, formFieldTypes } from '../lib/constants';
 import styled, { css } from 'styled-components';
 import AppColors from '../styles/colors';
 import { FormTitle, Link, LogoContainer } from './Login';
@@ -95,7 +95,7 @@ function Register() {
             <LogoContainer>
                 <Image src = "https://sgtradex.com/images/sgtradex-logo.svg"/>
             </LogoContainer>
-            <SideTitle>Already have an account? <SideLink href='/'> Login</SideLink> </SideTitle>
+            <SideTitle>Already have an account? <SideLink href={AppRoutes.Login}> Login</SideLink> </SideTitle>
         </Header>
         <FormContainer>
         <Title>REGISTRATION FORM</Title>

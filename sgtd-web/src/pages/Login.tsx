@@ -7,9 +7,11 @@ import {
 } from "../styles/global";
 import AppColors from "../styles/colors";
 import FormController from "../components/FormController";
-import { formFieldTypes } from "../lib/constants";
+import { AppRoutes, formFieldTypes } from "../lib/constants";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
   const { input, password, email, submit } = formFieldTypes;
   const formFields = {
     fields: [
@@ -41,6 +43,7 @@ function Login() {
   };
 
   const login = (data: any) => {
+    navigate(AppRoutes.Home)
     console.log(".....", data);
   };
   return (
@@ -53,7 +56,7 @@ function Login() {
         <FormController formFields={formFields} />
         <Footer>
           {" "}
-          Don't have an account? <Link href = "/register">Register</Link>
+          Don't have an account? <Link href = {AppRoutes.Register}>Register</Link>
         </Footer>
       </FormContainer>
     </Section>
