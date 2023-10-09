@@ -3,17 +3,19 @@ import { Controller, useForm } from "react-hook-form";
 import { formFieldTypes } from "../lib/constants";
 import Button from "./Button";
 import Input from "./Input";
-import styled, { RuleSet } from "styled-components";
+import styled, { css } from "styled-components";
 import { sharedFlexCenter, sharedFlexSpaceBetween } from "../styles/global";
 
 interface FormProps {
   formFields: any;
   row?: boolean;
+  isFormRow?: boolean
 }
 
 const FormController: React.FC<FormProps> = ({
   formFields,
-  row
+  row,
+  isFormRow
 }) => {
   const { control, handleSubmit, formState } = useForm(); //TODO: controller is used to register external component(i.e Input, dropdown) values to form.
   const { submit } = formFieldTypes;
@@ -21,7 +23,9 @@ const FormController: React.FC<FormProps> = ({
 
   return (
     <Form>
+      <FormFieldContainer $row={isFormRow}>
       {formFields?.fields?.map((formField : any, index: React.Key | null | undefined) => (
+        <FieldContainer $row={isFormRow}>
         <Field $row={row}>
               <Label>
                 {formField.label}
@@ -50,7 +54,9 @@ const FormController: React.FC<FormProps> = ({
                 />
               )}
             </Field>
+          </FieldContainer>
       ))}
+      </FormFieldContainer>
       <div>
         {formFields?.buttons?.map(({ name, type, onSubmitHandler,style}: any , index: React.Key | null | undefined) => (
           <Button
@@ -71,11 +77,25 @@ export default FormController;
 
 const Form = styled.form`
     ${sharedFlexCenter}
+    width:100%;
     flex-direction: column;
 `
-const FormInnerContainer = styled.div`
-display: flex;
-width: 100%;
+
+const FlexRow = css`
+flex-wrap:wrap;
+flex-Direction: row;
+`
+
+const FormFieldContainer = styled.div<{$row?: boolean}>`
+${sharedFlexCenter}
+width:100%;
+flex-direction: column;
+${(props) => props.$row && FlexRow}
+`
+const FieldContainer = styled.div<{$row?: boolean}>`
+  ${sharedFlexCenter}
+  width: ${props => props.$row ? "40%" : "60%"};
+  padding: 0 2rem
 `
 
 const Field = styled.div<{$row?: boolean}>`
@@ -84,7 +104,7 @@ const Field = styled.div<{$row?: boolean}>`
   align-items: flex-start;
   justify-content: center;
   margin-bottom: 1rem;
-  width: 60%;
+  width: 100%;
   ${(props) => props.$row && sharedFlexSpaceBetween}
 `
 

@@ -24,6 +24,17 @@ const Image = styled.img`
     width:100%;
     height:100%;
 `
+export const Section = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+    135deg,
+    ${AppColors.ThemeBlue},
+    ${AppColors.ThemeLightPurple}
+  );
+  ${sharedFlexCenter}
+  flex-direction: column;
+`;
 
 export{
     sharedFlexCenter,

@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components';
+import styled, { RuleSet } from 'styled-components';
 import AppColors from '../styles/colors';
 
 interface InputProps {
@@ -10,7 +10,7 @@ interface InputProps {
     onChangeHandler?: Function,
     readOnly?: boolean,
     defaultValue?: string | string[],
-    inputStyle?:  React.CSSProperties;
+    inputStyle?:  RuleSet<object>;
     required?: boolean;
     onFocus?: React.FocusEventHandler<HTMLTextAreaElement> & React.FocusEventHandler<HTMLInputElement>
     disabled?: boolean;
@@ -29,7 +29,7 @@ const Input: React.FC<InputProps> = ({ title, onFocus, inputStyle, disabled,type
             name={title}
             id={title}
             placeholder={placeholder}
-            style={inputStyle}
+            $customStyle={inputStyle}
             value={value}
             min="0"
             onChange={e => handleInputChange(e)}
@@ -44,7 +44,7 @@ const Input: React.FC<InputProps> = ({ title, onFocus, inputStyle, disabled,type
 
 export default Input
 
-const InputElement = styled.input`
+const InputElement = styled.input<{$customStyle?:RuleSet<object>}>`
     padding: 0.75rem 1rem;
     border-width: 0.1px 0.1px 2px 0.1px;
     margin: 0.5rem 0;
@@ -56,5 +56,6 @@ const InputElement = styled.input`
     border-color: ${AppColors.ThemeBlue};
     outline: 2px solid transparent;
     outline-offset: 2px
-    }
+       }
+    ${(props)=> props.$customStyle}
 `

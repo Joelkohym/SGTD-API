@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import {
   sharedButtonStyle,
-  sharedFlexCenter,
   Image,
   sharedFlexSpaceBetween,
+  Section,
 } from "../styles/global";
 import AppColors from "../styles/colors";
 import FormController from "../components/FormController";
@@ -49,11 +49,11 @@ function Login() {
         <Image src="https://sgtradex.com/images/sgtradex-logo.svg" />
       </LogoContainer>
       <FormContainer>
-        <Header>LOGIN</Header>
+        <FormTitle>LOGIN</FormTitle>
         <FormController formFields={formFields} />
         <Footer>
           {" "}
-          Don't have an account? <Link>Register</Link>
+          Don't have an account? <Link href = "/register">Register</Link>
         </Footer>
       </FormContainer>
     </Section>
@@ -62,18 +62,7 @@ function Login() {
 
 export default Login;
 
-const Section = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(
-    135deg,
-    ${AppColors.ThemeBlue},
-    ${AppColors.ThemeLightPurple}
-  );
-  ${sharedFlexCenter}
-  flex-direction: column;
-`;
-const LogoContainer = styled.div`
+export const LogoContainer = styled.div`
   width: 8rem;
   padding: 1rem;
 `;
@@ -86,7 +75,7 @@ const FormContainer = styled.div`
   ${sharedFlexSpaceBetween}
   flex-direction: column;
 `;
-const Header = styled.h1`
+export const FormTitle = styled.h1`
   padding: 1rem 2rem;
 `;
 
@@ -94,8 +83,9 @@ const Footer = styled.div`
   font-size: 1rem;
   padding: 1rem;
 `;
-const Link = styled.a`
+export const Link = styled.a`
   color: ${AppColors.ThemeBlue};
   font-weight: 700;
   cursor: pointer;
+  text-decoration:none;
 `;
