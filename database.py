@@ -105,7 +105,7 @@ def validate_login(email, password):
             )
         else:
             print("Error in Login")
-            return 0
+            return [0]
 
 
 def receive_details(email):

@@ -65,6 +65,7 @@ def login():
             email = request.form["email"]
             password = request.form["password"]
             login_data = validate_login(email, password)
+            print(f"Login data = {login_data}")
             # print(f"Validate_login value returned = {validate_login(email, password)}")
             if len(login_data) == 5:
                 id = login_data[0]
@@ -84,17 +85,18 @@ def login():
 
                 msg = f"Login success for {email}, please enter Vessel IMO number(s)"
                 print(f"Login success for {email}, redirect")
-                return redirect(url_for("table_view"))
-
+                return redirect(url_for("table_view")), 303
+                # return render_template('vessel_request.html', msg=msg, email=email)
             else:
                 msg = "Invalid credentials, please try again.."
-                print("Invalid credentials, reset login")
-                return render_template("login.html", msg=msg)
+                print("Invalid credentials, please try again..")
+                return render_template("login.html", msg=msg), 401
         except Exception as e:
-            msg = "Invalid credentials, please try again."
-            print("Invalid credentials, reset login")
-            return render_template("login.html", msg=msg)
-
+            msg = "Log in failed, please try again."
+            print("Log in failed, please contact admin")
+            return render_template("login.html", msg=msg), 403
+        # if request.data['username'] and request.data['password'] in db:
+        #   user_data = load_data_from_db()
     if request.method == "GET":
         print("Requets == GET")
         return render_template("login.html")
@@ -106,7 +108,9 @@ def table_view():
         email = session["email"]
         return render_template("table_view.html", email=email)
     else:
-        return redirect(url_for("login"))
+        msg = "Error while getting to table view, redirecting to login"
+        print("Error while getting to table view, redirecting to login")
+        return redirect(url_for("login", msg=msg)), 304
 
 
 @app.route("/api/table_pull", methods=["GET", "POST"])
@@ -120,87 +124,104 @@ def table_pull():
             delete_all_rows_table_view(session["gc"])
             user_vessel_imo = request.form["imo"]
             try:
-              # Split vessel_imo list into invdivual records
-              input_list = [int(x) for x in user_vessel_imo.split(",")]
-              print(f"Pilotage service input_list from html = {input_list}")
+                # Split vessel_imo list into invdivual records
+                input_list = [int(x) for x in user_vessel_imo.split(",")]
+                print(f"Pilotage service input_list from html = {input_list}")
 
-              # ========================              START PULL pilotage_service by vessel imo                   ===========================
-              # url_pilotage_service = (
-              #     f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
-              # )
-              # PULL_pilotage_service(
-              #     url_pilotage_service,
-              #     input_list,
-              #     session["participant_id"],
-              #     session["api_key"],
-              # )
-              # ========================          END PULL pilotage_service                         ===========================
+                # ========================              START PULL pilotage_service by vessel imo                   ===========================
+                # url_pilotage_service = (
+                #     f"{session['pitstop_url']}/api/v1/data/pull/pilotage_service"
+                # )
+                # PULL_pilotage_service(
+                #     url_pilotage_service,
+                #     input_list,
+                #     session["participant_id"],
+                #     session["api_key"],
+                # )
+                # ========================          END PULL pilotage_service                         ===========================
 
-              # ========================          START PULL vessel_due_to_arrive by date: Threaded            ===========================
-              url_vessel_due_to_arrive = (
-                  f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
-              )
-              print("Start PULL_vessel_due_to_arrive thread...")
-              print(datetime.now())
-              threading.Thread(
-                  target=PULL_vessel_due_to_arrive,
-                  args=(
-                      url_vessel_due_to_arrive,
-                      session["participant_id"],
-                      session["api_key"],
-                  ),
-              ).start()
-              print("End PULL_vessel_due_to_arrive thread...")
-              print(datetime.now())
-              # ========================    END PULL vessel_due_to_arrive: Threaded          ===========================
+                # ========================          START PULL vessel_due_to_arrive by date            ===========================
+                url_vessel_due_to_arrive = (
+                    f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
+                )
+                print("Start PULL_vessel_due_to_arrive thread...")
+                print(datetime.now())
+                threading.Thread(
+                    target=PULL_vessel_due_to_arrive,
+                    args=(
+                        url_vessel_due_to_arrive,
+                        session["participant_id"],
+                        session["api_key"],
+                    ),
+                ).start()
+                print("End PULL_vessel_due_to_arrive thread...")
+                print(datetime.now())
+                # PULL_vessel_due_to_arrive(
+                #     url_vessel_due_to_arrive,
+                #     session["participant_id"],
+                #     session["api_key"],
+                # )
+                # ========================    END PULL vessel_due_to_arrive         ===========================
 
-              return redirect(url_for("table_view_request", imo=user_vessel_imo))
+                return redirect(url_for("table_view_request", imo=user_vessel_imo)), 303
             except:
-                return render_template(
-                    "table_view.html",
-                    msg="No information found, please try another IMO.",
+                return (
+                    render_template(
+                        "table_view.html",
+                        msg="Invalid IMO. Please ensure at IMO is valid.",
+                    ),
+                    400,
                 )
         else:
             print("TABLE_PULL Method <> POST")
-            return redirect(url_for("login"))
+            return redirect(url_for("login")), 304
     else:
         print("TABLE_PULL g.user is not valid")
-        return redirect(url_for("login"))
+        return redirect(url_for("login")), 304
+
 
 @app.route("/table_view_request/<imo>", methods=["GET", "POST"])
 def table_view_request(imo):
     if g.user:
-      try:
-        imo_list = imo.split(",")
-        print(f"IMO ==== {imo}")
-        print(f"IMO list ==== {imo_list}")
+        try:
+            imo_list = imo.split(",")
+            print(f"IMO ==== {imo}")
+            print(f"IMO list ==== {imo_list}")
 
-        # ======================== START GET MPA Vessel Arrival Declaration by IMO Number =============
-        Declaration_df = get_data_from_MPA_Vessel_Arrival_Declaration(imo_list)
-        # ======================== END GET MPA Vessel Arrival Declaration by IMO Number =============
-        # ======================== START GET MPA Vessel Due to Arrive and Depart by next 99 hours  =============
-        MPA_arrive_depart_df = get_data_from_vessel_due_to_arrive_and_depart()
-        # ======================== END GET MPA Vessel Due to Arrive and Depart by next 99 hours =============
-        # Filter the DataFrame based on imoNumbers
-        filtered_df_before = MPA_arrive_depart_df[
-            MPA_arrive_depart_df["vesselParticulars.imoNumber"].isin(imo_list)
-        ]
-        render_html = merge_arrivedepart_declaration_df(
-            filtered_df_before, Declaration_df
-        )
-        if render_html == 1:
-            return render_template("table_view.html")
-        # change purpose from Y,Y,N,N,N... to #1 indicator – Loading / Unloading Cargo #2 indicator – Loading / Unloading Passengers #3 indicator – Taking Bunker  #4 indicator – Taking Ship Supplies #5 indicator – Changing Crew #6 indicator – Shipyard Repair #7 indicator – Offshore Support #8 indicator – Not Used #9 indicator – Other Afloat Activities
-        else:
-            print(f"merge_arrivedepart_declaration_df = {render_html}")
-            return render_template(render_html)
-      except:
-        return render_template(
-            "table_view.html",
-            msg="Something went wrong, please ensure IMO Number is valid.",
-        )
+            # ======================== START GET MPA Vessel Arrival Declaration by IMO Number =============
+            Declaration_df = get_data_from_MPA_Vessel_Arrival_Declaration(imo_list)
+            # ======================== END GET MPA Vessel Arrival Declaration by IMO Number =============
+            # ======================== START GET MPA Vessel Due to Arrive and Depart by next 99 hours  =============
+            MPA_arrive_depart_df = get_data_from_vessel_due_to_arrive_and_depart()
+            # ======================== END GET MPA Vessel Due to Arrive and Depart by next 99 hours =============
+            # Filter the DataFrame based on imoNumbers
+            filtered_df_before = MPA_arrive_depart_df[
+                MPA_arrive_depart_df["vesselParticulars.imoNumber"].isin(imo_list)
+            ]
+            print(f"filtered_df_before = {filtered_df_before}")
+            if len(filtered_df_before) == 0:
+                msg = "IMO cannot be found, please try another IMO.."
+                return render_template("table_view.html", msg=msg), 404
+            render_html = merge_arrivedepart_declaration_df(
+                filtered_df_before, Declaration_df
+            )
+            if render_html == 1:
+                return render_template("table_view.html"), 206
+            # change purpose from Y,Y,N,N,N... to #1 indicator – Loading / Unloading Cargo #2 indicator – Loading / Unloading Passengers #3 indicator – Taking Bunker  #4 indicator – Taking Ship Supplies #5 indicator – Changing Crew #6 indicator – Shipyard Repair #7 indicator – Offshore Support #8 indicator – Not Used #9 indicator – Other Afloat Activities
+            else:
+                print(f"merge_arrivedepart_declaration_df = {render_html}")
+                return render_template(render_html)
+        except:
+            return (
+                render_template(
+                    "table_view.html",
+                    msg="Something went wrong with the data, please ensure IMO Number is valid.",
+                ),
+                406,
+            )
     else:
-        return redirect(url_for("login"))
+        return redirect(url_for("login")), 304
+
 
 # Make function for logout session
 @app.route("/logout")
@@ -212,7 +233,7 @@ def logout():
     session.pop("pitstop_url", None)
     session.pop("api_key", None)
     session.pop("gc", None)
-    return redirect(url_for("login"))
+    return redirect(url_for("login")), 303
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -231,18 +252,18 @@ def register():
             return render_template("login.html", msg=msg)
         else:
             msg = "Your email exists in database! Please reach out to Admin if you need assistance."
-            return render_template("login.html", msg=msg)
+            return render_template("login.html", msg=msg), 409
     elif request.method == "POST":
         msg = "Please fill out the form !"
-        return render_template("login.html", msg=msg)
+        return render_template("login.html", msg=msg), 406
     if request.method == "GET":
         return render_template("register.html")
-    return render_template("register.html")
+    # return render_template("register.html")
 
 
 # https://sgtd-api.onrender.com/api/vessel_current_position_db/receive/test@sgtradex.com
 # ==========================================       Vessel data PULL         ============================================
-@app.route("/api/vessel", methods=["GET", "POST"])
+@app.route("/api/vessel", methods=["POST"])
 def Vessel_data_pull():
     if g.user:
         if request.method == "POST":
@@ -273,13 +294,15 @@ def Vessel_data_pull():
                 )
                 return redirect(url_for("Vessel_map"))
             except:
-                return render_template(
-                    "vessel_request.html",
-                    msg="Invalid IMO. Please ensure IMO is valid.",
+                return (
+                    render_template(
+                        "vessel_request.html",
+                        msg="Invalid IMO. Please ensure IMO is valid.",
+                    ),
+                    406,
                 )
-        return render_template("vessel_request.html")
-    return redirect(url_for("login"))
-
+        return render_template("vessel_request.html"), 403
+    return redirect(url_for("login")), 304
 
 
 @app.route("/vessel_request/<msg>", methods=["GET", "POST"])
@@ -288,9 +311,10 @@ def vessel_request(msg):
         email = session["email"]
         return render_template("vessel_request.html", msg=msg, email=email)
     else:
-        return redirect(url_for("login"))
+        return redirect(url_for("login")), 304
 
 
+# 9490820 / 9929297
 # ====================================####################MAP DB##############################========================================
 @app.route("/api/vessel_map", methods=["GET", "POST"])
 def Vessel_map():
@@ -309,13 +333,16 @@ def Vessel_map():
             )
 
         else:
-            return render_template(
-                display_data[1],
-                user=session["email"],
-                IMO_NOTFOUND=session["IMO_NOTFOUND"],
+            return (
+                render_template(
+                    display_data[1],
+                    user=session["email"],
+                    IMO_NOTFOUND=session["IMO_NOTFOUND"],
+                ),
+                404,
             )
     print("G.user doesn't exists, redirect to login")
-    return redirect(url_for("login"))
+    return redirect(url_for("login")), 304
 
 
 ####################################  START UPLOAD UCC #############################################
@@ -325,7 +352,7 @@ def UCC_upload():
         email = session["email"]
         return render_template("UCC_upload.html", email=email)
     else:
-        return redirect(url_for("login"))
+        return redirect(url_for("login")), 304
 
 
 @app.route("/api/triangular_upload", methods=["POST"])
@@ -342,8 +369,13 @@ def triangular_upload():
 
                     file.save(file.filename)
                 else:
-                    return "<h1>Invalid file format. Please upload only CSV files.</h1>"
+                    return (
+                        "<h1>Invalid file format. Please upload only CSV files.</h1>",
+                        415,
+                    )
             return "<h1>Files Uploaded Successfully.!</h1>"
+    else:
+        return redirect(url_for("login")), 304
 
 
 ####################################  END UPLOAD UCC  ###############################################
