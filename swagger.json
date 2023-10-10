@@ -35,6 +35,22 @@
                 }
               }
             }
+          },
+          "304": {
+            "description": "Error while getting to table view, redirecting to login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Resource not found for the given IMO number(s)"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": ["GET Endpoints"]
@@ -57,6 +73,40 @@
         "responses": {
           "200": {
             "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "render template /templates/table_view.html": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "IMO cannot be found, please try another IMO.., return render_template('table_view.html', msg=msg), 404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "IMO cannot be found, please try another IMO.., return render_template('table_view.html', msg=msg), 404"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Something went wrong with the data, please ensure IMO Number is valid. , return render_template('table_view.html', msg=msg), 406",
             "content": {
               "application/json": {
                 "schema": {
@@ -109,8 +159,26 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "render template /templates/vessel_request.html": {
+                    "render_template('vessel_request.html', msg=msg, email=email)": {
                       "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "g.user not valid , return redirect(url_for('login')), 304",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "redirect(url_for('login')), 304": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -134,6 +202,24 @@
                   "properties": {
                     "render template /templates/yyyymmddhhmmssmymap": {
                       "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "g.user not valid , return render_template display_data[1], 404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "redirect(url_for('login')), 304": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -427,6 +513,42 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Invalid credentials, please try again.. >>> return render_template('login.html', msg=msg), 401",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Invalid credentials, please try again.. >>> return render_template('login.html', msg=msg), 401": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Log in failed, please contact admin. >>> return render_template('login.html', msg=msg), 403",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Log in failed, please contact admin. >>> return render_template('login.html', msg=msg), 403": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": ["POST Endpoints"]
@@ -469,14 +591,68 @@
                 }
               }
             }
+          },
+          "301": {
+            "description": "TABLE_PULL Method <> POST >>> return render_template('login.html', msg=msg), 301",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "user_vessel_imo": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "TABLE_PULL g.user is not valid >>> return render_template('login.html', msg=msg), 302",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "user_vessel_imo": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "tags": ["POST Endpoints"]
       }
     },
     "/register": {
+      "get": {
+        "summary": "Register a new user",
+        "responses": {
+          "200": {
+            "description": "Register a new user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "render template /templates/yyyymmddhhmmssmymap": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }},"tags": ["GET Endpoints"]},
       "post": {
-        "summary": "User Registration",
+        "summary": "Register a new user",
         "requestBody": {
           "required": true,
           "content": {
@@ -489,9 +665,21 @@
                   },
                   "password": {
                     "type": "string"
+                  },
+                  "api_key": {
+                    "type": "string"
+                  },
+                  "participant_id": {
+                    "type": "string"
+                  },
+                  "pitstop_url": {
+                    "type": "string"
+                  },
+                  "gsheet_cred_path": {
+                    "type": "string"
                   }
                 },
-                "required": ["email", "password"]
+                "required": ["email", "password","api_key","participant_id", "pitstop_url", "gsheet_cred_path" ]
               }
             }
           }
@@ -505,6 +693,36 @@
                   "type": "object",
                   "properties": {
                     "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Please fill out the form! >>> return render_template('login.html', msg=msg), 406",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Please fill out the form!": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Your email exists in database! Please reach out to Admin if you need assistance. >>> return render_template('login.html', msg=msg), 409",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Your email exists in database! Please reach out to Admin if you need assistance.": {
                       "type": "string"
                     }
                   }
@@ -538,6 +756,51 @@
         "responses": {
           "200": {
             "description": "Successful vessel data pull",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "PULL and GET VCP & VDA from SGTD and MPA redirects to /api/vessel_map": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "VESSEL PULL g.user is not valid >>> return render_template('login.html', msg=msg), 302",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "PULL and GET VCP & VDA from SGTD and MPA redirects to /api/vessel_map": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Vessel_data_pull <> POST >>> return render_template('vessel_request.html'), 403",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "PULL and GET VCP & VDA from SGTD and MPA redirects to /api/vessel_map": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Invalid IMO. Please ensure IMO is valid.  >>>  return render_template('vessel_request.html', msg='Invalid IMO. Please ensure IMO is valid.',), 406",
             "content": {
               "application/json": {
                 "schema": {
