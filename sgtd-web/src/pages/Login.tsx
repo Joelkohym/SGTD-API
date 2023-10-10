@@ -7,14 +7,23 @@ import {
 } from "../styles/global";
 import AppColors from "../styles/colors";
 import FormController from "../components/FormController";
-import { API_Methods, AppRoutes, Response_Message, formFieldTypes } from "../lib/constants";
+import { API_Methods, AlertType, AppRoutes, Response_Message, formFieldTypes } from "../lib/constants";
 import { useNavigate } from "react-router-dom";
 import { useMakePOSTRequest } from "../hooks/useMakePostRequest";
+import Popup from "../components/Popup";
+import { useResetAtom } from "jotai/utils";
+import { popupAtom } from "../jotai/store";
+import { useAtom } from "jotai";
+import { useRef } from "react";
 
 function Login() {
   const navigate = useNavigate();
   const [getLogin] = useMakePOSTRequest();
   const { input, password, email, submit } = formFieldTypes;
+  const resetPopup = useResetAtom(popupAtom);
+  const [popupData, setPopupData] = useAtom(popupAtom);
+  const alertMessage = useRef("")
+
   const formFields = {
     fields: [
       {
@@ -45,21 +54,43 @@ function Login() {
   };
 
   const handleLogin = async(data: any) => {
+    if (data.email == ""){
+      alertMessage.current = "Email cannot be empty"
+      handlePopData()
+      return
+    } else if(data.password == ""){
+      alertMessage.current = "Password cannot be empty"
+      handlePopData()
+      return
+    }
     try {
     let res = await getLogin(API_Methods.Login,{
       email: data.email,
       password: data.password,
     })
     if (res == Response_Message.Success) {
-      console.log("Success")
+      navigate('/home')
     } else {
-      console.log("Failed")
+      alertMessage.current = "Login Failed! Try Again"
+      handlePopData()
     }
   } catch (error){
-    console.log("Failed")
-  }
-    
+    alertMessage.current = "Login Failed! Try Again"
+    handlePopData()
+  }  
   };
+
+  function handlePopData() {
+    setPopupData({
+      isOpen: true,
+      message: alertMessage.current,
+      type: AlertType.Error,
+      btnHandler: resetPopup
+    });
+  }
+
+
+
   return (
     <Section>
       <LogoContainer>
@@ -73,6 +104,7 @@ function Login() {
           Don't have an account? <Link href = {AppRoutes.Register}>Register</Link>
         </Footer>
       </FormContainer>
+      {popupData.isOpen && <Popup />}
     </Section>
   );
 }
