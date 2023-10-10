@@ -18,6 +18,7 @@ function Register() {
             type: input,
             inputType: email,
             style: InputStyle,
+            enableInputStyleWithValue : true
           }, {
             name: "password",
             label: "Password",
@@ -26,6 +27,7 @@ function Register() {
             inputType: password,
             type: password,
             style: InputStyle,
+            enableInputStyleWithValue : true
           }, {
             name: "ApiKey",
             label: "API Key",
@@ -34,6 +36,7 @@ function Register() {
             type: input,
             inputType: text,
             style: InputStyle,
+            enableInputStyleWithValue : true
           }, {
             name: "ParticipantID",
             label: "Participant ID",
@@ -42,14 +45,7 @@ function Register() {
             type: input,
             inputType: text,
             style: InputStyle,
-          }, {
-            name: "OnBehalfID",
-            label: "On Behalf ID",
-            placeholder: "Enter SGTD pitstop On Behalf ID",
-            defaultValue: "",
-            type: input,
-            inputType: text,
-            style: InputStyle,
+            enableInputStyleWithValue : true
           }, {
             name: "credPath",
             label: "Gsheet cred path",
@@ -58,6 +54,7 @@ function Register() {
             type: input,
             inputType: text,
             style: InputStyle,
+            enableInputStyleWithValue : true
           }, {
             name: "PitstopURL",
             label: "Pitstop URL",
@@ -66,15 +63,8 @@ function Register() {
             type: input,
             inputType: text,
             style: InputStyle,
-          }, {
-            name: "Company",
-            label: "Company",
-            placeholder: "Enter Company Name",
-            defaultValue: "",
-            type: input,
-            inputType: text,
-            style: InputStyle,
-          }, 
+            enableInputStyleWithValue : true
+          }
         ],
         buttons: [
           {
