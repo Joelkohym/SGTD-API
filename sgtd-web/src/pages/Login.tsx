@@ -7,7 +7,13 @@ import {
 } from "../styles/global";
 import AppColors from "../styles/colors";
 import FormController from "../components/FormController";
-import { API_Methods, AlertType, AppRoutes, Response_Message, formFieldTypes } from "../lib/constants";
+import {
+  API_Methods,
+  AlertType,
+  AppRoutes,
+  Response_Message,
+  formFieldTypes,
+} from "../lib/constants";
 import { useNavigate } from "react-router-dom";
 import { useMakePOSTRequest } from "../hooks/useMakePostRequest";
 import Popup from "../components/Popup";
@@ -22,7 +28,7 @@ function Login() {
   const { input, password, email, submit } = formFieldTypes;
   const resetPopup = useResetAtom(popupAtom);
   const [popupData, setPopupData] = useAtom(popupAtom);
-  const alertMessage = useRef("")
+  const alertMessage = useRef("");
 
   const formFields = {
     fields: [
@@ -53,31 +59,31 @@ function Login() {
     ],
   };
 
-  const handleLogin = async(data: any) => {
-    if (data.email == ""){
-      alertMessage.current = "Email cannot be empty"
-      handlePopData()
-      return
-    } else if(data.password == ""){
-      alertMessage.current = "Password cannot be empty"
-      handlePopData()
-      return
+  const handleLogin = async (data: any) => {
+    if (data.email == "") {
+      alertMessage.current = "Email cannot be empty";
+      handlePopData();
+      return;
+    } else if (data.password == "") {
+      alertMessage.current = "Password cannot be empty";
+      handlePopData();
+      return;
     }
     try {
-    let res = await getLogin(API_Methods.Login,{
-      email: data.email,
-      password: data.password,
-    })
-    if (res == Response_Message.Success) {
-      navigate('/home')
-    } else {
-      alertMessage.current = "Login Failed! Try Again"
-      handlePopData()
+      let res = await getLogin(API_Methods.Login, {
+        email: data.email,
+        password: data.password,
+      });
+      if (res == Response_Message.Success) {
+        navigate("/home");
+      } else {
+        alertMessage.current = "Login Failed! Try Again";
+        handlePopData();
+      }
+    } catch (error) {
+      alertMessage.current = "Login Failed! Try Again";
+      handlePopData();
     }
-  } catch (error){
-    alertMessage.current = "Login Failed! Try Again"
-    handlePopData()
-  }  
   };
 
   function handlePopData() {
@@ -85,11 +91,9 @@ function Login() {
       isOpen: true,
       message: alertMessage.current,
       type: AlertType.Error,
-      btnHandler: resetPopup
+      btnHandler: resetPopup,
     });
   }
-
-
 
   return (
     <Section>
@@ -101,7 +105,7 @@ function Login() {
         <FormController formFields={formFields} />
         <Footer>
           {" "}
-          Don't have an account? <Link href = {AppRoutes.Register}>Register</Link>
+          Don't have an account? <Link href={AppRoutes.Register}>Register</Link>
         </Footer>
       </FormContainer>
       {popupData.isOpen && <Popup />}
@@ -136,5 +140,5 @@ export const Link = styled.a`
   color: ${AppColors.ThemeBlue};
   font-weight: 700;
   cursor: pointer;
-  text-decoration:none;
+  text-decoration: none;
 `;
