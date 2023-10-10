@@ -5,6 +5,7 @@ enum AppColors {
     ThemeBlack = "#000000",
     ThemeLightBlack = "#212120",
     ThemePrimaryTransparencyBlack = "#0000000f",
+    ThemeTransparencyBlack = "#0000008f",
     ThemeLightTransparencyBlack = "#0000001a",
 
 
@@ -14,7 +15,10 @@ enum AppColors {
     ThemeBlueShadow = "#d5dcef",
 
     ThemePurple = "#8610AD",
-    ThemeLightPurple = "#da61ff"
+    ThemeLightPurple = "#da61ff",
+
+    ThemeSuccess = "#4CAF50",
+    ThemeError = "#f44336"
 }
 
 export default AppColors;

@@ -29,3 +29,8 @@ export const Response_Message = {
   Success: "Success",
   Error : "Error"
 }
+
+export const AlertType = {
+  Success: "Success",
+  Error : "Error"
+}
