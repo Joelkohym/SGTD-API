@@ -11,6 +11,8 @@ export const AppRoutes = {
   Home : "/home",
   Login : "/",
   Register: "/register",
-  VesselQuery: "/vesselQuery"
+  VesselQuery: "/vesselQuery",
+  TableView : "/tableView",
+  TriangularModule: "/triangularModule"
 
 }
