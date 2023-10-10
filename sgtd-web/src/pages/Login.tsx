@@ -7,16 +7,18 @@ import {
 } from "../styles/global";
 import AppColors from "../styles/colors";
 import FormController from "../components/FormController";
-import { AppRoutes, formFieldTypes } from "../lib/constants";
+import { API_Methods, AppRoutes, Response_Message, formFieldTypes } from "../lib/constants";
 import { useNavigate } from "react-router-dom";
+import { useMakePOSTRequest } from "../hooks/useMakePostRequest";
 
 function Login() {
   const navigate = useNavigate();
+  const [getLogin] = useMakePOSTRequest();
   const { input, password, email, submit } = formFieldTypes;
   const formFields = {
     fields: [
       {
-        name: "Email",
+        name: "email",
         label: "Email",
         placeholder: "Email",
         defaultValue: "",
@@ -36,15 +38,27 @@ function Login() {
       {
         name: "Login",
         type: submit,
-        onSubmitHandler: (data: any) => login(data),
+        onSubmitHandler: (data: any) => handleLogin(data),
         style: sharedButtonStyle,
       },
     ],
   };
 
-  const login = (data: any) => {
-    navigate(AppRoutes.Home)
-    console.log(".....", data);
+  const handleLogin = async(data: any) => {
+    try {
+    let res = await getLogin(API_Methods.Login,{
+      email: data.email,
+      password: data.password,
+    })
+    if (res == Response_Message.Success) {
+      console.log("Success")
+    } else {
+      console.log("Failed")
+    }
+  } catch (error){
+    console.log("Failed")
+  }
+    
   };
   return (
     <Section>
