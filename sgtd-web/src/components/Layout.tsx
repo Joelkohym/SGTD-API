@@ -118,6 +118,10 @@ const SideMenu = styled.div<{ $showMenu: boolean }>`
   ${sharedFlexCenter}
   flex-direction: column;
   background-color: ${AppColors.ThemeBlue};
+  background: linear-gradient(
+  180deg,
+  ${AppColors.ThemeBlue},
+  ${AppColors.ThemeLightPurple});
   box-shadow: 0 8px 2px -2px ${AppColors.ThemeLightGrey};
   width: ${(props) => (props.$showMenu ? `15%` : `5%`)}
 `;
