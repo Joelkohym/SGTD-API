@@ -14,10 +14,10 @@ interface InputProps {
     required?: boolean;
     onFocus?: React.FocusEventHandler<HTMLTextAreaElement> & React.FocusEventHandler<HTMLInputElement>
     disabled?: boolean;
+    enableInputStyleWithValue?: boolean
 }
 
-const Input: React.FC<InputProps> = ({ title, onFocus, inputStyle, disabled,type, placeholder, value, onChangeHandler, readOnly = false, required = false, defaultValue }) => {
-
+const Input: React.FC<InputProps> = ({ title, onFocus, inputStyle, disabled,type, placeholder, value, onChangeHandler, readOnly = false, required = false, defaultValue, enableInputStyleWithValue }) => {
 
     const handleInputChange = (e: any) => {   
         onChangeHandler && onChangeHandler(e.target.value);
@@ -38,13 +38,14 @@ const Input: React.FC<InputProps> = ({ title, onFocus, inputStyle, disabled,type
             required={true}
             disabled={disabled}
             defaultValue={defaultValue}
+            $enableInputStyleWithValue={enableInputStyleWithValue && (value !== "")}
         ></InputElement>
     )
 }
 
 export default Input
 
-const InputElement = styled.input<{$customStyle?:RuleSet<object>}>`
+const InputElement = styled.input<{$customStyle?:RuleSet<object>, $enableInputStyleWithValue?: boolean}>`
     padding: 0.75rem 1rem;
     border-width: 0.1px 0.1px 2px 0.1px;
     margin: 0.5rem 0;
@@ -55,7 +56,8 @@ const InputElement = styled.input<{$customStyle?:RuleSet<object>}>`
     &:focus {
     border-color: ${AppColors.ThemeBlue};
     outline: 2px solid transparent;
-    outline-offset: 2px
+    outline-offset: 2px;
        }
     ${(props)=> props.$customStyle}
+    background:${(props)=> props.$enableInputStyleWithValue ? AppColors.White: ""};
 `
