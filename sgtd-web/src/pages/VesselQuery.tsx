@@ -1,10 +1,9 @@
-import React from 'react'
-import Layout from '../components/Layout'
-import { FormContainer, Title } from './TableView'
-import FormController from '../components/FormController'
-import { sharedButtonStyle } from '../styles/global';
-import { formFieldTypes } from '../lib/constants';
-import styled from 'styled-components';
+import React from "react";
+import Layout from "../components/Layout";
+import { FormContainer, Title } from "./TableView";
+import FormController from "../components/FormController";
+import { sharedButtonStyle } from "../styles/global";
+import { formFieldTypes } from "../lib/constants";
 
 const VesselQuery: React.FC = () => {
   const { input, submit, text, email } = formFieldTypes;
@@ -19,15 +18,6 @@ const VesselQuery: React.FC = () => {
         type: input,
         inputType: text,
       },
-      {
-        name: "email",
-        label: "Email",
-        placeholder: "Email",
-        defaultValue: "test@sgtradex.com",
-        type: input,
-        inputType: email,
-        disabled : true
-      },
     ],
     buttons: [
       {
@@ -39,22 +29,17 @@ const VesselQuery: React.FC = () => {
     ],
   };
 
-  function handleVesselQueryRequest( data:any)  {
+  function handleVesselQueryRequest(data: any) {
     
   }
   return (
     <Layout>
-       <Container>
-          <Title>Vessel Request form</Title>
-          <FormController formFields={formFields} />
-        </Container>
+      <FormContainer>
+        <Title>Vessel Request form</Title>
+        <FormController formFields={formFields} />
+      </FormContainer>
     </Layout>
-  )
-}
+  );
+};
 
-export default VesselQuery
-
-const Container = styled(FormContainer)`
-  width: 30rem;
-  height: 25rem;
-`
+export default VesselQuery;
