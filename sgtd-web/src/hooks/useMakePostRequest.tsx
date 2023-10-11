@@ -18,9 +18,7 @@ export function useMakePOSTRequest() {
 
       fetch(API_ENDPOINT + methodEndpoint, requestOptions)
         .then((response) => {
-          response.status !== API_Response_Success
-            ? reject(Response_Message.Error)
-            : resolve(Response_Message.Success)
+           resolve(response)
         }
         )
         .catch((error) => reject(error));
