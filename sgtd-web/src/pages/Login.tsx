@@ -9,6 +9,7 @@ import AppColors from "../styles/colors";
 import FormController from "../components/FormController";
 import {
   API_Methods,
+  API_Response_Success,
   AlertType,
   AppRoutes,
   Response_Message,
@@ -62,31 +63,31 @@ function Login() {
   const handleLogin = async (data: any) => {
     if (data.email == "") {
       alertMessage.current = "Email cannot be empty";
-      handlePopData();
+      handlePopupData();
       return;
     } else if (data.password == "") {
       alertMessage.current = "Password cannot be empty";
-      handlePopData();
+      handlePopupData();
       return;
     }
     try {
-      let res = await getLogin(API_Methods.Login, {
+      let res:any = await getLogin(API_Methods.Login, {
         email: data.email,
         password: data.password,
       });
-      if (res == Response_Message.Success) {
-        navigate("/home");
+      if (res.status == API_Response_Success) {
+        navigate(AppRoutes.TableView);
       } else {
         alertMessage.current = "Login Failed! Try Again";
-        handlePopData();
+        handlePopupData();
       }
     } catch (error) {
       alertMessage.current = "Login Failed! Try Again";
-      handlePopData();
+      handlePopupData();
     }
   };
 
-  function handlePopData() {
+  function handlePopupData() {
     setPopupData({
       isOpen: true,
       message: alertMessage.current,
