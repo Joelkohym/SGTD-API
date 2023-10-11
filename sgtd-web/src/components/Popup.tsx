@@ -23,7 +23,7 @@ const PopupData = {
 }
 
 const Popup : React.FC = () => {
-  const { type , message }  = useAtomValue(popupAtom);
+  const { type , message, btnHandler }  = useAtomValue(popupAtom);
   const resetPopup = useResetAtom(popupAtom);
   const data = type == AlertType.Success ? PopupData.Success : PopupData.Error
   return (
@@ -34,7 +34,7 @@ const Popup : React.FC = () => {
                 <Text>{` ${data.title}`}</Text>
             </PopupHeader>
             <Description>{message}</Description>
-            <PopupBtn $color= {data.color}>OK</PopupBtn>
+            <PopupBtn $color= {data.color} onClick={btnHandler}>OK</PopupBtn>
         </PopupContainer>
     </OverlayLayer>
   )
