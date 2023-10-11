@@ -61,15 +61,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {NavButtonData.map(
             (btnData, index) =>
               btnData.isPublic && (
-                  <NavLink
+                    <NavLink
                     $isActive={location.pathname == btnData.link}
                     $showMenu={showMenu}
                     href= {btnData.link}
+                    key={index}
                   >
                     <div>{btnData.icon}</div>
                     {showMenu && <NavTitle>{btnData.label}</NavTitle>}
                   </NavLink>
-              )
+                                )
           )}
         </NavItem>
       </SideMenu>
@@ -98,7 +99,11 @@ const NavLink = styled.a<{ $showMenu: boolean; $isActive: boolean }>`
     padding: 0.8rem 0;
     justify-content: ${(props) => (props.$showMenu ? `flex-start` : `center`)};
     background: ${(props) => (props.$isActive ? AppColors.ThemeLightTransparencyBlack : "")};
-    text-decoration: none
+    text-decoration: none;
+    margin: 0.1rem 0;
+    &:hover{
+      background: ${AppColors.ThemeLightTransparencyBlack};
+    }
 `;
 
 const DrawerIconContainer = styled(NavLink)`
@@ -109,7 +114,7 @@ const DrawerIconContainer = styled(NavLink)`
 
 const LogoContainer = styled.div<{$showMenu: boolean}>`
     ${sharedFlexCenter}
-    height: ${(props) => props.$showMenu ? "10%": "5%"};
+    height: ${(props) => props.$showMenu ? "12%": "5%"};
     padding-top: 2.5rem;
 `
 
@@ -127,15 +132,14 @@ const SideMenu = styled.div<{ $showMenu: boolean }>`
 `;
 
 const NavItem = styled.div`
-  padding: 0 1rem;
   height: 90%;
-  width: 90%;
+  width: 95%;
   display:flex;
   align-Items: center;
   flex-direction: column;
   padding-top: 2.5rem;
-  margin-left: 0.2rem;
-  margin-right: 0.2rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
   
 `;
 
