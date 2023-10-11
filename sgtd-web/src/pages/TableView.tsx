@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useRef } from "react";
 import Layout from "../components/Layout";
-import { formFieldTypes } from "../lib/constants";
+import { API_Methods, AlertType, Response_Message, formFieldTypes } from "../lib/constants";
 import styled from "styled-components";
 import AppColors from "../styles/colors";
 import FormController from "../components/FormController";
 import { sharedButtonStyle, sharedFlexCenter } from "../styles/global";
+import { useMakePOSTRequest } from "../hooks/useMakePostRequest";
+import { useNavigate } from "react-router-dom";
+import { useResetAtom } from "jotai/utils";
+import { popupAtom } from "../jotai/store";
+import { useAtom } from "jotai";
 
 const TableView: React.FC = () => {
   const { input, submit, text } = formFieldTypes;
+  const [getVesselTableData] = useMakePOSTRequest()
+  const navigate = useNavigate();
+  const resetPopup = useResetAtom(popupAtom);
+  const [popupData, setPopupData] = useAtom(popupAtom);
+  const alertMessage = useRef("")
 
   const formFields = {
     fields: [
@@ -30,7 +40,32 @@ const TableView: React.FC = () => {
     ],
   };
 
-  function handleVesselQuery(data: any) {}
+  const handleVesselQuery = async(data: any) => {
+    try {
+      let res = await getVesselTableData(API_Methods.Table_view, {
+       imo: data.vessel_imo,
+      });
+      if (res == Response_Message.Success) {
+        
+      } else {
+        alertMessage.current = "Login Failed! Try Again";
+        handlePopData();
+      }
+    } catch (error) {
+      alertMessage.current = "Login Failed! Try Again";
+      handlePopData();
+    }
+  }
+
+  function handlePopData() {
+    setPopupData({
+      isOpen: true,
+      message: alertMessage.current,
+      type: AlertType.Error,
+      btnHandler: resetPopup,
+    });
+  }
+  
   return (
     <Layout>
       <FormContainer>

@@ -5,6 +5,7 @@ export const formFieldTypes = {
     password: "password",
     button: "button",
     submit: "submit",
+    url: "url",
   };
 
 export const AppRoutes = {
@@ -20,10 +21,12 @@ export const API_ENDPOINT = "https://sgtd-api.onrender.com"
 
 export const API_Methods = {
   Login: '/login',
-  Register: '/register'
+  Register: '/register',
+  Table_view: '/api/table_pull'
 }
 
 export const API_Response_Success = 304;
+export const API_Response_OK = 200
 
 export const Response_Message = {
   Success: "Success",
