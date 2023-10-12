@@ -101,42 +101,85 @@ form .form-row .textarea{
 .textarea textarea:valid ~ .underline:before{
   transform: scale(1);
 }
-.submit-btn .input-data{
-  overflow: hidden;
-  height: 45px!important;
-  width: 25%!important;
-}
-.submit-btn .input-data .inner{
-  height: 100%;
-  width: 300%;
-  position: absolute;
-  left: -100%;
-  background: -webkit-linear-gradient(right, #56d8e4, #9f01ea, #56d8e4, #9f01ea);
-  transition: all 0.4s;
-}
-.submit-btn .input-data:hover .inner{
-  left: 0;
-}
 
-.submit-btn .input-data {
-    text-align: center; /* Center-align the content within the container */
-    margin: 20px 0; /* Add margin to create spacing */
+
+
+
+
+
+.form-row.submit-btn {
+    display: flex; /* Use flexbox to center elements horizontally */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
   }
-.submit-btn .input-data input {
+  
+  .form-row.submit-btn .input-data {
+    overflow: hidden;
+    width: 25%; /* Adjust the width as needed */
+  }
+  
+  .form-row.submit-btn .input-data .inner {
+    height: 100%;
+    width: 300%;
+    position: absolute;
+    left: -100%;
+    background: -webkit-linear-gradient(right, #56d8e4, #9f01ea, #56d8e4, #9f01ea);
+    transition: all 0.4s;
+  }
+  
+  .form-row.submit-btn .input-data:hover .inner {
+    left: 0;
+  }
+  
+  
+  .form-row.submit-btn .input-data input {
     background: none;
     border: none;
     color: #fff;
-    font-size: 17px;
+    font-size: 20px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
     position: relative;
     z-index: 2;
-    margin: 0 auto; /* Horizontally center the button */
-    display: block; /* Ensure the button takes up the full width */
+    margin: 0 auto; /* Center the button horizontally */
+    display: block;
     width: 120px; /* Adjust the width as needed */
   }
+
+  .form-row.justify-content-center {
+    display: flex; /* Use flexbox to center elements horizontally */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+  }
+  
+  .form-row.justify-content-center .btn {
+    /* You might need to adjust the styles of the button */
+    background-color: #000000; /* Adjust to your preferred button styles */
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none; /* Remove default link underline */
+    border-radius: 0px;
+    cursor: pointer;
+  }
+
+  .form-row.justify-content-center .btn-primary input {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    margin: 0 auto; /* Center the button horizontally */
+    display: block;
+    width: 120px; /* Adjust the width as needed */
+  }
+  
 @media (max-width: 700px) {
   .container .text{
     font-size: 30px;
