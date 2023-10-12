@@ -6,6 +6,22 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
+
+.header {
+    text-align: center;
+    padding: 20px 0; /* Adjust the padding to control the vertical position of the image */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+.header img {
+    width: 20rem;
+    display: block;
+    margin: 0 auto; /* Center the image horizontally */
+  }
+
 body{
   display: flex;
   align-items: center;
@@ -15,6 +31,9 @@ body{
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(to bottom, #1845ad, #b92f90);
 }
+
+
+
 .container{
   max-width: 800px;
   background: #fff;
@@ -101,6 +120,8 @@ form .form-row .textarea{
 .textarea textarea:valid ~ .underline:before{
   transform: scale(1);
 }
+
+
 
 
 
