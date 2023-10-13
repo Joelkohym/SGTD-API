@@ -9,10 +9,9 @@ import AppColors from "../styles/colors";
 import FormController from "../components/FormController";
 import {
   API_Methods,
-  API_Response_Success,
+  API_Response_OK,
   AlertType,
   AppRoutes,
-  Response_Message,
   formFieldTypes,
 } from "../lib/constants";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +25,7 @@ import { useRef } from "react";
 function Login() {
   const navigate = useNavigate();
   const [getLogin] = useMakePOSTRequest();
-  const { input, password, email, submit } = formFieldTypes;
+    const { input, password, email, submit } = formFieldTypes;
   const resetPopup = useResetAtom(popupAtom);
   const [popupData, setPopupData] = useAtom(popupAtom);
   const alertMessage = useRef("");
@@ -75,7 +74,7 @@ function Login() {
         email: data.email,
         password: data.password,
       });
-      if (res.status == API_Response_Success) {
+      if (res.status == API_Response_OK) {
         navigate(AppRoutes.TableView);
       } else {
         alertMessage.current = "Login Failed! Try Again";
