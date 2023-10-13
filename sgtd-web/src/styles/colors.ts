@@ -16,6 +16,7 @@ enum AppColors {
 
     ThemePurple = "#8610AD",
     ThemeLightPurple = "#da61ff",
+    ThemeLightestPurple = "#e09ded",
 
     ThemeSuccess = "#4CAF50",
     ThemeError = "#f44336"
