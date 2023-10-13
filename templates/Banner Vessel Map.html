@@ -1,0 +1,58 @@
+<body>
+<style media="screen">
+    *,
+    *:before,
+    *:after {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    /* Style for the navigation buttons */
+      /* Add z-index to bring navigation bar in front of shapes */
+      .navbar {
+        z-index: 1000;
+      }
+
+      .navbar img {
+        width: 120px; /* Adjust the width of the image as needed */
+        margin-right: 20px; /* Add margin to separate image from links */
+      }
+  </style>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="https://sgtradex.com/images/sgtradex-logo.svg" alt="SGTD Image">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class=" collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav ms-auto ">
+          <li class="nav-item">
+            <a class="nav-link mx-2" aria-current="page" href="/table_view">Vessel ETA</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mx-2 active" href="/vessel_request/''">Vessel Map</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link mx-2" href="#">Upload File</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Log In
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="/login">Log In</a></li>
+              <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+              <li><a class="dropdown-item" href="/register">Register</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+    </nav>
+
+    <div style="font-weight: bold; text-decoration: underline; color: rgb(223, 55, 4);">IMO NOT FOUND: {{ IMO_NOTFOUND }} </div>

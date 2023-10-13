@@ -325,6 +325,7 @@ def Vessel_map():
         print(f"df1 VESSEL MAP = {df1.to_string(index=False, header=True)}")
 
         display_data = display_map(df1)
+        print(f"Vessel_map display_data = {display_data}")
         if display_data[0] == 1:
             return render_template(
                 display_data[1],
