@@ -14,8 +14,9 @@ export function useMakeGETRequest() {
         },
       };
       fetch(API_ENDPOINT + methodEndpoint + "?" + data, requestOptions)
-        .then((res) => res.json())
-        .then((response) => resolve(response.responseData))
+        .then((res) => {
+          console.log("Response...",res)
+        })
         .catch((error) => reject(error));
     });
   }
