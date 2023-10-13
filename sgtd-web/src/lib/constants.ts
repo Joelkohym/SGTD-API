@@ -17,7 +17,7 @@ export const AppRoutes = {
   TriangularModule: "/triangularModule"
 }
 
-export const API_ENDPOINT = "https://sgtd-api.onrender.com"
+export const API_ENDPOINT = "https://sgtd-api-test.onrender.com"
 
 export const API_Methods = {
   Login: '/login',
