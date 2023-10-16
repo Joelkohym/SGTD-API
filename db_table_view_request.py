@@ -207,9 +207,9 @@ def merge_arrivedepart_declaration_df(filtered_df_before, Declaration_df):
             f'<thead class="table-dark">',
         )
         html_content = html_content.replace(
-            f"</table>",
-            f'</table></div></div></div></div><script src="/static/js/bootstrap.bundle.min.js"></script><script src="/static/js/jquery-3.6.0.min.js"></script><script src="/static/js/datatables.min.js"></script><script src="/static/js/pdfmake.min.js"></script><script src="/static/js/vfs_fonts.js"></script><script src="/static/js/custom.js"></script><script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script></body></html>',
-          )
+          f"</table>",
+          f'</table></div></div></div></div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script><script src="/static/js/bootstrap.bundle.min.js"></script><script src="/static/js/jquery-3.6.0.min.js"></script><script src="/static/js/datatables.min.js"></script><script src="/static/js/pdfmake.min.js"></script><script src="/static/js/vfs_fonts.js"></script><script src="/static/js/custom.js"></script></body></html>',
+      )
 
         # Write the modified HTML content back to the file
         with open(newHTML, "w") as file:
