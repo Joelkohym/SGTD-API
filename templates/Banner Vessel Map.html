@@ -7,19 +7,37 @@
       margin: 0;
       box-sizing: border-box;
     }
+    
+    .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally. */
+            text-align: center;
+        }
+
 
     /* Style for the navigation buttons */
       /* Add z-index to bring navigation bar in front of shapes */
       .navbar {
-        z-index: 1000;
-      }
+          z-index: 1000;
+          display: flex;
+          justify-content: space-between; /* To place the logo and menu items at each end */
+          align-items: center;
+          background-color: #413838 !important;
+          padding: 10px 20px; /* Adjust the padding as needed */
+          width: 100%; /* Take the full width of the screen */
+          position: fixed; /* Stick the navbar to the top of the screen */
+          top: 0; /* Position at the top of the screen */
+}
+  
 
-      .navbar img {
+
+    .navbar img {
         width: 120px; /* Adjust the width of the image as needed */
         margin-right: 20px; /* Add margin to separate image from links */
-      }
+}
   </style>
-
+  
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
@@ -28,7 +46,7 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
+    
       <div class=" collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ms-auto ">
           <li class="nav-item">
@@ -53,5 +71,5 @@
       </div>
     </div>
     </nav>
-
+  
     <div style="font-weight: bold; text-decoration: underline; color: rgb(223, 55, 4);">IMO NOT FOUND: {{ IMO_NOTFOUND }} </div>
