@@ -108,6 +108,7 @@ def display_map(df1):
         with open(newHTML, "r") as file:
             html_content = file.read()
         html_content = menu_banner_html + html_content
+        html_content = html_content.replace("</body>", f'<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script></body>')
         with open(newHTML, "w") as file:
             file.write(html_content)
         return [1, newHTMLwotemp]  # render_template(

@@ -1,87 +1,64 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <!-- Design by foolishdeveloper.com -->
-  <title>SGTraDex Vessel Query Login</title>
+    <!-- Design by foolishdeveloper.com -->
+    <title>SGTraDex Vessel Query Login</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <!--Stylesheet-->
+    <style media="screen">
+        *,
+        *:before,
+        *:after {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
 
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-  <!--Stylesheet-->
-  <style media="screen">
-    *,
-    *:before,
-    *:after {
-      padding: 0;
-      margin: 0;
-      box-sizing: border-box;
-    }
+        .flex-container {
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 0;
+            background: linear-gradient(to bottom, #1845ad, #b92f90);
+          }
 
-    body {
-      background: linear-gradient(to bottom, #1845ad, #b92f90); /* Define your gradient here */
-      background-attachment: fixed; /* Fixed background */
-    }
+        body {
+            background: linear-gradient(to bottom, #1845ad, #b92f90);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure the body takes up at least the full viewport height. */
+            margin: 0;
+        }
 
-    .background {
-      width: 430px;
-      height: 520px;
-      position: absolute;
-      transform: translate(-50%, -50%);
-      left: 50%;
-      top: 50%;
-    }
-
-    .background .shape {
-      height: 200px;
-      width: 200px;
-      position: absolute;
-      border-radius: 50%;
-    }
-
-    .shape:first-child {
-      background: linear-gradient(#1845ad,
-          #23a2f6);
-      left: -80px;
-      top: -80px;
-    }
-
-    .shape:last-child {
-      background: linear-gradient(to right,
-          #ff512f,
-          #f09819);
-      right: -30px;
-      bottom: -80px;
-    }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally. */
+            text-align: center;
+            margin-top: 0px; /* Adjust the margin-top to move the container higher up the page. */
+        }
 
 
-    .header {
-      text-align: center;
-      padding-top: 20px; /* Adjust the padding to control the vertical position of the image */
-    }
-
-    .header img {
-      width: 20rem;
-      display: block;
-      margin: 0 auto; /* Center the image horizontally */
-    }
-
-
-    form {
-      height: 520px;
-      width: 400px;
-      background-color: rgba(255, 255, 255, 0.13);
-      position: absolute;
-      transform: translate(-50%, -50%);
-      top: 50%;
-      left: 50%;
-      border-radius: 10px;
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
-      padding: 50px 35px;
-    }
+        body img {
+          max-width: 50%; /* Adjust the maximum width for the image as a percentage of the screen width */
+          width: 100%; /* Ensure the image takes the full available width */
+          display: block;
+          margin: 0 auto;
+        }
+        form {
+            width: 400px;
+            background-color: rgba(255, 255, 255, 0.13);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+            padding: 50px 35px;
+        }
 
     form * {
       font-family: 'Poppins', sans-serif;
@@ -103,6 +80,7 @@
       margin-top: 30px;
       font-size: 16px;
       font-weight: 500;
+      text-align: left;
     }
 
     input {
@@ -124,49 +102,50 @@
     button {
       margin-top: 50px;
       width: 100%;
-      background-color: #ffffff;
-      color: #080710;
       padding: 15px 0;
       font-size: 18px;
       font-weight: 600;
       border-radius: 5px;
       cursor: pointer;
     }
+
     button#loginButton {
       background-color: #088f72;
       color: #ffffff;
     }
+
     button#registerButton {
       background-color: rgb(0, 0, 0);
       color: #ffffff;
       margin-top: 20px;
     }
-
   </style>
 </head>
 
 <body>
-  <div class="background">
-    <div class="shape"></div>
-    <div class="shape"></div>
+<div class="flex-container">
+  <div class="container">
+    <div class="background">
+      <div class="shape"></div>
+      <div class="shape"></div>
+    </div>
+    <div class="header">
+      <img src="https://sgtradex.com/images/sgtradex-logo.svg" alt="SGTD Image">
+    </div>
+    <form id="loginForm" action="/login" method="post">
+      <h3>Login Here</h3>
+
+      <label for="email">Email</label>
+      <input type="text" placeholder="Email" id="email" name="email">
+
+      <label for="password">Password</label>
+      <input type="password" placeholder="Password" id="password" name="password">
+
+      <button type="button" id="loginButton">Log In</button>
+      <button type="button" id="registerButton">Register</button>
+    </form>
   </div>
-  <div class="header">
-    <img src="https://sgtradex.com/images/sgtradex-logo.svg" alt="SGTD Image">
-  </div>
-  <form id="loginForm" action="/login" method="post">
-    <h3>Login Here</h3>
-
-    <label for="email">Email</label>
-    <input type="text" placeholder="Email" id="email" name="email">
-
-    <label for="password">Password</label>
-    <input type="password" placeholder="Password" id="password" name="password">
-
-    <button type="button" id="loginButton">Log In</button>
-    <button type="button" id="registerButton">Register</button>
-
-  </form>
-
+</div>
   <script>
     var loginButton = document.getElementById("loginButton");
     var loginForm = document.getElementById("loginForm");
@@ -184,6 +163,5 @@
     });
   </script>
 </body>
-
 
 </html>

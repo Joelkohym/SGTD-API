@@ -7,35 +7,40 @@
   font-family: 'Poppins', sans-serif;
 }
 
-.header {
-    text-align: center;
-    padding: 20px 0; /* Adjust the padding to control the vertical position of the image */
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-  }
 
-.header img {
-    width: 20rem;
-    display: block;
-    margin: 0 auto; /* Center the image horizontally */
-  }
-
-body{
+/* Add a new class for the flex container */
+.flex-container {
   display: flex;
+  flex-direction: column; /* Stack children vertically */
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100vh;
-  padding: 10px;
-  font-family: 'Poppins', sans-serif;
+  padding: 0;
   background: linear-gradient(to bottom, #1845ad, #b92f90);
 }
 
+/* Modify .header styles to fit the container */
+.header {
+  text-align: center;
+  padding: 0;
+  position: relative; /* Change to relative positioning */
+  width: 100%;
+}
+
+body img {
+  max-width: 12%; /* Adjust the maximum width for the image as a percentage of the screen width */
+  width: 100%; /* Ensure the image takes the full available width */
+  display: block;
+  margin: 0 auto;
+}
+
+body {
+  margin: 0;
+}
 
 
 .container{
-  max-width: 800px;
+  max-width: 100%;
   background: #fff;
   width: 800px;
   padding: 25px 40px 10px 40px;
@@ -122,23 +127,17 @@ form .form-row .textarea{
 }
 
 
-
-
-
-
-
-
 .form-row.submit-btn {
     display: flex; /* Use flexbox to center elements horizontally */
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
   }
-  
+
   .form-row.submit-btn .input-data {
     overflow: hidden;
     width: 25%; /* Adjust the width as needed */
   }
-  
+
   .form-row.submit-btn .input-data .inner {
     height: 100%;
     width: 300%;
@@ -147,12 +146,11 @@ form .form-row .textarea{
     background: -webkit-linear-gradient(right, #56d8e4, #9f01ea, #56d8e4, #9f01ea);
     transition: all 0.4s;
   }
-  
+
   .form-row.submit-btn .input-data:hover .inner {
     left: 0;
   }
-  
-  
+
   .form-row.submit-btn .input-data input {
     background: none;
     border: none;
@@ -174,7 +172,7 @@ form .form-row .textarea{
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
   }
-  
+
   .form-row.justify-content-center .btn {
     /* You might need to adjust the styles of the button */
     background-color: #000000; /* Adjust to your preferred button styles */
@@ -200,7 +198,8 @@ form .form-row .textarea{
     display: block;
     width: 120px; /* Adjust the width as needed */
   }
-  
+
+
 @media (max-width: 700px) {
   .container .text{
     font-size: 30px;
