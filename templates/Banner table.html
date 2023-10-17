@@ -1,84 +1,101 @@
-                  <!DOCTYPE html>
-                  <html lang="en">
-                  <head>
-                    <title>Vessel Request Page</title>
-                    <meta charset="utf-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1">
-                    <!-- Bootstrap code for navigation template -->
-                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Vessel Request Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap code for navigation template -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-                    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-                    <link rel="stylesheet" href="/static/css/datatables.min.css">
-                    <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/css/datatables.min.css">
+  <link rel="stylesheet" href="/static/css/style.css">
 
-                    <style media="screen">
-                      *,
-                      *:before,
-                      *:after {
-                        padding: 0;
-                        margin: 0;
-                        box-sizing: border-box;
-                      }
+  <style media="screen">
+    *,
+    *:before,
+    *:after {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
 
-                      /* Style for the navigation buttons */
-                        /* Add z-index to bring navigation bar in front of shapes */
-                        .navbar {
-                          z-index: 2;
-                          background-color: #413838 !important;
-                        }
+    /* Style for the navigation buttons */
+      /* Add z-index to bring navigation bar in front of shapes */
+    .navbar {
+      z-index: 2;
+      background-color: #413838 !important;
+    }
 
 
-                        .navbar img {
-                          width: 120px; /* Adjust the width of the image as needed */
-                          margin-right: 20px; /* Add margin to separate image from links */
-                        }
-                    </style>
+    .navbar img {
+      width: 120px; /* Adjust the width of the image as needed */
+      margin-right: 20px; /* Add margin to separate image from links */
+    }
 
-                    </head>
-                    <body style="margin: 0; padding: 0;">
+    body {
+    background: linear-gradient(to bottom, #1845ad, #b92f90);
+    color: white;
+    }
 
-                      <header>
-                        <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
-                          <div class="container-fluid">
-                            <a class="navbar-brand" href="#">
-                              <img src="https://sgtradex.com/images/sgtradex-logo.svg" alt="SGTD Image">
-                            </a>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                              <span class="navbar-toggler-icon"></span>
-                            </button>
 
-                            <div class=" collapse navbar-collapse" id="navbarNavDropdown">
-                              <ul class="navbar-nav ms-auto ">
-                                <li class="nav-item">
-                                  <a class="nav-link mx-2 active" aria-current="page" href="/table_view">Vessel ETA</a>
-                                </li>
-                                <li class="nav-item">
-                                  <a class="nav-link mx-2" href="/vessel_request/''">Vessel Map</a>
-                                </li>
-                                <li class="nav-item">
-                                  <a class="nav-link mx-2" href="#">Upload File</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                  <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Log In
-                                  </a>
-                                  <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <li><a class="dropdown-item" href="/logout">Log Out</a></li>
-                                    <li><a class="dropdown-item" href="/register">Register</a></li>
-                                  </ul>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                          </nav>
+    table#example tbody th  {
+    color: rgb(0, 0, 0) !important;
+    }
+    table#example tbody td  {
+    color: rgb(0, 0, 0) !important;
+    }
+    table#example {
+    background-color: white;
+    }
+    
+  </style>
 
-                      </header>
-                      <!-- =======  Data-Table  = Start  ========================== -->
-                      <div class="container" style="padding-top: 20px;">
-                          <div class="row">
-                              <div class="col-12">
-                                  <div class="data_table">
+  </head>
+  <body style="margin: 0; padding: 0;">
+
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-3">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="https://sgtradex.com/images/sgtradex-logo.svg" alt="SGTD Image">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class=" collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto ">
+              <li class="nav-item">
+                <a class="nav-link mx-2 active" aria-current="page" href="/table_view">Vessel ETA</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-2" href="/vessel_request/''">Vessel Map</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link mx-2" href="#">Upload File</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link mx-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Log In
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                  <li><a class="dropdown-item" href="/register">Register</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+        </nav>
+
+    </header>
+    <!-- =======  Data-Table  = Start  ========================== -->
+    <div class="container" style="padding-top: 20px;">
+        <div class="row">
+            <div class="col-12">
+                <div class="data_table">
