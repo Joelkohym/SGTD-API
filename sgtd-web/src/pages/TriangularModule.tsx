@@ -35,14 +35,16 @@ function TriangularModule() {
   };
 
   const csvData = [
-    ["ID", "Full Name", "Email", "Gender", "Age", "S"],
-    ...tableData.map(({ id, full_name, email, gender, age, start_date }) => [
-      id,
-      full_name,
-      email,
-      gender,
-      age,
-      start_date,
+    ["INDEX", "Due To Arrive Time", "locationFrom", "Vessel Name", "Call Sign", "IMO number","Flag", "Due To Depart Time"],
+    ...tableData.map(({ index, duetoArriveTime, locationFrom, vesselName, callSign, IMOnumber, flag,dueToDepartTime }) => [
+      index + 1,
+      duetoArriveTime,
+      locationFrom,
+      vesselName,
+      callSign,
+      IMOnumber,
+      flag,
+      dueToDepartTime
     ]),
   ];
 
