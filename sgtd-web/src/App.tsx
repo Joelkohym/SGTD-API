@@ -7,6 +7,7 @@ import { AppRoutes } from "./lib/constants";
 import VesselQuery from "./pages/VesselQuery";
 import TableView from "./pages/TableView";
 import TriangularModule from "./pages/TriangularModule";
+import VesselMap from "./pages/VesselMap";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Route path = {AppRoutes.VesselQuery} element = {<VesselQuery/>} />
       <Route path = {AppRoutes.TableView} element = {<TableView/>} />
       <Route path = {AppRoutes.TriangularModule} element = {<TriangularModule/>} />
+      <Route path = {AppRoutes.VesselMap} element = {<VesselMap />} />
     </Routes>
   </BrowserRouter>
   );

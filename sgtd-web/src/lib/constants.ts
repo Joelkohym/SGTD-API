@@ -14,7 +14,8 @@ export const AppRoutes = {
   Register: "/register",
   VesselQuery: "/vesselQuery",
   TableView : "/tableView",
-  TriangularModule: "/triangularModule"
+  TriangularModule: "/triangularModule",
+  VesselMap: "/VesselMap"
 }
 
 export const API_ENDPOINT = "https://sgtd-api-test.onrender.com"
@@ -36,4 +37,9 @@ export const Response_Message = {
 export const AlertType = {
   Success: "Success",
   Error : "Error"
+}
+
+export const tileLayer = {
+  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+  url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 }

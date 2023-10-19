@@ -19,7 +19,10 @@ enum AppColors {
     ThemeLightestPurple = "#e09ded",
 
     ThemeSuccess = "#4CAF50",
-    ThemeError = "#f44336"
+    ThemeError = "#f44336",
+
+    ThemeRed = "#590505",
+    ThemeLightRed = "#f55656"
 }
 
 export default AppColors;
