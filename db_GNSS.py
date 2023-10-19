@@ -205,7 +205,7 @@ def display_lbo_map(df1):
                 color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
             icon_color = color_mapping[imo_number]
             icon_html = folium.DivIcon(
-                html=f'<i class="fa fa-arrow-up" style="color: {icon_color}; font-size: 17px; transform: rotate({row["direction"]}deg);"></i>'
+                html=f'<i class="fa fa-arrow-up" style="color: {icon_color}; font-size: 20px; transform: rotate({row["direction"]}deg);"></i>'
             )
             popup_html = f"<b>Vessel Info</b><br>"
             for key, value in row.items():
