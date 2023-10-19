@@ -207,6 +207,7 @@
   <form id="imoForm" action="/api/vessel" method="POST">
     {% if msg != '1' %}
     <div style="font-weight: bold; text-decoration: underline; color: rgb(223, 55, 4);">{{ msg }}</div>
+    {% endif %}
     <h3>Vessel Map Query 🗺️</h3>
 
     <label for="vessel_imo">Vessel IMO(s)</label>
