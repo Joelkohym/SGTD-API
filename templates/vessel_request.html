@@ -176,7 +176,7 @@
             <a class="nav-link mx-2" aria-current="page" href="/table_view">Vessel ETA</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link mx-2 active" href="/vessel_request/''">Vessel Map</a>
+            <a class="nav-link mx-2 active" href="/vessel_request/1">Vessel Map</a>
           </li>
           <li class="nav-item">
             <a class="nav-link mx-2" href="/lbo_request/1">LBO Map</a>
@@ -205,6 +205,8 @@
     <div class="shape"></div>
   </div>
   <form id="imoForm" action="/api/vessel" method="POST">
+    {% if msg != '1' %}
+    <div style="font-weight: bold; text-decoration: underline; color: rgb(223, 55, 4);">{{ msg }}</div>
     <h3>Vessel Map Query 🗺️</h3>
 
     <label for="vessel_imo">Vessel IMO(s)</label>
