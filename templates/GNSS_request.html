@@ -205,7 +205,7 @@
     <div class="shape"></div>
   </div>
   <form id="imeiForm" action="/api/lbo" method="POST">
-    {% if msg %}
+    {% if msg != '1' %}
     <div style="font-weight: bold; text-decoration: underline; color: rgb(223, 55, 4);">{{ msg }}</div>
     {% endif %}
     <h3>LBO Map Query 🗺️</h3>
