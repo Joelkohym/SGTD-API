@@ -83,6 +83,8 @@ def login():
                 session["api_key"] = API_KEY
                 session["gc"] = gSheet
                 session["IMO_NOTFOUND"] = []
+                session["LBO_ACCESS_TOKEN"] = []
+                session["LBO_REFRESH_TOKEN"] = []
 
                 msg = f"Login success for {email}, please enter Vessel IMO number(s)"
                 print(f"Login success for {email}, redirect")
@@ -318,6 +320,10 @@ def logout():
     session.pop("pitstop_url", None)
     session.pop("api_key", None)
     session.pop("gc", None)
+    session.pop("IMO_FOUND", None)
+    session.pop("IMO_NOT_FOUND", None)
+    session.pop("LBO_ACCESS_TOKEN", None)
+    session.pop("LBO_REFRESH_TOKEN", None)
     return redirect(url_for("login")), 303
 
 
