@@ -37,6 +37,7 @@ from database import (
 )
 from flask_swagger_ui import get_swaggerui_blueprint
 
+from db_GNSS import GET_LBO_GNSS_Data, GET_LBO_GNSS_Token, display_lbo_map
 
 app = Flask(__name__)
 
@@ -100,6 +101,90 @@ def login():
     if request.method == "GET":
         print("Requets == GET")
         return render_template("login.html")
+
+
+# ====================================#################### LBO GNSS MAP ##############################========================================
+@app.route("/api/gnss_token", methods=["POST"])
+def LBO_GET_GNSS_TOKEN():
+    tokens = GET_LBO_GNSS_Token()
+    print(tokens)
+    if tokens == "0":
+        print("Too frequent TOKEN request, please try again later...")
+        return render_template(
+            "GNSS_request.html",
+            msg="Too frequent TOKEN request, please try again later...",
+        )
+    session["LBO_ACCESS_TOKEN"] = tokens["access_token"]
+    session["LBO_REFRESH_TOKEN"] = tokens["refresh_token"]
+    return f'Successfuly retrieved token: session["LBO_ACCESS_TOKEN"] = {session["LBO_ACCESS_TOKEN"]}, session["LBO_REFRESH_TOKEN"] = {session["LBO_REFRESH_TOKEN"]}'
+
+
+@app.route("/lbo_request/<msg>", methods=["GET", "POST"])
+def lbo_request(msg):
+    if g.user:
+        return render_template("GNSS_request.html", msg=msg)
+    else:
+        return redirect(url_for("login")), 304
+
+
+@app.route("/api/lbo", methods=["POST"])
+def LBO_data_pull():
+    if g.user:
+        if request.method == "POST":
+            session["IMO_NOTFOUND"] = []
+            print(f'session["LBO_ACCESS_TOKEN"]  = {session["LBO_ACCESS_TOKEN"]}')
+            if len(session["LBO_ACCESS_TOKEN"]) == 0:
+                return render_template(
+                    "GNSS_request.html",
+                    msg="Please retrieve a TOKEN first... Token is currently empty.",
+                )
+
+            # Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
+            # delete_all_rows_vessel_location(session["gc"])
+            user_lbo_imei = request.form["lbo_imei"]
+            user_imo = request.form["imo"]
+
+            # ============= GET LBO GNSS DATA API's from GETT TECHNOLOGIES ===================
+            try:
+                tic = time.perf_counter()
+                GNSS_Data = GET_LBO_GNSS_Data(
+                    user_lbo_imei,
+                    session["LBO_ACCESS_TOKEN"],
+                    session["LBO_REFRESH_TOKEN"],
+                )
+                print(f"user_lbo_imei from html = {GNSS_Data}")
+                # Loop through input IMO list
+                display_data = display_lbo_map(GNSS_Data)[1]
+
+                print(f"display_data = {display_data}")
+                # ============= GET 2 API's from MPA: VCP + VDA ===================
+                # ============= PULL 2 API's from SGTD: VCP + VDA =================
+                toc = time.perf_counter()
+                print(
+                    f"PULL duration for vessel map query {len(user_lbo_imei)} in {toc - tic:0.4f} seconds"
+                )
+                if display_data[0] == 1:
+                    print(f"LBO GNSS _map return start 1")
+                    return render_template(
+                        display_data[1],
+                    )
+
+                else:
+                    print(f"LBO GNSS_map return start 2")
+                    print(display_data)
+                    return render_template(display_data), 200
+
+            except:
+                return (
+                    render_template(
+                        "GNSS_request.html",
+                        msg="Invalid IMEI. Please ensure IMEI is valid.",
+                    ),
+                    406,
+                )
+        return render_template("GNSS_request.html"), 403
+    return redirect(url_for("login")), 304
+
 
 
 @app.route("/table_view", methods=["GET", "POST"])
