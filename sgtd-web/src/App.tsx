@@ -1,6 +1,6 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import './App.css';
-import Login from './pages/Login';
+import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom";
+import "./App.css";
+import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import { AppRoutes } from "./lib/constants";
@@ -11,17 +11,20 @@ import VesselMap from "./pages/VesselMap";
 
 function App() {
   return (
-    <BrowserRouter>
-    <Routes>
-      <Route path={AppRoutes.Login} element={<Login />}/>
-      <Route path={AppRoutes.Register} element={<Register />}/>
-      <Route path = {AppRoutes.Home} element = {<Home/>} />
-      <Route path = {AppRoutes.VesselQuery} element = {<VesselQuery/>} />
-      <Route path = {AppRoutes.TableView} element = {<TableView/>} />
-      <Route path = {AppRoutes.TriangularModule} element = {<TriangularModule/>} />
-      <Route path = {AppRoutes.VesselMap} element = {<VesselMap />} />
-    </Routes>
-  </BrowserRouter>
+    <HashRouter>
+      <Routes>
+        <Route path={AppRoutes.Login} element={<Login />} />
+        <Route path={AppRoutes.Register} element={<Register />} />
+        <Route path={AppRoutes.Home} element={<Home />} />
+        <Route path={AppRoutes.VesselQuery} element={<VesselQuery />} />
+        <Route path={AppRoutes.TableView} element={<TableView />} />
+        <Route
+          path={AppRoutes.TriangularModule}
+          element={<TriangularModule />}
+        />
+        <Route path={AppRoutes.VesselMap} element={<VesselMap />} />
+      </Routes>
+    </HashRouter>
   );
 }
 
