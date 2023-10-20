@@ -129,63 +129,101 @@ def lbo_request(msg):
         return redirect(url_for("login")), 304
 
 
-@app.route("/api/lbo", methods=["POST"])
-def LBO_data_pull():
-    if g.user:
-        if request.method == "POST":
-            session["IMO_NOTFOUND"] = []
-            print(f'session["LBO_ACCESS_TOKEN"]  = {session["LBO_ACCESS_TOKEN"]}')
-            if len(session["LBO_ACCESS_TOKEN"]) == 0:
-                return render_template(
-                    "GNSS_request.html",
-                    msg="Please retrieve a TOKEN first... Token is currently empty.",
-                )
+  @app.route("/api/lbo", methods=["POST"])
+  def LBO_data_pull():
+      if g.user:
+          if request.method == "POST":
+              session["IMO_NOTFOUND"] = []
 
-            # Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
-            # delete_all_rows_vessel_location(session["gc"])
-            user_lbo_imei = request.form["lbo_imei"]
-            user_imo = request.form["imo"]
+              user_vessel_imo = request.form["imo"]
+              if len(user_vessel_imo) > 1:
+                  # Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
+                  delete_all_rows_vessel_location(session["gc"])
+                  try:
+                      input_list = [int(x) for x in user_vessel_imo.split(",")]
+                      print(f"user_vessel_imo from html = {user_vessel_imo}")
+                      print(f"input_list from html = {input_list}")
+                      # Loop through input IMO list
+                      tic = time.perf_counter()
+                      # ============= GET 2 API's from MPA: VCP + VDA ===================
+                      # ============= PULL 2 API's from SGTD: VCP + VDA =================
+                      PULL_GET_VCP_VDA_MPA(
+                          input_list,
+                          session["pitstop_url"],
+                          session["gc"],
+                          session["participant_id"],
+                          session["api_key"],
+                          session["IMO_NOTFOUND"],
+                      )
+                      toc = time.perf_counter()
+                      print(
+                          f"PULL duration for vessel map query {len(input_list)} in {toc - tic:0.4f} seconds"
+                      )
+                      print(
+                          f"VESSEL MAP PRINTING IMO_NOTFOUND = {session['IMO_NOTFOUND']}"
+                      )
+                      DB_queried_data = get_map_data(session["gc"])
+                      df1 = pd.DataFrame(DB_queried_data[0])
+                      print(f"df1 VESSEL MAP = {df1.to_string(index=False, header=True)}")
+                  except:
+                      return (
+                          render_template(
+                              "GNSS_request.html",
+                              msg="Invalid Vessel IMO. Please ensure Vessel IMO is valid.",
+                          ),
+                          406,
+                      )
 
-            # ============= GET LBO GNSS DATA API's from GETT TECHNOLOGIES ===================
-            try:
-                tic = time.perf_counter()
-                GNSS_Data = GET_LBO_GNSS_Data(
-                    user_lbo_imei,
-                    session["LBO_ACCESS_TOKEN"],
-                    session["LBO_REFRESH_TOKEN"],
-                )
-                print(f"user_lbo_imei from html = {GNSS_Data}")
-                # Loop through input IMO list
-                display_data = display_lbo_map(GNSS_Data)[1]
+              # Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
+              # delete_all_rows_vessel_location(session["gc"])
+              user_lbo_imei = request.form["lbo_imei"]
+              if len(user_lbo_imei) > 1:
+                  print(f'session["LBO_ACCESS_TOKEN"]  = {session["LBO_ACCESS_TOKEN"]}')
+                  if len(session["LBO_ACCESS_TOKEN"]) == 0:
+                      return render_template(
+                          "GNSS_request.html",
+                          msg="Please retrieve a TOKEN first... Token is currently empty.",
+                      )
+                  # ============= GET LBO GNSS DATA API's from GETT TECHNOLOGIES ===================
+                  try:
+                      tic = time.perf_counter()
+                      GNSS_Data = GET_LBO_GNSS_Data(
+                          user_lbo_imei,
+                          session["LBO_ACCESS_TOKEN"],
+                          session["LBO_REFRESH_TOKEN"],
+                      )
+                      print(f"user_lbo_imei from html = {GNSS_Data}")
+                      # Loop through input IMO list
+                      display_data = display_lbo_map(GNSS_Data, df1)[1]
 
-                print(f"display_data = {display_data}")
-                # ============= GET 2 API's from MPA: VCP + VDA ===================
-                # ============= PULL 2 API's from SGTD: VCP + VDA =================
-                toc = time.perf_counter()
-                print(
-                    f"PULL duration for vessel map query {len(user_lbo_imei)} in {toc - tic:0.4f} seconds"
-                )
-                if display_data[0] == 1:
-                    print(f"LBO GNSS _map return start 1")
-                    return render_template(
-                        display_data[1],
-                    )
+                      print(f"display_data = {display_data}")
+                      # ============= GET 2 API's from MPA: VCP + VDA ===================
+                      # ============= PULL 2 API's from SGTD: VCP + VDA =================
+                      toc = time.perf_counter()
+                      print(
+                          f"PULL duration for vessel map query {len(user_lbo_imei)} in {toc - tic:0.4f} seconds"
+                      )
+                      if display_data[0] == 1:
+                          print(f"LBO GNSS _map return start 1")
+                          return render_template(
+                              display_data[1],
+                          )
 
-                else:
-                    print(f"LBO GNSS_map return start 2")
-                    print(display_data)
-                    return render_template(display_data), 200
+                      else:
+                          print(f"LBO GNSS_map return start 2")
+                          print(display_data)
+                          return render_template(display_data), 200
 
-            except:
-                return (
-                    render_template(
-                        "GNSS_request.html",
-                        msg="Invalid IMEI. Please ensure IMEI is valid.",
-                    ),
-                    406,
-                )
-        return render_template("GNSS_request.html"), 403
-    return redirect(url_for("login")), 304
+                  except:
+                      return (
+                          render_template(
+                              "GNSS_request.html",
+                              msg="Invalid IMEI. Please ensure IMEI is valid.",
+                          ),
+                          406,
+                      )
+          return render_template("GNSS_request.html"), 403
+      return redirect(url_for("login")), 304
 
 
 

@@ -143,120 +143,151 @@ def GET_LBO_GNSS_Data(imeis, access_token, refresh_token):
 # )
 
 
-def display_lbo_map(df1):
-    df1 = pd.DataFrame(df1)
-    with open("templates/Banner.html", "r") as file:
-        menu_banner_html = file.read()
+def display_lbo_map(df1, df2):
+  df1 = pd.DataFrame(df1)
+  with open("templates/Banner.html", "r") as file:
+      menu_banner_html = file.read()
 
-    with open("templates/Banner Vessel Map.html", "r") as file:
-        menu_banner_body_html = file.read()
-    if df1.empty:
-        print(f"disaply map: Empty df1................")
-        current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
-        for f in os.listdir("templates/"):
-            if "lbomap.html" in f:
-                print(f"*lbomap.html file to be removed = {f}")
-                os.remove(f"templates/{f}")
+  with open("templates/Banner Vessel Map.html", "r") as file:
+      menu_banner_body_html = file.read()
+  if df1.empty and df2.empty:
+      print(f"disaply map: Empty df1 and df2................")
+      current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
+      for f in os.listdir("templates/"):
+          if "lbomap.html" in f:
+              print(f"*lbomap.html file to be removed = {f}")
+              os.remove(f"templates/{f}")
 
-        m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
-        regions = "templates/SG_anchorages.geojson"
-        m.add_geojson(
-            regions,
-            layer_name="SG Anchorages",
-            style={
-                "color": (random.choice(colors)),
-                "fill": True,
-                "fillOpacity": 0.05,
-            },
-        )
-        newHTML = f"templates/{current_datetime}lbomap.html"
-        newHTMLwotemp = f"{current_datetime}lbomap.html"
-        print(f"new html file created = {newHTML}")
-        m.to_html(newHTML)
-        with open(newHTML, "r") as file:
-            html_content = file.read()
-        html_content = html_content.replace(
-            "<style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>",
-            menu_banner_html,
-        )
-        html_content = html_content.replace("<body>", menu_banner_body_html)
-        with open(newHTML, "w") as file:
-            file.write(html_content)
-        return [1, newHTMLwotemp]  # render_template(
-        #     newHTMLwotemp,
-        #     user=session["email"],
-        #     IMO_NOTFOUND=session["IMO_NOTFOUND"],
-        # )
+      m = leafmap.Map(center=[1.257167, 103.897], zoom=9)
+      regions = "templates/SG_anchorages.geojson"
+      m.add_geojson(
+          regions,
+          layer_name="SG Anchorages",
+          style={
+              "color": (random.choice(colors)),
+              "fill": True,
+              "fillOpacity": 0.05,
+          },
+      )
+      newHTML = f"templates/{current_datetime}lbomap.html"
+      newHTMLwotemp = f"{current_datetime}lbomap.html"
+      print(f"new html file created = {newHTML}")
+      m.to_html(newHTML)
+      with open(newHTML, "r") as file:
+          html_content = file.read()
+      html_content = html_content.replace(
+          "<style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>",
+          menu_banner_html,
+      )
+      html_content = html_content.replace("<body>", menu_banner_body_html)
+      with open(newHTML, "w") as file:
+          file.write(html_content)
+      return [1, newHTMLwotemp]  # render_template(
+      #     newHTMLwotemp,
+      #     user=session["email"],
+      #     IMO_NOTFOUND=session["IMO_NOTFOUND"],
+      # )
 
-    else:
-        # Edit here, remove df1 and merge df, keep df2. Alter drop coulmns based on print
-        print(f"df1 LBO_map = {df1}")
-        df = df1
-        print(f"LBO_map Merged DF = {df}")
-        print(f"LBO_map Longitiude = {df['long']}")
-        m = folium.Map(location=[1.257167, 103.897], zoom_start=9)
-        color_mapping = {}
-        ship_image = "static/images/ship.png"
-        # Add several markers to the map
-        for index, row in df.iterrows():
-            imo_number = row["imei"]
-            # Assign a color to the imoNumber, cycling through the available colors
-            if imo_number not in color_mapping:
-                color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
-            icon_color = color_mapping[imo_number]
-            icon_html = folium.DivIcon(
-                html=f'<i class="fa fa-arrow-up" style="color: {icon_color}; font-size: 20px; transform: rotate({row["direction"]}deg);"></i>'
-            )
-            popup_html = f"<b>Vessel Info</b><br>"
-            for key, value in row.items():
-                popup_html += f"<b>{key}:</b> {value}<br>"
-            folium.Marker(
-                location=[row["lat"], row["long"]],
-                popup=folium.Popup(html=popup_html, max_width=300),
-                icon=icon_html,  # folium.DivIcon(html=icon_html),
-                angle=float(row["direction"]),
-                spin=True,
-            ).add_to(m)
-        # Geojson url
-        geojson_url = "templates/SG_anchorages.geojson"
+  else:
+      # Edit here, remove df1 and merge df, keep df2. Alter drop coulmns based on print
+      print(f"df1 LBO_map = {df1}")
+      print(f"df2 Vessel_map = {df2}")
+      df = df1
+      print(f"LBO_map Merged DF = {df}")
+      print(f"LBO_map Longitiude = {df['long']}")
+      m = folium.Map(location=[1.257167, 103.897], zoom_start=9)
+      color_mapping = {}
+      ship_image = "static/images/ship.png"
+      # Add several LBO markers to the map
+      for index, row in df.iterrows():
+          imo_number = row["imei"]
+          # Assign a color to the imoNumber, cycling through the available colors
+          if imo_number not in color_mapping:
+              color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
+          icon_color = color_mapping[imo_number]
+          icon_html = folium.DivIcon(
+              html=f'<i class="fa fa-arrow-up" style="color: {icon_color}; font-size: 17px; transform: rotate({row["direction"]}deg);"></i>'
+          )
+          popup_html = f"<b>Vessel Info</b><br>"
+          for key, value in row.items():
+              popup_html += f"<b>{key}:</b> {value}<br>"
+          folium.Marker(
+              location=[row["lat"], row["long"]],
+              popup=folium.Popup(html=popup_html, max_width=300),
+              icon=icon_html,  # folium.DivIcon(html=icon_html),
+              angle=float(row["direction"]),
+              spin=True,
+          ).add_to(m)
 
-        # Desired styles
-        style = {"fillColor": "red", "color": "blueviolet"}
+      # Add several VESSEL markers to the map
+      for index, row in df2.iterrows():
+          imo_number = row["imoNumber"]
+          # Assign a color to the imoNumber, cycling through the available colors
+          if imo_number not in color_mapping:
+              color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
+          icon_color = color_mapping[imo_number]
+          if int(row["yearBuilt"]) > 2010:
+              icon_html = folium.DivIcon(
+                  html=f'<i class="fa fa-ship" style="color: {icon_color}; font-size: {int(row["vesselLength"])/10}px; transform: rotate({row["heading"]}deg);"></i>'
+              )
+          else:
+              # icon_html = f'<i class="fa fa-ship" style="color: {icon_color}; font-size: {int(row["vesselLength"])/10}px; transform: rotate({row["heading"]}deg);"></i>'
+              icon_html = folium.CustomIcon(
+                  icon_image=ship_image,
+                  icon_size=(50, 50),  # You can adjust the size
+                  icon_anchor=(25, 25),
+              )
+          popup_html = f"<b>Vessel Info</b><br>"
+          for key, value in row.items():
+              popup_html += f"<b>{key}:</b> {value}<br>"
+          folium.Marker(
+              location=[row["latitudeDegrees"], row["longitudeDegrees"]],
+              popup=folium.Popup(html=popup_html, max_width=300),
+              icon=icon_html,  # folium.DivIcon(html=icon_html),
+              angle=float(row["heading"]),
+              spin=True,
+          ).add_to(m)
 
-        # Geojson
-        geojson_layer = folium.GeoJson(
-            data=geojson_url,
-            name="geojson",
-            style_function=lambda x: style,
-            highlight_function=lambda x: {"fillOpacity": 0.3},
-            popup=folium.GeoJsonPopup(fields=["NAME"], aliases=["Name"]),
-        ).add_to(m)
+      # Geojson url
+      geojson_url = "templates/SG_anchorages.geojson"
 
-        for f in os.listdir("templates/"):
-            # print(f)
-            if "lbomap.html" in f:
-                print(f"*lbomap.html file to be removed = {f}")
-                os.remove(f"templates/{f}")
+      # Desired styles
+      style = {"fillColor": "red", "color": "blueviolet"}
 
-        current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
-        newHTML = rf"templates/{current_datetime}lbomap.html"
-        m.save(newHTML)
-        with open(newHTML, "r") as file:
-            html_content = file.read()
+      # Geojson
+      geojson_layer = folium.GeoJson(
+          data=geojson_url,
+          name="geojson",
+          style_function=lambda x: style,
+          highlight_function=lambda x: {"fillOpacity": 0.3},
+          popup=folium.GeoJsonPopup(fields=["NAME"], aliases=["Name"]),
+      ).add_to(m)
 
-        # Add the menu banner HTML code to the beginning of the file
-        html_content = html_content.replace(
-            "<style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>",
-            menu_banner_html,
-        )
-        html_content = html_content.replace("<body>", menu_banner_body_html)
+      for f in os.listdir("templates/"):
+          # print(f)
+          if "lbomap.html" in f:
+              print(f"*lbomap.html file to be removed = {f}")
+              os.remove(f"templates/{f}")
 
-        # Write the modified HTML content back to the file
-        with open(newHTML, "w") as file:
-            file.write(html_content)
+      current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
+      newHTML = rf"templates/{current_datetime}lbomap.html"
+      m.save(newHTML)
+      with open(newHTML, "r") as file:
+          html_content = file.read()
 
-        newHTMLrender = f"{current_datetime}lbomap.html"
-        return [2, newHTMLrender]  # render_template(
+      # Add the menu banner HTML code to the beginning of the file
+      html_content = html_content.replace(
+          "<style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>",
+          menu_banner_html,
+      )
+      html_content = html_content.replace("<body>", menu_banner_body_html)
+
+      # Write the modified HTML content back to the file
+      with open(newHTML, "w") as file:
+          file.write(html_content)
+
+      newHTMLrender = f"{current_datetime}lbomap.html"
+      return [2, newHTMLrender]  # render_template(
         #     newHTMLrender,
         #     user=session["email"],
         #     IMO_NOTFOUND=session["IMO_NOTFOUND"],
