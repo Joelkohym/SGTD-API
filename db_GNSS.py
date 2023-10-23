@@ -265,7 +265,7 @@ def display_lbo_map(df1, df2):
       # Add legend
       item_txt = """<br> &nbsp; {item1} &nbsp; <i class="fa fa-arrow-circle-up" style="color:{col1}"></i><br> &nbsp; {item2} &nbsp; <i class="fa fa-arrow-up" style="color:{col2}"></i>"""
       html_itms = item_txt.format(
-          item1="Vessel", col1="red", item2="Lighter Boat", col2="red"
+          item1="Vessel", col1="black", item2="Lighter Boat", col2="black"
       )
 
       legend_html = """
