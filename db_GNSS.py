@@ -144,7 +144,6 @@ def GET_LBO_GNSS_Data(imeis, access_token, refresh_token):
 
 
 def display_lbo_map(df1, df2):
-  df1 = pd.DataFrame(df1)
   with open("templates/Banner.html", "r") as file:
       menu_banner_html = file.read()
 
@@ -190,63 +189,63 @@ def display_lbo_map(df1, df2):
 
   else:
       # Edit here, remove df1 and merge df, keep df2. Alter drop coulmns based on print
-      print(f"df1 LBO_map = {df1}")
-      print(f"df2 Vessel_map = {df2}")
+      # print(f"df1 LBO_map = {df1}")
+      # print(f"df2 Vessel_map = {df2}")
       df = df1
-      print(f"LBO_map Merged DF = {df}")
-      print(f"LBO_map Longitiude = {df['long']}")
       m = folium.Map(location=[1.257167, 103.897], zoom_start=9)
       color_mapping = {}
       ship_image = "static/images/ship.png"
       # Add several LBO markers to the map
-      for index, row in df.iterrows():
-          imo_number = row["imei"]
-          # Assign a color to the imoNumber, cycling through the available colors
-          if imo_number not in color_mapping:
-              color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
-          icon_color = color_mapping[imo_number]
-          icon_html = folium.DivIcon(
-              html=f'<i class="fa fa-arrow-up" style="color: {icon_color}; font-size: 17px; transform: rotate({row["direction"]}deg);"></i>'
-          )
-          popup_html = f"<b>Vessel Info</b><br>"
-          for key, value in row.items():
-              popup_html += f"<b>{key}:</b> {value}<br>"
-          folium.Marker(
-              location=[row["lat"], row["long"]],
-              popup=folium.Popup(html=popup_html, max_width=300),
-              icon=icon_html,  # folium.DivIcon(html=icon_html),
-              angle=float(row["direction"]),
-              spin=True,
-          ).add_to(m)
+      if not df1.empty:
+          for index, row in df.iterrows():
+              imo_number = row["imei"]
+              # Assign a color to the imoNumber, cycling through the available colors
+              if imo_number not in color_mapping:
+                  color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
+              icon_color = color_mapping[imo_number]
+              icon_html = folium.DivIcon(
+                  html=f'<i class="fa fa-arrow-up" style="color: {icon_color}; font-size: 17px; transform: rotate({row["direction"]}deg);"></i>'
+              )
+              popup_html = f"<b>Vessel Info</b><br>"
+              for key, value in row.items():
+                  popup_html += f"<b>{key}:</b> {value}<br>"
+              folium.Marker(
+                  location=[row["lat"], row["long"]],
+                  popup=folium.Popup(html=popup_html, max_width=300),
+                  icon=icon_html,  # folium.DivIcon(html=icon_html),
+                  angle=float(row["direction"]),
+                  spin=True,
+              ).add_to(m)
 
       # Add several VESSEL markers to the map
-      for index, row in df2.iterrows():
-          imo_number = row["imoNumber"]
-          # Assign a color to the imoNumber, cycling through the available colors
-          if imo_number not in color_mapping:
-              color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
-          icon_color = color_mapping[imo_number]
-          if int(row["yearBuilt"]) > 2010:
+      if not df2.empty:
+          for index, row in df2.iterrows():
+              imo_number = row["imoNumber"]
+              # Assign a color to the imoNumber, cycling through the available colors
+              if imo_number not in color_mapping:
+                  color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
+              icon_color = color_mapping[imo_number]
+              # if int(row["yearBuilt"]) > 2010:
               icon_html = folium.DivIcon(
-                  html=f'<i class="fa fa-ship" style="color: {icon_color}; font-size: {int(row["vesselLength"])/10}px; transform: rotate({row["heading"]}deg);"></i>'
+                  html=f'<i class="fa fa-arrow-circle-up" style="color: {icon_color}; font-size: {int(row["vesselLength"])/10}px; transform: rotate({row["heading"]}deg);"></i>'
               )
-          else:
-              # icon_html = f'<i class="fa fa-ship" style="color: {icon_color}; font-size: {int(row["vesselLength"])/10}px; transform: rotate({row["heading"]}deg);"></i>'
-              icon_html = folium.CustomIcon(
-                  icon_image=ship_image,
-                  icon_size=(50, 50),  # You can adjust the size
-                  icon_anchor=(25, 25),
-              )
-          popup_html = f"<b>Vessel Info</b><br>"
-          for key, value in row.items():
-              popup_html += f"<b>{key}:</b> {value}<br>"
-          folium.Marker(
-              location=[row["latitudeDegrees"], row["longitudeDegrees"]],
-              popup=folium.Popup(html=popup_html, max_width=300),
-              icon=icon_html,  # folium.DivIcon(html=icon_html),
-              angle=float(row["heading"]),
-              spin=True,
-          ).add_to(m)
+              # else:
+              #     # icon_html = f'<i class="fa fa-ship" style="color: {icon_color}; font-size: {int(row["vesselLength"])/10}px; transform: rotate({row["heading"]}deg);"></i>'
+              #     icon_html = folium.CustomIcon(
+              #         icon_image=ship_image,
+              #         icon_size=(50, 50),  # You can adjust the size
+              #         icon_anchor=(25, 25),
+              #     )
+              popup_html = f"<b>Vessel Info</b><br>"
+              for key, value in row.items():
+                  popup_html += f"<b>{key}:</b> {value}<br>"
+              folium.Marker(
+                  location=[row["latitudeDegrees"], row["longitudeDegrees"]],
+                  popup=folium.Popup(html=popup_html, max_width=300),
+                  icon=icon_html,  # folium.DivIcon(html=icon_html),
+                  angle=float(row["heading"]),
+                  spin=True,
+              ).add_to(m)
 
       # Geojson url
       geojson_url = "templates/SG_anchorages.geojson"
@@ -262,6 +261,34 @@ def display_lbo_map(df1, df2):
           highlight_function=lambda x: {"fillOpacity": 0.3},
           popup=folium.GeoJsonPopup(fields=["NAME"], aliases=["Name"]),
       ).add_to(m)
+
+      # Add legend
+      item_txt = """<br> &nbsp; {item1} &nbsp; <i class="fa fa-arrow-circle-up" style="color:{col1}"></i><br> &nbsp; {item2} &nbsp; <i class="fa fa-arrow-up" style="color:{col2}"></i>"""
+      html_itms = item_txt.format(
+          item1="Vessel", col1="red", item2="Lighter Boat", col2="red"
+      )
+
+      legend_html = """
+          <div style="
+          position: fixed; 
+          bottom: 50px; left: 50px; width: 200px; height: 70px; 
+          border:2px solid grey; z-index:9999; 
+
+          background-color:white;
+          opacity: .85;
+
+          font-size:14px;
+          font-weight: bold;
+
+          ">
+          &nbsp; {title} 
+
+          {itm_txt}
+
+          </div> """.format(
+          title="Legend html", itm_txt=html_itms
+      )
+      m.get_root().html.add_child(folium.Element(legend_html))
 
       for f in os.listdir("templates/"):
           # print(f)
@@ -288,10 +315,10 @@ def display_lbo_map(df1, df2):
 
       newHTMLrender = f"{current_datetime}lbomap.html"
       return [2, newHTMLrender]  # render_template(
-        #     newHTMLrender,
-        #     user=session["email"],
-        #     IMO_NOTFOUND=session["IMO_NOTFOUND"],
-        # )
+      #     newHTMLrender,
+      #     user=session["email"],
+      #     IMO_NOTFOUND=session["IMO_NOTFOUND"],
+      # )
 
 
 # data = """{
