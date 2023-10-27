@@ -26,7 +26,7 @@ const FormController: React.FC<FormProps> = ({
       <FormFieldContainer $row={isFormRow}>
         {formFields?.fields?.map(
           (formField: any, index: React.Key | null | undefined) => (
-            <FieldContainer $row={isFormRow}>
+            <FieldContainer $row={isFormRow} key={index}>
               <Field $row={row}>
                 <Label>{formField.label}</Label>
                 {formField.defaultValue !== "undefined" && ( //Temporary approach. will be checked once api's available

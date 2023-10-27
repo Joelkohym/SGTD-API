@@ -126,7 +126,6 @@ function Register() {
         pitstop_url: data.pitstop_url,
       };
       let res:any = await registerUser(API_Methods.Register,requestData)
-      console.log(".....",res)
       if (res.status == 200) {
         alertMessage.current = {
           type: AlertType.Success,

@@ -15,7 +15,8 @@ export const AppRoutes = {
   VesselQuery: "/vesselQuery",
   TableView : "/tableView",
   TriangularModule: "/triangularModule",
-  VesselMap: "/VesselMap"
+  VesselMap: "/VesselMap",
+  VesselETA: "/VesselETA"
 }
 
 export const API_ENDPOINT = "https://sgtd-api-test.onrender.com"

@@ -74,12 +74,11 @@ function Login() {
         email: data.email,
         password: data.password,
       });
-      if (res.status == API_Response_OK) {
+      if (res){
+        localStorage.setItem("access_token" , res.access_token)
         navigate(AppRoutes.TableView);
-      } else {
-        alertMessage.current = "Login Failed! Try Again";
-        handlePopupData();
       }
+
     } catch (error) {
       alertMessage.current = "Login Failed! Try Again";
       handlePopupData();
@@ -105,7 +104,7 @@ function Login() {
         <FormController formFields={formFields} />
         <Footer>
           {" "}
-          Don't have an account? <Link href={AppRoutes.Register}>Register</Link>
+          Don't have an account? <Link onClick={() => navigate(AppRoutes.Register)}>Register</Link>
         </Footer>
       </FormContainer>
       {popupData.isOpen && <Popup />}

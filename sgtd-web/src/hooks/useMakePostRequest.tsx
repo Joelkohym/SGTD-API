@@ -17,7 +17,8 @@ export function useMakePOSTRequest() {
       };
 
       fetch(API_ENDPOINT + methodEndpoint, requestOptions)
-        .then((response) => {
+        .then((response) => response.json())
+          .then( (response) => {
            resolve(response)
         }
         )

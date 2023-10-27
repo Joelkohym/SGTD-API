@@ -5,7 +5,7 @@ import { TbBrandGoogleBigQuery, TbTriangleSquareCircle } from "react-icons/tb";
 import styled from "styled-components";
 import AppColors from "../styles/colors";
 import { Image, sharedFlexCenter } from "../styles/global";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AppRoutes } from "../lib/constants";
 
 interface LayoutProps {
@@ -20,15 +20,9 @@ const NavButtonData = [
     isPublic: true,
   },
   {
-    label: "Table View",
-    link: `/tableView`,
+    label: "Vessel ETA",
+    link: AppRoutes.VesselETA,
     icon: <FaTable size={25} />,
-    isPublic: true,
-  },
-  {
-    label: `Triangular Module`,
-    link: `/triangularModule`,
-    icon: <TbTriangleSquareCircle size={25} />,
     isPublic: true,
   },
   {
@@ -41,6 +35,7 @@ const NavButtonData = [
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [showMenu, setShowMenu] = useState(true);
+  const navigate = useNavigate()
   const location = useLocation();
   return (
     <DrawerContainer>
@@ -64,7 +59,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     <NavLink
                     $isActive={location.pathname == btnData.link}
                     $showMenu={showMenu}
-                    href= {btnData.link}
+                    onClick={() => navigate(btnData.link)}
                     key={index}
                   >
                     <div>{btnData.icon}</div>
