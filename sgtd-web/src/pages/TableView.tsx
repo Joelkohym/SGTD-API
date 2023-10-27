@@ -1,92 +1,149 @@
 import React, { useRef } from "react";
 import Layout from "../components/Layout";
-import { API_Methods, AlertType, Response_Message, formFieldTypes } from "../lib/constants";
-import styled from "styled-components";
-import AppColors from "../styles/colors";
-import FormController from "../components/FormController";
+import Table from "../components/Table";
+import styled, { css } from "styled-components";
+import Button from "../components/Button";
 import { sharedButtonStyle, sharedFlexCenter } from "../styles/global";
-import { useMakePOSTRequest } from "../hooks/useMakePostRequest";
-import { useNavigate } from "react-router-dom";
-import { useResetAtom } from "jotai/utils";
-import { popupAtom } from "../jotai/store";
-import { useAtom } from "jotai";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { CSVLink } from "react-csv";
+import AppColors from "../styles/colors";
+import { Slide, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { PDFColumns, columns, tableData } from "../lib/dummyData";
 
-const TableView: React.FC = () => {
-  const { input, submit, text } = formFieldTypes;
-  const [getVesselTableData] = useMakePOSTRequest()
-  const navigate = useNavigate();
-  const resetPopup = useResetAtom(popupAtom);
-  const [popupData, setPopupData] = useAtom(popupAtom);
-  const alertMessage = useRef("")
+function TableView() {
+  const tableRef = useRef(null);
 
-  const formFields = {
-    fields: [
-      {
-        name: "vessel_imo",
-        label: "Vessel IMO for Table View",
-        placeholder: "Enter Vessel IMO for Table View",
-        defaultValue: "",
-        type: input,
-        inputType: text,
-      },
-    ],
-    buttons: [
-      {
-        name: "Search",
-        type: submit,
-        onSubmitHandler: (data: any) => handleVesselQuery(data),
-        style: sharedButtonStyle,
-      },
-    ],
+  const exportToPDF = () => {
+    const unit = "pt";
+    const size = "A4";
+    const orientation = "portrait";
+
+    const marginLeft = 40;
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const title = "Table Title";
+    doc.text(title, marginLeft, 25);
+    autoTable(doc, {
+      body: [...tableData],
+      columns: PDFColumns,
+    });
+    doc.save("report.pdf");
   };
 
-  const handleVesselQuery = async(data: any) => {
-    try {
-      let res = await getVesselTableData(API_Methods.Table_view, {
-       imo: data.vessel_imo,
-      });
-      if (res == Response_Message.Success) {
-        
-      } else {
-        alertMessage.current = "Login Failed! Try Again";
-        handlePopData();
-      }
-    } catch (error) {
-      alertMessage.current = "Login Failed! Try Again";
-      handlePopData();
-    }
-  }
+  const csvData = [
+    ["INDEX", "Due To Arrive Time", "locationFrom", "Vessel Name", "Call Sign", "IMO number","Flag", "Due To Depart Time"],
+    ...tableData.map(({ index, duetoArriveTime, locationFrom, vesselName, callSign, IMOnumber, flag,dueToDepartTime }) => [
+      index + 1,
+      duetoArriveTime,
+      locationFrom,
+      vesselName,
+      callSign,
+      IMOnumber,
+      flag,
+      dueToDepartTime
+    ]),
+  ];
 
-  function handlePopData() {
-    setPopupData({
-      isOpen: true,
-      message: alertMessage.current,
-      type: AlertType.Error,
-      btnHandler: resetPopup,
-    });
-  }
-  
+  const copyTable = () => {
+    const elTable = document.querySelector("table");
+    let range, sel;
+    if (document.createRange && window.getSelection) {
+      range = document.createRange();
+      sel = window.getSelection();
+      sel && sel.removeAllRanges();
+      if (elTable && sel) {
+        try {
+          range.selectNodeContents(elTable);
+          sel.addRange(range);
+        } catch (e) {
+          range.selectNode(elTable);
+          sel.addRange(range);
+        }
+      }
+      document.execCommand("copy");
+    }
+
+    sel && sel.removeAllRanges();
+
+    toast.success("Copied to clipboard!!");
+  };
+
   return (
     <Layout>
-      <FormContainer>
-        <Title>Table view for IMO</Title>
-        <FormController formFields={formFields} />
-      </FormContainer>
+      <Section>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={2000}
+          transition={Slide}
+        />
+        <BtnContainer>
+          <Button
+            title={"PDF"}
+            clickHandler={exportToPDF}
+            buttonStyle={btnStyle}
+          />
+
+          <StyledCSVLink filename="my-file.csv" data={csvData}>
+            CSV
+          </StyledCSVLink>
+          <Button
+            title={"COPY"}
+            clickHandler={copyTable}
+            buttonStyle={btnStyle}
+          />
+        </BtnContainer>
+        <TableContainer ref={tableRef}>
+          <Table
+            title={"Table view"}
+            data={tableData}
+            columns={columns}
+            id={"my-table"}
+          />
+        </TableContainer>
+      </Section>
     </Layout>
   );
-};
+}
 
 export default TableView;
 
-export const FormContainer = styled.div`
-  background: ${AppColors.White};
-  width: 25rem;
-  height: 20rem;
-  ${sharedFlexCenter}
-  flex-direction: column;
-  box-shadow: 2px 2px 10px 2px ${AppColors.ThemePurple};
+const TableContainer = styled.div`
+  width: 90%;
 `;
 
-export const Title = styled.h3`
-  padding: 1rem;
+const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 90%;
+  align-items: center;
+`;
+
+const BtnContainer = styled.div`
+  margin: 1rem;
+  align-self: flex-end;
+  ${sharedFlexCenter};
+  justify-content: flex-end;
+`;
+
+const btnStyle = css`
+  ${sharedButtonStyle}
+  width: 5rem;
+  margin: 0 0.5rem;
+`;
+
+const StyledCSVLink = styled(CSVLink)`
+  display: block;
+  font-weight: 600;
+  border-radius: 0.25rem;
+  ${btnStyle}
+  text-decoration: none;
+  font-size: 0.8rem;
+  color: ${AppColors.White};
+  cursor: pointer;
+  text-align: center;
 `;
