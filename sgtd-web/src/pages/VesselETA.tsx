@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import Layout from "../components/Layout";
-import { API_Methods, AlertType, Response_Message, formFieldTypes } from "../lib/constants";
+import { API_Methods, AlertType, AppRoutes, Response_Message, formFieldTypes } from "../lib/constants";
 import styled from "styled-components";
 import AppColors from "../styles/colors";
 import FormController from "../components/FormController";
@@ -41,6 +41,7 @@ const VesselETA: React.FC = () => {
   };
 
   const handleVesselQuery = async(data: any) => {
+    navigate(AppRoutes.TableView)
     try {
       let res = await getVesselTableData(API_Methods.Table_view, {
        imo: data.vessel_imo,
