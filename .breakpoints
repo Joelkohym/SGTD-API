@@ -1,12 +1,3 @@
 {
-  "files": {
-    "requirements.txt": [
-      {
-        "id": "6200a89a-c669-4ce0-b126-990d42b0af5a",
-        "line": 13,
-        "version": 102,
-        "index": 111
-      }
-    ]
-  }
+  "files": {}
 }
