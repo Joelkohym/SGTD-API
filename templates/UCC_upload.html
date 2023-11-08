@@ -132,13 +132,22 @@ body {
           </nav>
       
       </header>
+  
+    <div class="container mt-5">
+      <select> 
+      {% for data in nepsejson %}
+          <option value="name">{{ data.Company_Name }}</option>
+      {% endfor %}
+
+      </select>
+    
     <form action = "/api/triangular_upload" method="POST" enctype="multipart/form-data">
     <label class="custom-file-input-label" for="fileInput">Choose Files</label>
     <input type="file" id="fileInput" name="files[]" multiple class="custom-file-input" accept=".csv"  />
     <input type="submit" value="Upload" class="upload-button">
     </form>
     <ul id="fileList"></ul>
-
+    </div>
 </body>
 
 
