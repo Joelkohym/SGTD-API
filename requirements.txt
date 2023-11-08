@@ -10,3 +10,4 @@ Flask-MySQLdb
 pytz
 folium
 flask-swagger-ui
+mysqlclient == 2.1.1

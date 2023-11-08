@@ -533,100 +533,100 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
 
 
 
-# CREATE TABLE vessel_movement_UCE (
-# 	id int NOT NULL AUTO_INCREMENT,
-#     vessel_nm VARCHAR(255),
-#     vessel_imo_no VARCHAR(255),
-#     vessel_flag VARCHAR(255),
-#     vessel_call_sign VARCHAR(255),
-#     vessel_location_from VARCHAR(255),
-#     vessel_location_to VARCHAR(255),
-#     vessel_movement_height VARCHAR(255),
-#     vessel_movement_type VARCHAR(255),
-#     vessel_movement_start_dt DATETIME,
-#     vessel_movement_end_dt DATETIME,
-#     vessel_movement_status VARCHAR(255),
-#     vessel_movement_draft VARCHAR(255),
-#     Timestamp_vessel_movement DATETIME,
-#     Timestamp_query DATETIME default now(),
-#     PRIMARY KEY (`id`)
-# );
+CREATE TABLE vessel_movement_UCE (
+	id int NOT NULL AUTO_INCREMENT,
+    vessel_nm VARCHAR(255),
+    vessel_imo_no VARCHAR(255),
+    vessel_flag VARCHAR(255),
+    vessel_call_sign VARCHAR(255),
+    vessel_location_from VARCHAR(255),
+    vessel_location_to VARCHAR(255),
+    vessel_movement_height VARCHAR(255),
+    vessel_movement_type VARCHAR(255),
+    vessel_movement_start_dt DATETIME,
+    vessel_movement_end_dt DATETIME,
+    vessel_movement_status VARCHAR(255),
+    vessel_movement_draft VARCHAR(255),
+    Timestamp_vessel_movement DATETIME,
+    Timestamp_query DATETIME default now(),
+    PRIMARY KEY (`id`)
+);
 
-# CREATE TABLE vessel_current_position_UCE (
-# 	id int NOT NULL AUTO_INCREMENT,
-#     vessel_nm VARCHAR(255),
-#     vessel_imo_no VARCHAR(255),
-#     vessel_call_sign VARCHAR(255),
-#     vessel_flag VARCHAR(255),
-#     vessel_length FLOAT,
-#     vessel_depth FLOAT,
-#     vessel_type VARCHAR(255),
-#     vessel_grosstonnage FLOAT,
-#     vessel_nettonnage FLOAT,
-#     vessel_deadweight FLOAT,
-#     vessel_mmsi_number VARCHAR(255),
-#     vessel_year_built INT,
-#     vessel_latitude DECIMAL(10, 6),
-#     vessel_longitude DECIMAL(10, 6),
-#     vessel_latitude_degrees DECIMAL(10, 6),
-#     vessel_longitude_degrees DECIMAL(10, 6),
-#     vessel_speed FLOAT,
-#     vessel_course FLOAT,
-#     vessel_heading FLOAT,
-#     vessel_time_stamp DATETIME,
-#     Timestamp_vessel_current_position DATETIME,
-#     Timestamp_query DATETIME default now(),
-#     PRIMARY KEY (`id`)
-# );
+CREATE TABLE vessel_current_position_UCE (
+	id int NOT NULL AUTO_INCREMENT,
+    vessel_nm VARCHAR(255),
+    vessel_imo_no VARCHAR(255),
+    vessel_call_sign VARCHAR(255),
+    vessel_flag VARCHAR(255),
+    vessel_length FLOAT,
+    vessel_depth FLOAT,
+    vessel_type VARCHAR(255),
+    vessel_grosstonnage FLOAT,
+    vessel_nettonnage FLOAT,
+    vessel_deadweight FLOAT,
+    vessel_mmsi_number VARCHAR(255),
+    vessel_year_built INT,
+    vessel_latitude DECIMAL(10, 6),
+    vessel_longitude DECIMAL(10, 6),
+    vessel_latitude_degrees DECIMAL(10, 6),
+    vessel_longitude_degrees DECIMAL(10, 6),
+    vessel_speed FLOAT,
+    vessel_course FLOAT,
+    vessel_heading FLOAT,
+    vessel_time_stamp DATETIME,
+    Timestamp_vessel_current_position DATETIME,
+    Timestamp_query DATETIME default now(),
+    PRIMARY KEY (`id`)
+);
 
-# CREATE TABLE MPA_arrivaldeclaration (
-#     id INT AUTO_INCREMENT PRIMARY KEY,
-#     vessel_name VARCHAR(255),
-#     call_sign VARCHAR(255),
-#     imo_number VARCHAR(255),
-#     flag VARCHAR(255),
-#     location VARCHAR(255),
-#     grid VARCHAR(255),
-#     purpose VARCHAR(255),
-#     agent VARCHAR(255),
-#     reported_arrival_time DATETIME
-# );
+CREATE TABLE MPA_arrivaldeclaration (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    vessel_name VARCHAR(255),
+    call_sign VARCHAR(255),
+    imo_number VARCHAR(255),
+    flag VARCHAR(255),
+    location VARCHAR(255),
+    grid VARCHAR(255),
+    purpose VARCHAR(255),
+    agent VARCHAR(255),
+    reported_arrival_time DATETIME
+);
 
-# CREATE TABLE MPA_vessel_data (
-# 	id int NOT NULL AUTO_INCREMENT,
-#     vesselName VARCHAR(255),
-# 	callsign VARCHAR(255),
-#     imoNumber VARCHAR(255),
-#     flag VARCHAR(255),
-#     vesselLength FLOAT,
-#     vesselBreadth FLOAT,
-#     vesselDepth FLOAT,
-#     vesselType VARCHAR(255),
-#     grossTonnage FLOAT,
-#     netTonnage FLOAT,
-#     deadweight FLOAT,
-#     mmsiNumber VARCHAR(255),
-#     yearBuilt INT,
-#     latitude DECIMAL(10, 6),
-#     longitude DECIMAL(10, 6),
-#     latitudeDegrees DECIMAL(10, 6),
-#     longitudeDegrees DECIMAL(10, 6),
-#     speed FLOAT,
-#     course FLOAT,
-#     heading FLOAT,
-#     timeStamp DATETIME,
-#     time_queried DATETIME default now(),
-#     PRIMARY KEY (`id`)
-# );
+CREATE TABLE MPA_vessel_data (
+	id int NOT NULL AUTO_INCREMENT,
+    vesselName VARCHAR(255),
+	callsign VARCHAR(255),
+    imoNumber VARCHAR(255),
+    flag VARCHAR(255),
+    vesselLength FLOAT,
+    vesselBreadth FLOAT,
+    vesselDepth FLOAT,
+    vesselType VARCHAR(255),
+    grossTonnage FLOAT,
+    netTonnage FLOAT,
+    deadweight FLOAT,
+    mmsiNumber VARCHAR(255),
+    yearBuilt INT,
+    latitude DECIMAL(10, 6),
+    longitude DECIMAL(10, 6),
+    latitudeDegrees DECIMAL(10, 6),
+    longitudeDegrees DECIMAL(10, 6),
+    speed FLOAT,
+    course FLOAT,
+    heading FLOAT,
+    timeStamp DATETIME,
+    time_queried DATETIME default now(),
+    PRIMARY KEY (`id`)
+);
 
 
-# CREATE TABLE IF NOT EXISTS vessel_due_to_arrive_UCE (
-#         id INT AUTO_INCREMENT PRIMARY KEY,
-#         vessel_name VARCHAR(255),
-#         call_sign VARCHAR(255),
-#         imo_number VARCHAR(255),
-#         flag VARCHAR(255),
-#         due_to_arrive_dt DATETIME,
-#         location_from VARCHAR(255),
-#         location_to VARCHAR(255)
-#     )
+CREATE TABLE IF NOT EXISTS vessel_due_to_arrive_UCE (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        vessel_name VARCHAR(255),
+        call_sign VARCHAR(255),
+        imo_number VARCHAR(255),
+        flag VARCHAR(255),
+        due_to_arrive_dt DATETIME,
+        location_from VARCHAR(255),
+        location_to VARCHAR(255)
+    )
