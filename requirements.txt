@@ -4,7 +4,6 @@ requests
 pygsheets
 pandas
 leafmap
-geopandas
 sqlalchemy
 pymysql
 Flask-MySQLdb

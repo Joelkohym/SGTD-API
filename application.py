@@ -39,8 +39,6 @@ from flask_swagger_ui import get_swaggerui_blueprint
 
 from db_GNSS import GET_LBO_GNSS_Data, GET_LBO_GNSS_Token, display_lbo_map
 
-from package_API_SGTD import get_participants,display_selected_data,remove_empty,convert_keys_to_nested_structure,convert_values,cleanup_PUSH_JSON,process_file,create_folder_and_package,open_file_dialog,get_system_data
-
 application = app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = os.environ['MYSQL_HOST']
