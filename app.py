@@ -39,8 +39,6 @@ from flask_swagger_ui import get_swaggerui_blueprint
 
 from db_GNSS import GET_LBO_GNSS_Data, GET_LBO_GNSS_Token, display_lbo_map
 
-from package_API_SGTD import get_participants,display_selected_data,remove_empty,convert_keys_to_nested_structure,convert_values,cleanup_PUSH_JSON,process_file,create_folder_and_package,open_file_dialog,get_system_data
-
 application = app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = os.environ['MYSQL_HOST']
@@ -506,15 +504,15 @@ def Vessel_map():
 def UCC_upload():
     if g.user:
         email = session["email"]
-        base_url = "https://sgtradexdummy-lbs.pitstop.uat.sgtradex.io/"
-        participant_id_lbs = "848a81a3-7d00-4390-b604-a2ca6251ecc8"
+        # base_url = "https://sgtradexdummy-lbs.pitstop.uat.sgtradex.io/"
+        # participant_id_lbs = "848a81a3-7d00-4390-b604-a2ca6251ecc8"
   
-        participant_name_lbs = "SGTraDex Dummy - Licensed Bunker Supplier"
-        participant_sourceSystem_id_lbs = "824dd507-712a-44fb-8989-c00143f00cad"
-        participant_sourceSystem_id_lbs = "70a3f53d-f21e-4cae-aa98-9f3eef4abf17"
-        api_url = "https://sgtradexdummy-lbs.pitstop.uat.sgtradex.io/api/v1/config"  # Replace with the actual API endpoint
-        system_data = get_system_data(api_url, api_key)
-        participant_data = get_participants(system_data)
+        # participant_name_lbs = "SGTraDex Dummy - Licensed Bunker Supplier"
+        # participant_sourceSystem_id_lbs = "824dd507-712a-44fb-8989-c00143f00cad"
+        # participant_sourceSystem_id_lbs = "70a3f53d-f21e-4cae-aa98-9f3eef4abf17"
+        # api_url = "https://sgtradexdummy-lbs.pitstop.uat.sgtradex.io/api/v1/config"  # Replace with the actual API endpoint
+        # system_data = get_system_data(api_url, api_key)
+        # participant_data = get_participants(system_data)
 
         return render_template("UCC_upload.html", email=email)
     else:
