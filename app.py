@@ -269,7 +269,6 @@ def table_pull():
             session["IMO_NOTFOUND"] = []
             session["TABLE_IMO_NOTFOUND"] = []
             # Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
-            print(f'Session gc = {session["gc"]}')
             delete_all_rows_table_view(session["gc"])
             user_vessel_imo = request.form["imo"]
             try:
