@@ -332,6 +332,7 @@ def table_pull():
 @app.route("/table_view_request/<imo>", methods=["GET", "POST"])
 def table_view_request(imo):
     if g.user:
+        print("+++++++++++G.USER VALID, STARTING /table_view_request/<imo>++++++++++++++++++")
         try:
             imo_list = imo.split(",")
             print(f"IMO ==== {imo}")
