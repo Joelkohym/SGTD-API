@@ -265,6 +265,7 @@ def table_view():
 @app.route("/api/table_pull", methods=["GET", "POST"])
 def table_pull():
     if g.user:
+      print("+++++++++++G.USER VALID, STARTING /api/table_pull++++++++++++++++++")
         if request.method == "POST":
             session["IMO_NOTFOUND"] = []
             session["TABLE_IMO_NOTFOUND"] = []
