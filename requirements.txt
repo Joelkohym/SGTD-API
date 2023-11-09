@@ -2,7 +2,8 @@ Flask==2.3.2
 gunicorn
 requests==2.31.0
 pandas==1.5.3
-leafmap
+leafmap==0.23.4
+geopandas==0.13.2
 sqlalchemy==2.0.20
 pymysql==1.1.0
 Flask-MySQLdb==1.0.1
@@ -22,3 +23,4 @@ mysqlclient==2.1.1
 Werkzeug==3.0.0
 zipp==3.11.0
 urllib3==1.26.6
+
