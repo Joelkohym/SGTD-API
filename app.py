@@ -362,6 +362,7 @@ def table_view_request(imo):
                 print(f"merge_arrivedepart_declaration_df = {render_html}")
                 return render_template(render_html)
         except:
+            print("Please check /table_view_request/<imo>. Something went wrong with the data, please ensure IMO Number is valid.")
             return (
                 render_template(
                     "table_view.html",
