@@ -2,7 +2,7 @@ Flask==2.3.2
 gunicorn
 requests==2.31.0
 pandas==1.5.3
-leafmap==0.23.4
+leafmap
 sqlalchemy==2.0.20
 pymysql==1.1.0
 Flask-MySQLdb==1.0.1
