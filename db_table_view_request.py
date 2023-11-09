@@ -41,15 +41,17 @@ def get_data_from_MPA_Vessel_Arrival_Declaration(input_list):
                 # Print the latest record
             if latest_record:
                 print(json.dumps(latest_record, indent=4))
+                print(
+                  f"Declaration_df get_data_from_MPA_Vessel_Arrival_Declaration == {Declaration_df}"
+              )
                 Declaration_df = Declaration_df.append(
                     pd.json_normalize(latest_record), ignore_index=True
                 )
-                print(
-                    f"Declaration_df get_data_from_MPA_Vessel_Arrival_Declaration == {Declaration_df}"
-                )
+                
 
             else:
                 print("No records with reported arrival times found.")
+                x = ""
     # Apply the mapping to the "purpose" column in Declaration_df
 
     Declaration_df["purpose"] = Declaration_df["purpose"].apply(map_purpose)
