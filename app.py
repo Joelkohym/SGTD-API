@@ -96,6 +96,7 @@ def login():
                 return render_template("login.html", msg=msg), 401
         except Exception as e:
             msg = "Log in failed, please try again."
+            print(f"Log in failed, please try again. Error = {e}")
             print("Log in failed, please contact admin")
             return render_template("login.html", msg=msg), 403
         # if request.data['username'] and request.data['password'] in db:
@@ -341,9 +342,15 @@ def table_view_request(imo):
             # ======================== START GET MPA Vessel Arrival Declaration by IMO Number =============
             Declaration_df = get_data_from_MPA_Vessel_Arrival_Declaration(imo_list)
             # ======================== END GET MPA Vessel Arrival Declaration by IMO Number =============
+          
             # ======================== START GET MPA Vessel Due to Arrive and Depart by next 99 hours  =============
             MPA_arrive_depart_df = get_data_from_vessel_due_to_arrive_and_depart()
             # ======================== END GET MPA Vessel Due to Arrive and Depart by next 99 hours =============
+          
+            # ======================== START GET Vessel Finder Vessel Data  =============
+            VF_Single_Vessel_Positions_df = get_data_from_single_vessel_positions(imo)
+            # ======================== END GET Vessel Finder Vessel Data  =============
+          
             # Filter the DataFrame based on imoNumbers
             filtered_df_before = MPA_arrive_depart_df[
                 MPA_arrive_depart_df["vesselParticulars.imoNumber"].isin(imo_list)
@@ -353,7 +360,7 @@ def table_view_request(imo):
                 msg = "IMO cannot be found, please try another IMO.."
                 return render_template("table_view.html", msg=msg), 404
             render_html = merge_arrivedepart_declaration_df(
-                filtered_df_before, Declaration_df
+                filtered_df_before, Declaration_df, VF_Single_Vessel_Positions_df
             )
             if render_html == 1:
                 return render_template("table_view.html"), 206
@@ -405,7 +412,7 @@ def register():
         print(data)
         r_status = new_registration(data)
         if r_status == 1:
-            msg = "You have successfully registered!, please send Admin gsheet credentials file."
+            msg = "You have successfully registered!, please approach Admin to setup DB credentials."
             return render_template("login.html", msg=msg)
         else:
             msg = "Your email exists in database! Please reach out to Admin if you need assistance."

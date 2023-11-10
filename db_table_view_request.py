@@ -6,6 +6,55 @@ import requests
 from datetime import datetime
 import pytz
 
+def get_data_from_single_vessel_positions(imo_list):
+  single_vessel_positions_df = pd.DataFrame()
+  print("Start of get_data_from_single_vessel_positions.............")
+  print(f"input_list = {imo_list}")
+  
+  api_key = os.environ['VF_API_KEY']
+  base_url = f"https://api.vesselfinder.com/vessels?userkey={api_key}"
+
+  VF_ais_response = requests.get(f"{base_url}&imo={imo_list}")
+  print(f"VF_ais_response.json() = {VF_ais_response.json()}")
+  VF_ais_data = VF_ais_response.json()
+
+  VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
+  single_vessel_positions_df = pd.DataFrame(VF_ais_info)
+  print(f"single_vessel_positions_df = {single_vessel_positions_df}")
+  single_vessel_positions_df.rename(
+      columns={
+          "MMSI": "mmsiNumber",
+          "TIMESTAMP": "timeStamp",
+          "LATITUDE": "latitudeDegrees",
+          "LONGITUDE": "longitudeDegrees",
+          "COURSE": "course",
+          "SPEED": "speed",
+          "HEADING": "heading",
+          "IMO": "imoNumber",
+          "CALLSIGN": "callSign",
+      },
+      inplace=True,
+  )
+  single_vessel_positions_df.drop(
+      columns=[
+          "A",
+          "B",
+          "C",
+          "D",
+          "ECA",
+          "LOCODE",
+          "SRC",
+          "DRAUGHT",
+          "NAVSTAT",
+      ],
+      inplace=True,
+  )
+
+  # print(VF_ais_info)
+  print(single_vessel_positions_df)
+  return single_vessel_positions_df
+
+
 def get_data_from_MPA_Vessel_Arrival_Declaration(input_list):
     Declaration_df = pd.DataFrame()
     print("Start of get_data_from_MPA_Vessel_Arrival_Declaration.............")
@@ -47,11 +96,8 @@ def get_data_from_MPA_Vessel_Arrival_Declaration(input_list):
                 Declaration_df = Declaration_df.append(
                     pd.json_normalize(latest_record), ignore_index=True
                 )
-                
-
             else:
                 print("No records with reported arrival times found.")
-                x = ""
     # Apply the mapping to the "purpose" column in Declaration_df
 
     Declaration_df["purpose"] = Declaration_df["purpose"].apply(map_purpose)
@@ -79,7 +125,6 @@ def map_purpose(row):
         return "No Purpose Specified"
     # If none of the values are 'Y', return a default value (you can change this as needed)
     return ", ".join(selected_indicators)
-
 
 # get VDA from MPA API
 def get_data_from_vessel_due_to_arrive_and_depart():
@@ -134,7 +179,7 @@ def get_data_from_vessel_due_to_arrive_and_depart():
     return merged_df
 
 
-def merge_arrivedepart_declaration_df(filtered_df_before, Declaration_df):
+def merge_arrivedepart_declaration_df(filtered_df_before, Declaration_df, VF_Single_Vessel_Positions_df):
     # Merge Declaration_df with filtered_df
     filtered_df = filtered_df_before.merge(
         Declaration_df,
@@ -160,9 +205,9 @@ def merge_arrivedepart_declaration_df(filtered_df_before, Declaration_df):
     filtered_df.rename(
         columns={
             "vesselParticulars.vesselName_x": "vesselName",
-            "vesselParticulars.callSign_x": "callSign",
+            "vesselParticulars.callSign_x": "callSignMPA",
             "vesselParticulars.flag_x": "flag",
-            "vesselParticulars.imoNumber": "IMO number",
+            "vesselParticulars.imoNumber": "imoNumber",
             "dueToDepart": "dueToDepartTime",
             # To be reviewed in future
             "locationTo": "locationFrom",
@@ -170,6 +215,38 @@ def merge_arrivedepart_declaration_df(filtered_df_before, Declaration_df):
         inplace=True,
     )
 
+    #vessel finder DF
+    print(f"filtered_df...")
+    print(filtered_df)
+    print(f"VF_Single_Vessel_Positions_df...")
+    print(VF_Single_Vessel_Positions_df)
+  
+    filtered_df["imoNumber"] = filtered_df["imoNumber"].astype(int)
+    VF_Single_Vessel_Positions_df["imoNumber"] = VF_Single_Vessel_Positions_df[
+        "imoNumber"
+    ].astype(int)
+    Final_df = VF_Single_Vessel_Positions_df.merge(
+        filtered_df,
+        how="outer",
+        on="imoNumber",
+    )
+    # Reorder columns in place
+    desired_column_order = [
+      "imoNumber",
+      "NAME",
+      "DESTINATION",
+      "ETA",
+      "duetoArriveTime",
+      "dueToDepartTime",
+      "callSign",
+      "flag",
+      "speed",
+      "timeStamp",
+    ]
+    Final_df = Final_df[desired_column_order]
+    print(f"Final_df = {Final_df}")
+    filtered_df = Final_df
+  
     print(f"filtered_df = {filtered_df}")
     with open("templates/Banner table.html", "r") as file:
         menu_banner_html = file.read()
