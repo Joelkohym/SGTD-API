@@ -235,7 +235,7 @@ def merge_arrivedepart_declaration_df(filtered_df_before, Declaration_df, VF_Sin
       "imoNumber",
       "NAME",
       "DESTINATION",
-      "ETA",
+      "ETA_AIS",
       "duetoArriveTime",
       "dueToDepartTime",
       "callSign",
