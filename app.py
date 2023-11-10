@@ -13,7 +13,7 @@ import time
 import pytz 
 import os
 import threading
-from db_Vessel_map import get_map_data, display_map
+from db_Vessel_map import get_map_data, display_map, get_data_from_VF_vessels
 from db_Vessel_data_pull import delete_all_rows_vessel_location, PULL_GET_VCP_VDA_MPA
 from db_table_pull import (
     delete_all_rows_table_view,
@@ -103,7 +103,7 @@ def login():
         # if request.data['username'] and request.data['password'] in db:
         #   user_data = load_data_from_db()
     if request.method == "GET":
-        print("Requets == GET")
+        print("Request == GET")
         return render_template("login.html")
 
 
@@ -140,6 +140,11 @@ def LBO_data_pull():
             user_vessel_imo = request.form["imo"]
             user_lbo_imei = request.form["lbo_imei"]
             print(f"len(user_vessel_imo) = {len(user_vessel_imo)}")
+            if len(user_vessel_imo) == 0 and len(user_lbo_imei) == 0:
+              return render_template(
+                  "GNSS_request.html",
+                  msg="Please enter IMO or IMEI number.",
+              )
             if len(user_vessel_imo) > 1:
                 # Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
                 delete_all_rows_vessel_location(session["gc"])
@@ -168,7 +173,27 @@ def LBO_data_pull():
                     )
                     DB_queried_data = get_map_data(session["gc"])
                     df2 = pd.DataFrame(DB_queried_data[0])
-                    print(f"df1 VESSEL MAP = {df2.to_string(index=False, header=True)}")
+                    print(f"app.py /api/lbo df2 VESSEL MAP = {df2.to_string(index=False, header=True)}")
+
+                    # Get Vessel Finder DF and merge
+                    VF_df = get_data_from_VF_vessels(user_vessel_imo)
+                    print(f"app.py /api/lbo VF_df == {VF_df")
+                    if df2.empty and VF_df.empty:
+                        return (
+                            render_template(
+                                "GNSS_request.html",
+                                msg=f"No data found. Please try again.",
+                            ),
+                            406,
+                        )
+                    if df2.empty:
+                        print(f"df2==empty, only display VF_df, no merge....")
+                        df2 = VF_df
+                    else:
+                        merged_df = merged_MPA_VF_df(df2, VF_df)
+                        print(f"merged_df LBO MAP == {merged_df}")
+                        df2 = merged_df
+              
                 except:
                     return (
                         render_template(

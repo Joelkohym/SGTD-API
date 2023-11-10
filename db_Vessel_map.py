@@ -6,6 +6,7 @@ from datetime import datetime
 import folium
 import leafmap.foliumap as leafmap
 import random
+import requests
 
 colors = [
     "red",
@@ -28,6 +29,56 @@ colors = [
     "black",
     "lightgray",
 ]
+
+
+def get_data_from_VF_vessels(imo_list):
+  single_vessel_positions_df = pd.DataFrame()
+  print("Start of get_data_from_single_vessel_positions.............")
+  print(f"input_list = {imo_list}")
+
+  api_key = "WS-00555FCD-8CD037"
+
+  base_url = f"https://api.vesselfinder.com/vessels?userkey={api_key}"
+
+  VF_ais_response = requests.get(f"{base_url}&imo={imo_list}")
+  print(f"VF_ais_response.json() = {VF_ais_response.json()}")
+  VF_ais_data = VF_ais_response.json()
+
+  VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
+  single_vessel_positions_df = pd.DataFrame(VF_ais_info)
+  print(f"single_vessel_positions_df = {single_vessel_positions_df}")
+  single_vessel_positions_df.rename(
+      columns={
+          "MMSI": "mmsiNumber",
+          "TIMESTAMP": "timeStamp",
+          "LATITUDE": "latitudeDegrees",
+          "LONGITUDE": "longitudeDegrees",
+          "COURSE": "course",
+          "SPEED": "speed",
+          "HEADING": "heading",
+          "IMO": "imoNumber",
+          "CALLSIGN": "callSign",
+      },
+      inplace=True,
+  )
+  single_vessel_positions_df.drop(
+      columns=[
+          "A",
+          "B",
+          "C",
+          "D",
+          "ECA",
+          "LOCODE",
+          "SRC",
+          "DRAUGHT",
+          "NAVSTAT",
+      ],
+      inplace=True,
+  )
+
+  # print(VF_ais_info)
+  print(single_vessel_positions_df)
+  return single_vessel_positions_df
 
 
 # Merge database data for MAP

@@ -33,6 +33,56 @@ colors = [
     "lightgray",
 ]
 
+def get_data_from_VF_vessels(imo_list):
+  single_vessel_positions_df = pd.DataFrame()
+  print("Start of get_data_from_single_vessel_positions.............")
+  print(f"input_list = {imo_list}")
+
+  api_key = "WS-00555FCD-8CD037"
+
+  base_url = f"https://api.vesselfinder.com/vessels?userkey={api_key}"
+
+  VF_ais_response = requests.get(f"{base_url}&imo={imo_list}")
+  print(f"VF_ais_response.json() = {VF_ais_response.json()}")
+  VF_ais_data = VF_ais_response.json()
+
+  VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
+  single_vessel_positions_df = pd.DataFrame(VF_ais_info)
+  print(f"single_vessel_positions_df = {single_vessel_positions_df}")
+  single_vessel_positions_df.rename(
+      columns={
+          "MMSI": "mmsiNumber",
+          "TIMESTAMP": "timeStamp",
+          "LATITUDE": "latitudeDegrees",
+          "LONGITUDE": "longitudeDegrees",
+          "COURSE": "course",
+          "SPEED": "speed",
+          "HEADING": "heading",
+          "IMO": "imoNumber",
+          "CALLSIGN": "callSign",
+      },
+      inplace=True,
+  )
+  single_vessel_positions_df.drop(
+      columns=[
+          "A",
+          "B",
+          "C",
+          "D",
+          "ECA",
+          "LOCODE",
+          "SRC",
+          "DRAUGHT",
+          "NAVSTAT",
+      ],
+      inplace=True,
+  )
+
+  # print(VF_ais_info)
+  print(single_vessel_positions_df)
+  return single_vessel_positions_df
+
+
 
 def GET_LBO_GNSS_Token():
     access_token = ""
@@ -192,7 +242,7 @@ def display_lbo_map(df1, df2):
       # print(f"df1 LBO_map = {df1}")
       # print(f"df2 Vessel_map = {df2}")
       df = df1
-      m = folium.Map(location=[1.257167, 103.897], zoom_start=9)
+      m = folium.Map(location=[1.257167, 103.897], zoom_start=5)
       color_mapping = {}
       ship_image = "static/images/ship.png"
       # Add several LBO markers to the map
@@ -227,7 +277,7 @@ def display_lbo_map(df1, df2):
               icon_color = color_mapping[imo_number]
               # if int(row["yearBuilt"]) > 2010:
               icon_html = folium.DivIcon(
-                  html=f'<i class="fa fa-arrow-circle-up" style="color: {icon_color}; font-size: {int(row["vesselLength"])/10}px; transform: rotate({row["heading"]}deg);"></i>'
+                  html=f'<i class="fa fa-arrow-circle-up" style="color: {icon_color}; font-size: 20px; transform: rotate({row["heading"]}deg);"></i>'
               )
               # else:
               #     # icon_html = f'<i class="fa fa-ship" style="color: {icon_color}; font-size: {int(row["vesselLength"])/10}px; transform: rotate({row["heading"]}deg);"></i>'
