@@ -4,6 +4,7 @@ requests
 pygsheets
 pandas==1.5.3
 leafmap
+geopandas
 sqlalchemy
 pymysql
 Flask-MySQLdb
