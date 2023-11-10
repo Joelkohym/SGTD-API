@@ -177,7 +177,8 @@ def LBO_data_pull():
 
                     # Get Vessel Finder DF and merge
                     VF_df = get_data_from_VF_vessels(user_vessel_imo)
-                    print(f"app.py /api/lbo VF_df == {VF_df")
+                    print(f"app.py /api/lbo VF_df == {VF_df}")
+                    
                     if df2.empty and VF_df.empty:
                         return (
                             render_template(
