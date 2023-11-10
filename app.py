@@ -25,6 +25,7 @@ from db_table_view_request import (
     get_data_from_MPA_Vessel_Arrival_Declaration,
     get_data_from_vessel_due_to_arrive_and_depart,
     merge_arrivedepart_declaration_df,
+    get_data_from_single_vessel_positions,
 )
 from database import (
     new_registration,
