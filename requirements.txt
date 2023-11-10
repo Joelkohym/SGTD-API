@@ -3,7 +3,7 @@ gunicorn
 requests==2.31.0
 pandas==1.5.3
 leafmap
-sqlalchemy==2.0.20
+SQLAlchemy==2.0.20
 pymysql==1.1.0
 Flask-MySQLdb==1.0.1
 pytz==2022.7.1
@@ -18,7 +18,6 @@ itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.1
 mysqlclient==2.1.1
-SQLAlchemy==1.4.44
 Werkzeug==2.2.2
 zipp==3.11.0
 urllib3==1.26.6
