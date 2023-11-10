@@ -242,7 +242,7 @@ def display_lbo_map(df1, df2):
       # print(f"df1 LBO_map = {df1}")
       # print(f"df2 Vessel_map = {df2}")
       df = df1
-      m = folium.Map(location=[1.257167, 103.897], zoom_start=5)
+      m = folium.Map(location=[1.257167, 103.897], zoom_start=3)
       color_mapping = {}
       ship_image = "static/images/ship.png"
       # Add several LBO markers to the map
