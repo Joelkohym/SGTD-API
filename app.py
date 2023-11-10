@@ -194,11 +194,11 @@ def LBO_data_pull():
                         print(f"merged_df LBO MAP == {merged_df}")
                         df2 = merged_df
               
-                except:
+                except Exception as e:
                     return (
                         render_template(
                             "GNSS_request.html",
-                            msg="Invalid Vessel IMO. Please ensure Vessel IMO is valid.",
+                            msg=f"Invalid Vessel IMO. Please ensure Vessel IMO is valid. Error = {e}",
                         ),
                         406,
                     )
@@ -265,11 +265,11 @@ def LBO_data_pull():
                         print(display_data)
                         return render_template(display_data), 200
 
-                except:
+                except Exception as e:
                     return (
                         render_template(
                             "GNSS_request.html",
-                            msg="Invalid IMEI. Please ensure IMEI is valid.",
+                            msg=f"Invalid IMEI. Please ensure IMEI is valid. Error = {e}",
                         ),
                         406,
                     )
@@ -340,11 +340,11 @@ def table_pull():
                 # ========================    END PULL vessel_due_to_arrive         ===========================
 
                 return redirect(url_for("table_view_request", imo=user_vessel_imo)), 303
-            except:
+            except Exception as e:
                 return (
                     render_template(
                         "table_view.html",
-                        msg="Invalid IMO. Please ensure at IMO is valid.",
+                        msg=f"Invalid IMO. Please ensure at IMO is valid. Error = {e}",
                     ),
                     400,
                 )
@@ -396,7 +396,7 @@ def table_view_request(imo):
                 return render_template(render_html)
         except Exception as e:
             print(e)
-            print("Please check /table_view_request/<imo>. Something went wrong with the data, please ensure IMO Number is valid.")
+            print(f"Please check /table_view_request/<imo>. Something went wrong with the data, please ensure IMO Number is valid. Error = {e}")
           
             return (
                 render_template(
@@ -483,11 +483,11 @@ def Vessel_data_pull():
                     f"PULL duration for vessel map query {len(input_list)} in {toc - tic:0.4f} seconds"
                 )
                 return redirect(url_for("Vessel_map"))
-            except:
+            except Exception as e:
                 return (
                     render_template(
                         "vessel_request.html",
-                        msg="Invalid IMO. Please ensure IMO is valid.",
+                        msg=f"Invalid IMO. Please ensure IMO is valid. Error = {e}",
                     ),
                     406,
                 )
@@ -733,8 +733,8 @@ def RECEIVE_Vessel_movement(email_url):
             "vm_vessel_movement_status": last_payload_item["vm_vessel_movement_status"],
             "vm_vessel_movement_draft": last_payload_item["vm_vessel_movement_draft"],
         }
-    except:
-        print("================no movement end date, printing exception===============")
+    except Exception as e:
+        print(f"================no movement end date, printing exception. Error = {e}===============")
         row_data_vessel_movement = {
             "vm_vessel_particulars.vessel_nm": last_payload_item[
                 "vm_vessel_particulars"
