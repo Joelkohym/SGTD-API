@@ -2,9 +2,8 @@ Flask
 gunicorn
 requests
 pygsheets
-pandas==1.5.3
+pandas
 leafmap
-geopandas
 sqlalchemy
 pymysql
 Flask-MySQLdb
