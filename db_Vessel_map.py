@@ -51,14 +51,14 @@ def get_data_from_VF_vessels(imo_list):
       columns={
           "MMSI": "mmsiNumber",
           "TIMESTAMP": "timeStamp",
-          "LATITUDE": "latitude",
-          "LONGITUDE": "longitude",
+          "LATITUDE": "latitudeDegrees",
+          "LONGITUDE": "longitudeDegrees",
           "COURSE": "course",
           "SPEED": "speed",
           "HEADING": "heading",
           "IMO": "imoNumber",
           "CALLSIGN": "callSign",
-          "ETA": "ETA Vessel Finder"
+          "ETA": "ETA - VesselFinder"
       },
       inplace=True,
   )
@@ -82,9 +82,9 @@ def get_data_from_VF_vessels(imo_list):
     "callSign",
     "imoNumber",
     "mmsiNumber",
-    "latitude",
-    "longitude",
-    "ETA Vessel Finder",
+    "latitudeDegrees",
+    "longitudeDegrees",
+    "ETA - VesselFinder",
     "DESTINATION",
     "DISTANCE_REMAINING"
     "course",

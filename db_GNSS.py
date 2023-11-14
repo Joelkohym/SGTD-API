@@ -33,54 +33,55 @@ colors = [
     "lightgray",
 ]
 
-def get_data_from_VF_vessels(imo_list):
-  single_vessel_positions_df = pd.DataFrame()
-  print("Start of get_data_from_single_vessel_positions.............")
-  print(f"input_list = {imo_list}")
+# def get_data_from_VF_vessels(imo_list):
+#   single_vessel_positions_df = pd.DataFrame()
+#   print("Start of get_data_from_single_vessel_positions.............")
+#   print(f"input_list = {imo_list}")
 
-  api_key = "WS-00555FCD-8CD037"
+#   api_key = "WS-00555FCD-8CD037"
 
-  base_url = f"https://api.vesselfinder.com/vessels?userkey={api_key}"
+#   base_url = f"https://api.vesselfinder.com/vessels?userkey={api_key}"
 
-  VF_ais_response = requests.get(f"{base_url}&imo={imo_list}")
-  print(f"VF_ais_response.json() = {VF_ais_response.json()}")
-  VF_ais_data = VF_ais_response.json()
+#   VF_ais_response = requests.get(f"{base_url}&imo={imo_list}")
+#   print(f"VF_ais_response.json() = {VF_ais_response.json()}")
+#   VF_ais_data = VF_ais_response.json()
 
-  VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
-  single_vessel_positions_df = pd.DataFrame(VF_ais_info)
-  print(f"single_vessel_positions_df = {single_vessel_positions_df}")
-  single_vessel_positions_df.rename(
-      columns={
-          "MMSI": "mmsiNumber",
-          "TIMESTAMP": "timeStamp",
-          "LATITUDE": "latitudeDegrees",
-          "LONGITUDE": "longitudeDegrees",
-          "COURSE": "course",
-          "SPEED": "speed",
-          "HEADING": "heading",
-          "IMO": "imoNumber",
-          "CALLSIGN": "callSign",
-      },
-      inplace=True,
-  )
-  single_vessel_positions_df.drop(
-      columns=[
-          "A",
-          "B",
-          "C",
-          "D",
-          "ECA",
-          "LOCODE",
-          "SRC",
-          "DRAUGHT",
-          "NAVSTAT",
-      ],
-      inplace=True,
-  )
+#   VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
+#   single_vessel_positions_df = pd.DataFrame(VF_ais_info)
+#   print(f"single_vessel_positions_df = {single_vessel_positions_df}")
+#   single_vessel_positions_df.rename(
+#       columns={
+#           "MMSI": "mmsiNumber",
+#           "TIMESTAMP": "timeStamp",
+#           "LATITUDE": "latitudeDegrees",
+#           "LONGITUDE": "longitudeDegrees",
+#           "COURSE": "course",
+#           "SPEED": "speed",
+#           "HEADING": "heading",
+#           "IMO": "imoNumber",
+#           "CALLSIGN": "callSign",
+#           "ETA": "ETA - Vessel Finder",
+#       },
+#       inplace=True,
+#   )
+#   single_vessel_positions_df.drop(
+#       columns=[
+#           "A",
+#           "B",
+#           "C",
+#           "D",
+#           "ECA",
+#           "LOCODE",
+#           "SRC",
+#           "DRAUGHT",
+#           "NAVSTAT",
+#       ],
+#       inplace=True,
+#   )
 
-  # print(VF_ais_info)
-  print(single_vessel_positions_df)
-  return single_vessel_positions_df
+#   # print(VF_ais_info)
+#   print(single_vessel_positions_df)
+#   return single_vessel_positions_df
 
 
 
@@ -274,7 +275,8 @@ def display_lbo_map(df1, df2):
               # Assign a color to the imoNumber, cycling through the available colors
               if imo_number not in color_mapping:
                   color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
-              icon_color = color_mapping[imo_number]
+              # icon_color = color_mapping[imo_number]
+              icon_color = 'green'
               # if int(row["yearBuilt"]) > 2010:
               icon_html = folium.DivIcon(
                   html=f'<i class="fa fa-arrow-circle-up" style="color: {icon_color}; font-size: 20px; transform: rotate({row["heading"]}deg);"></i>'
