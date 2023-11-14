@@ -207,7 +207,7 @@ def display_map(df1):
                 color_mapping[imo_number] = colors[len(color_mapping) % len(colors)]
             icon_color = color_mapping[imo_number]
             icon_html = f'<i class="fa fa-arrow-up" style="color: {icon_color}; font-size: 24px; transform: rotate({row["heading"]}deg);"></i>'
-            popup_html = f"<b>{row["NAME"]} - {row["callSign"]}</b><br>"
+            popup_html = f"<b>{row['NAME']} - {row['callSign']}</b><br>"
             for key, value in row.items():
                 popup_html += f"<b>{key}:</b> {value}<br>"
             folium.Marker(
