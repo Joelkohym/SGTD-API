@@ -291,6 +291,7 @@ def display_lbo_map(df1, df2):
               popup_html = f"<b>{row['NAME']} ({row['callSign']})</b><br>"
               for key, value in row.items():
                   if key != "NAME" and key != "callSign":
+                      popup_html += f"<b>{key}:</b> {value}<br>"
               folium.Marker(
                   location=[row["latitudeDegrees"], row["longitudeDegrees"]],
                   popup=folium.Popup(html=popup_html, max_width=300),
