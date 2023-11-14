@@ -200,7 +200,7 @@ def display_lbo_map(df1, df2):
   with open("templates/Banner Vessel Map.html", "r") as file:
       menu_banner_body_html = file.read()
   if df1.empty and df2.empty:
-      print(f"disaply map: Empty df1 and df2................")
+      print(f"display map: Empty df1 and df2................")
       current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
       for f in os.listdir("templates/"):
           if "lbomap.html" in f:
@@ -242,7 +242,7 @@ def display_lbo_map(df1, df2):
       # print(f"df1 LBO_map = {df1}")
       # print(f"df2 Vessel_map = {df2}")
       df = df1
-      m = folium.Map(location=[1.257167, 103.897], zoom_start=3)
+      m = folium.Map(location=[1.257167, 103.897], zoom_start=2)
       color_mapping = {}
       ship_image = "static/images/ship.png"
       # Add several LBO markers to the map
