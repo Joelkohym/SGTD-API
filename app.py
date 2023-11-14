@@ -383,7 +383,7 @@ def table_view_request(imo):
                 MPA_arrive_depart_df["vesselParticulars.imoNumber"].isin(imo_list)
             ]
             print(f"filtered_df_before = {filtered_df_before}")
-            if len(filtered_df_before) == 0:
+            if len(filtered_df_before) == 0 and len(VF_Single_Vessel_Positions_df) == 0:
                 msg = "IMO cannot be found, please try another IMO.."
                 return render_template("table_view.html", msg=msg), 404
             render_html = merge_arrivedepart_declaration_df(
