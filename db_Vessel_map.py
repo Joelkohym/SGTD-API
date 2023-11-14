@@ -51,13 +51,14 @@ def get_data_from_VF_vessels(imo_list):
       columns={
           "MMSI": "mmsiNumber",
           "TIMESTAMP": "timeStamp",
-          "LATITUDE": "latitudeDegrees",
-          "LONGITUDE": "longitudeDegrees",
+          "LATITUDE": "latitude",
+          "LONGITUDE": "longitude",
           "COURSE": "course",
           "SPEED": "speed",
           "HEADING": "heading",
           "IMO": "imoNumber",
           "CALLSIGN": "callSign",
+          "ETA": "ETA Vessel Finder"
       },
       inplace=True,
   )
@@ -75,7 +76,23 @@ def get_data_from_VF_vessels(imo_list):
       ],
       inplace=True,
   )
-
+  # Reorder columns in place
+  desired_column_order = [
+    "NAME",
+    "callSign",
+    "imoNumber",
+    "mmsiNumber",
+    "latitude",
+    "longitude",
+    "ETA Vessel Finder",
+    "DESTINATION",
+    "DISTANCE_REMAINING"
+    "course",
+    "speed",
+    "heading",
+    "timeStamp",
+  ]
+  single_vessel_positions_df = single_vessel_positions_df[desired_column_order]
   # print(VF_ais_info)
   print(single_vessel_positions_df)
   return single_vessel_positions_df

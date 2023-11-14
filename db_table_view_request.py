@@ -208,12 +208,20 @@ def merge_arrivedepart_declaration_df(filtered_df_before, Declaration_df, VF_Sin
             "vesselParticulars.callSign_x": "callSignMPA",
             "vesselParticulars.flag_x": "flag",
             "vesselParticulars.imoNumber": "imoNumber",
-            "dueToDepart": "dueToDepartTime",
+            "duetoArriveTime": "ETA - MPA",
+            "dueToDepart": "ETD - MPA",
             # To be reviewed in future
             "locationTo": "locationFrom",
         },
         inplace=True,
     )
+    VF_Single_Vessel_Positions_df.rename(
+        columns={
+            "ETA": "ETA - VesselFinder",
+        },
+        inplace=True,
+    )
+  
 
     #vessel finder DF
     print(f"filtered_df...")
@@ -232,18 +240,16 @@ def merge_arrivedepart_declaration_df(filtered_df_before, Declaration_df, VF_Sin
     )
     # Reorder columns in place
     desired_column_order = [
-      "imoNumber",
-      "NAME",
-      "DESTINATION",
-      "ETA",
-      "ETA_PREDICTED",
-      "ETA_AIS",
-      "duetoArriveTime",
-      "dueToDepartTime",
-      "callSign",
-      "flag",
-      "speed",
-      "timeStamp",
+        "imoNumber",
+        "NAME",
+        "DESTINATION",
+        "ETA - VesselFinder",
+        "ETA - MPA",
+        "ETD - MPA",
+        "callSign",
+        "flag",
+        "speed",
+        "timeStamp",
     ]
     Final_df = Final_df[desired_column_order]
     print(f"Final_df = {Final_df}")
