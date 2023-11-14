@@ -86,7 +86,7 @@ def get_data_from_VF_vessels(imo_list):
     "longitudeDegrees",
     "ETA - VesselFinder",
     "DESTINATION",
-    "DISTANCE_REMAINING"
+    "DISTANCE_REMAINING",
     "course",
     "speed",
     "heading",
