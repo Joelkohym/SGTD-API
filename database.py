@@ -67,6 +67,7 @@ def new_registration(data):
             }
             print(query)
             result = conn.execute(query, values)
+            conn.commit()
             print("execute success")
             return 1
         else:
@@ -162,6 +163,7 @@ def new_vessel_current_position(data, email, gsheet_cred_path):
         }
 
         result = conn.execute(query_vcp, values_vcp)
+        conn.commit()
     print("New vessel_current_position execute success")
     return 1
 
@@ -191,6 +193,7 @@ def new_vessel_movement(data, email, gsheet_cred_path):
         }
 
         result = conn.execute(query_vm, values_vm)
+        conn.commit()
     print("New vessel_current_position execute success")
     return 1
 
@@ -217,6 +220,7 @@ def new_pilotage_service(data, email, gsheet_cred_path):
         }
 
         result = conn.execute(query_pilot, values_pilot)
+        conn.commit()
     print("New pilotage_service execute success")
     return 1
 
@@ -464,6 +468,7 @@ def MPA_GET_arrivaldeclaration(api_response, gsheet_cred_path):
     )
     with engine_MPA_arrivaldeclaration.connect() as conn:
         MPA_arrivaldeclaration = conn.execute(query, values)
+        conn.commit()
     return MPA_arrivaldeclaration
 
 
