@@ -37,6 +37,8 @@ def update_row(row):
       row["heading"] = row["heading_y"]
       row["speed"] = row["speed_y"]
       row["timeStamp"] = row["timeStamp_y"]
+      row["NAME"] = row["vesselName"]
+      row["callsign"] = row["callSignMPA"]
   else:
       row["longitudeDegrees"] = row["longitudeDegreesVF"]
       row["latitudeDegrees"] = row["latitudeDegreesVF"]
