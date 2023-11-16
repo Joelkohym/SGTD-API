@@ -30,13 +30,32 @@ colors = [
     "lightgray",
 ]
 
+def update_row(row):
+  if not pd.isna(row["longitudeDegrees_y"]):
+      row["longitudeDegrees"] = row["longitudeDegrees_y"]
+      row["latitudeDegrees"] = row["latitudeDegrees_y"]
+      row["heading"] = row["heading_y"]
+  else:
+      row["longitudeDegrees"] = row["longitudeDegreesVF"]
+      row["latitudeDegrees"] = row["latitudeDegreesVF"]
+      row["heading"] = row["headingVF"]
+  return row
+
+
 def merged_MPA_VF_df(df2, VF_df, ETA_df):
   print(f"merged_MPA_VF_df df2 = {df2}")
   print(f"merged_MPA_VF_df VF_df= {VF_df}")
   print(f"MPA dueToArrive/depart df = {ETA_df}")
+  df2.rename(
+      columns={
+          "callsign": "callSignMPA",
+      },
+      inplace=True,
+  )
   pprint(f"filtered_df = {df2}")
   print(f"VF_df = {VF_df}")
-
+  ETA_df.to_excel("ETA_df.xlsx")
+  df2.to_excel("df2.xlsx")
   df2["imoNumber"] = df2["imoNumber"].astype(int)
   VF_df["imoNumber"] = VF_df["imoNumber"].astype(int)
   ETA_df["vesselParticulars.imoNumber"] = ETA_df[
@@ -50,7 +69,7 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
       ETA_df,
       left_on=VF_df["imoNumber"],
       right_on=ETA_df["vesselParticulars.imoNumber"],
-      how="inner",
+      how="left",
   )
   print(f"VF_df merged ETA_df = {VF_ETA_df}")
   # cols_to_use = df2.columns.difference(VF_df.columns)
@@ -60,20 +79,19 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
       VF_df = VF_ETA_df
 
   Final_df = VF_df.merge(df2, how="outer", on="imoNumber", suffixes=("VF", "_y"))
-
-  if not Final_df["longitudeDegrees_y"].empty:
-      Final_df["longitudeDegrees"] = Final_df["longitudeDegrees_y"]
-      Final_df["latitudeDegrees"] = Final_df["latitudeDegrees_y"]
-      Final_df["heading"] = Final_df["heading_y"]
-      Final_df["callsign"] = Final_df["callsign_y"]
-  else:
-      Final_df["longitudeDegrees"] = Final_df["longitudeDegreesVF"]
-      Final_df["latitudeDegrees"] = Final_df["latitudeDegreesVF"]
-      Final_df["heading"] = Final_df["headingVF"]
-      Final_df["callsign"] = Final_df["callsignVF"]
+  Final_df.to_excel("Merged before drop Final_df.xlsx")
+  Final_df = Final_df.apply(update_row, axis=1)
+  # if not Final_df["longitudeDegrees_y"].empty:
+  #     Final_df["longitudeDegrees"] = Final_df["longitudeDegrees_y"]
+  #     Final_df["latitudeDegrees"] = Final_df["latitudeDegrees_y"]
+  #     Final_df["heading"] = Final_df["heading_y"]
+  # else:
+  #     Final_df["longitudeDegrees"] = Final_df["longitudeDegreesVF"]
+  #     Final_df["latitudeDegrees"] = Final_df["latitudeDegreesVF"]
+  #     Final_df["heading"] = Final_df["headingVF"]
 
   # Final_df.drop(Final_df.filter(regex="_y$").columns, axis=1, inplace=True)
-
+  Final_df.to_excel("Final_df.xlsx")
   print(f"Final_df = {Final_df}")
   # Reorder columns in place
   if set(["duetoArriveTime", "dueToDepart"]).issubset(Final_df.columns):
@@ -84,6 +102,7 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
           "ETA - Vessel Finder",
           "duetoArriveTime",
           "dueToDepart",
+          "locationTo",
           "callsign",
           "flag",
           "SPEED",
@@ -109,6 +128,7 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
   Final_df = Final_df[desired_column_order]
   print(f"Final_df = {Final_df}")
   return Final_df
+
 
 
 def get_data_from_VF_vessels(imo_list):

@@ -193,7 +193,7 @@ def LBO_data_pull():
                             ETA_df,
                             left_on=VF_df["imoNumber"],
                             right_on=ETA_df["vesselParticulars.imoNumber"],
-                            how="inner",
+                            how="left",
                         )
                         if VF_ETA_df.empty:
                             df2 = VF_df
