@@ -132,7 +132,7 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
   if set(["duetoArriveTime", "dueToDepart"]).issubset(Final_df.columns):
       Final_df.rename(
           columns={
-              "duetoArriveTim": "ETA - MPA",
+              "duetoArriveTime": "ETA - MPA",
               "dueToDepart": "ETD - MPA",
               "locationTo": "DESTINATION - MPA",
               "DESTINATION": "DESTINATION - VesselFinder",
