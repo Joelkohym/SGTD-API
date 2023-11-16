@@ -242,7 +242,7 @@ def get_data_from_VF_vessels(imo_list):
   # Reorder columns in place
   desired_column_order = [
     "NAME",
-    "callSign",
+    "callsign",
     "imoNumber",
     "mmsiNumber",
     "latitudeDegrees",
