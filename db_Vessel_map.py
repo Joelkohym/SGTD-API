@@ -101,10 +101,10 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
           "imoNumber",
           "NAME",
           "DESTINATION",
+          "locationTo",
           "ETA - VesselFinder",
           "duetoArriveTime",
           "dueToDepart",
-          "locationTo",
           "callsign",
           "flag",
           "speed",
@@ -135,14 +135,14 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
               "duetoArriveTime": "ETA - MPA",
               "dueToDepart": "ETD - MPA",
               "locationTo": "DESTINATION - MPA",
-              "DESTINATION": "DESTINATION - VesselFinder",
+              "DESTINATION": "DESTINATION - VF",
           },
           inplace=True,
       )
   else:
       Final_df.rename(
           columns={
-              "DESTINATION": "DESTINATION - VesselFinder",
+              "DESTINATION": "DESTINATION - VF",
           },
           inplace=True,
       )
