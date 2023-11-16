@@ -288,9 +288,9 @@ def display_lbo_map(df1, df2):
               #         icon_size=(50, 50),  # You can adjust the size
               #         icon_anchor=(25, 25),
               #     )
-              popup_html = f"<b>{row['NAME']} ({row['callSign']})</b><br>"
+              popup_html = f"<b>{row['NAME']} ({row['callsign']})</b><br>"
               for key, value in row.items():
-                  if key != "NAME" and key != "callSign":
+                  if key != "NAME" and key != "callsign":
                       popup_html += f"<b>{key}:</b> {value}<br>"
               folium.Marker(
                   location=[row["latitudeDegrees"], row["longitudeDegrees"]],
