@@ -200,10 +200,10 @@ def LBO_data_pull():
                         else:
                             df2 = VF_ETA_df
 
-                  else:
-                      merged_df = merged_MPA_VF_df(df2, VF_df, ETA_df)
-                      print(f"merged_df LBO MAP == {merged_df}")
-                      df2 = merged_df
+                    else:
+                        merged_df = merged_MPA_VF_df(df2, VF_df, ETA_df)
+                        print(f"merged_df LBO MAP == {merged_df}")
+                        df2 = merged_df
               
                 except Exception as e:
                     return (
