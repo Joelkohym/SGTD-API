@@ -128,6 +128,25 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
           "heading",
       ]
   Final_df = Final_df[desired_column_order]
+  # Rename Final_df
+  if set(["duetoArriveTime", "dueToDepart"]).issubset(Final_df.columns):
+      Final_df.rename(
+          columns={
+              "duetoArriveTim": "ETA - MPA",
+              "dueToDepart": "ETD - MPA",
+              "locationTo": "DESTINATION - MPA",
+              "DESTINATION": "DESTINATION - VesselFinder",
+          },
+          inplace=True,
+      )
+  else:
+      Final_df.rename(
+          columns={
+              "DESTINATION": "DESTINATION - VesselFinder",
+          },
+          inplace=True,
+      )
+
   print(f"Final_df = {Final_df}")
   return Final_df
 
