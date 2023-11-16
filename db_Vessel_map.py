@@ -227,57 +227,57 @@ def get_data_from_VF_vessels(imo_list):
           }
       },
   ]
-  
-  VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
-  single_vessel_positions_df = pd.DataFrame(VF_ais_info)
-  print(f"single_vessel_positions_df = {single_vessel_positions_df}")
-  single_vessel_positions_df.rename(
-      columns={
-          "MMSI": "mmsiNumber",
-          "TIMESTAMP": "timeStamp",
-          "LATITUDE": "latitudeDegrees",
-          "LONGITUDE": "longitudeDegrees",
-          "COURSE": "course",
-          "SPEED": "speed",
-          "HEADING": "heading",
-          "IMO": "imoNumber",
-          "CALLSIGN": "callsign",
-          "ETA": "ETA - VesselFinder"
-      },
-      inplace=True,
-  )
-  single_vessel_positions_df.drop(
-      columns=[
-          "A",
-          "B",
-          "C",
-          "D",
-          "ECA",
-          "LOCODE",
-          "SRC",
-          "DRAUGHT",
-          "NAVSTAT",
-      ],
-      inplace=True,
-  )
-  # Reorder columns in place
-  desired_column_order = [
-    "NAME",
-    "callsign",
-    "imoNumber",
-    "mmsiNumber",
-    "latitudeDegrees",
-    "longitudeDegrees",
-    "ETA - VesselFinder",
-    "DESTINATION",
-    "DISTANCE_REMAINING",
-    "course",
-    "speed",
-    "heading",
-    "timeStamp",
-  ]
-  single_vessel_positions_df = single_vessel_positions_df[desired_column_order]
-  # print(VF_ais_info)
+  if not VF_ais_data.empty:
+    VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
+    single_vessel_positions_df = pd.DataFrame(VF_ais_info)
+    print(f"single_vessel_positions_df = {single_vessel_positions_df}")
+    single_vessel_positions_df.rename(
+        columns={
+            "MMSI": "mmsiNumber",
+            "TIMESTAMP": "timeStamp",
+            "LATITUDE": "latitudeDegrees",
+            "LONGITUDE": "longitudeDegrees",
+            "COURSE": "course",
+            "SPEED": "speed",
+            "HEADING": "heading",
+            "IMO": "imoNumber",
+            "CALLSIGN": "callsign",
+            "ETA": "ETA - VesselFinder"
+        },
+        inplace=True,
+    )
+    single_vessel_positions_df.drop(
+        columns=[
+            "A",
+            "B",
+            "C",
+            "D",
+            "ECA",
+            "LOCODE",
+            "SRC",
+            "DRAUGHT",
+            "NAVSTAT",
+        ],
+        inplace=True,
+    )
+    # Reorder columns in place
+    desired_column_order = [
+      "NAME",
+      "callsign",
+      "imoNumber",
+      "mmsiNumber",
+      "latitudeDegrees",
+      "longitudeDegrees",
+      "ETA - VesselFinder",
+      "DESTINATION",
+      "DISTANCE_REMAINING",
+      "course",
+      "speed",
+      "heading",
+      "timeStamp",
+    ]
+    single_vessel_positions_df = single_vessel_positions_df[desired_column_order]
+    # print(VF_ais_info)
   print(single_vessel_positions_df)
   return single_vessel_positions_df
 
