@@ -36,8 +36,7 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
   print(f"MPA dueToArrive/depart df = {ETA_df}")
   pprint(f"filtered_df = {df2}")
   print(f"VF_df = {VF_df}")
-  ETA_df.to_excel("ETA_df.xlsx")
-  df2.to_excel("df2.xlsx")
+
   df2["imoNumber"] = df2["imoNumber"].astype(int)
   VF_df["imoNumber"] = VF_df["imoNumber"].astype(int)
   ETA_df["vesselParticulars.imoNumber"] = ETA_df[
@@ -61,7 +60,7 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
       VF_df = VF_ETA_df
 
   Final_df = VF_df.merge(df2, how="outer", on="imoNumber", suffixes=("VF", "_y"))
-  Final_df.to_excel("Merged before drop Final_df.xlsx")
+
   if not Final_df["longitudeDegrees_y"].empty:
       Final_df["longitudeDegrees"] = Final_df["longitudeDegrees_y"]
       Final_df["latitudeDegrees"] = Final_df["latitudeDegrees_y"]
@@ -74,7 +73,7 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
       Final_df["callsign"] = Final_df["callsignVF"]
 
   # Final_df.drop(Final_df.filter(regex="_y$").columns, axis=1, inplace=True)
-  Final_df.to_excel("Final_df.xlsx")
+
   print(f"Final_df = {Final_df}")
   # Reorder columns in place
   if set(["duetoArriveTime", "dueToDepart"]).issubset(Final_df.columns):
