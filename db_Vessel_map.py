@@ -201,7 +201,7 @@ def get_data_from_VF_vessels(imo_list):
           "SPEED": "speed",
           "HEADING": "heading",
           "IMO": "imoNumber",
-          "CALLSIGN": "callSign",
+          "CALLSIGN": "callsign",
           "ETA": "ETA - VesselFinder"
       },
       inplace=True,
