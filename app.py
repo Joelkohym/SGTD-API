@@ -13,7 +13,7 @@ import time
 import pytz 
 import os
 import threading
-from db_Vessel_map import get_map_data, display_map, get_data_from_VF_vessels
+from db_Vessel_map import get_map_data, display_map, get_data_from_VF_vessels, merged_MPA_VF_df
 from db_Vessel_data_pull import delete_all_rows_vessel_location, PULL_GET_VCP_VDA_MPA
 from db_table_pull import (
     delete_all_rows_table_view,
@@ -173,12 +173,11 @@ def LBO_data_pull():
                     )
                     DB_queried_data = get_map_data(session["gc"])
                     df2 = pd.DataFrame(DB_queried_data[0])
-                    print(f"app.py /api/lbo df2 VESSEL MAP = {df2.to_string(index=False, header=True)}")
-
+                    print(f"df1 VESSEL MAP = {df2.to_string(index=False, header=True)}")
+  
                     # Get Vessel Finder DF and merge
                     VF_df = get_data_from_VF_vessels(user_vessel_imo)
-                    print(f"app.py /api/lbo VF_df == {VF_df}")
-                    
+                    ETA_df = get_data_from_vessel_due_to_arrive_and_depart()
                     if df2.empty and VF_df.empty:
                         return (
                             render_template(
@@ -189,11 +188,22 @@ def LBO_data_pull():
                         )
                     if df2.empty:
                         print(f"df2==empty, only display VF_df, no merge....")
-                        df2 = VF_df
-                    else:
-                        merged_df = merged_MPA_VF_df(df2, VF_df)
-                        print(f"merged_df LBO MAP == {merged_df}")
-                        df2 = merged_df
+                        VF_ETA_df = pd.merge(
+                            VF_df,
+                            ETA_df,
+                            left_on=VF_df["imoNumber"],
+                            right_on=ETA_df["vesselParticulars.imoNumber"],
+                            how="inner",
+                        )
+                        if VF_ETA_df.empty:
+                            df2 = VF_df
+                        else:
+                            df2 = VF_ETA_df
+
+                  else:
+                      merged_df = merged_MPA_VF_df(df2, VF_df, ETA_df)
+                      print(f"merged_df LBO MAP == {merged_df}")
+                      df2 = merged_df
               
                 except Exception as e:
                     return (
