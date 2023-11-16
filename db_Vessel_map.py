@@ -31,19 +31,19 @@ colors = [
 ]
 
 def update_row(row):
-if not pd.isna(row["longitudeDegrees_y"]):
-    row["longitudeDegrees"] = row["longitudeDegrees_y"]
-    row["latitudeDegrees"] = row["latitudeDegrees_y"]
-    row["heading"] = row["heading_y"]
-    row["speed"] = row["speed_y"]
-    row["timeStamp"] = row["timeStamp_y"]
-else:
-    row["longitudeDegrees"] = row["longitudeDegreesVF"]
-    row["latitudeDegrees"] = row["latitudeDegreesVF"]
-    row["heading"] = row["headingVF"]
-    row["speed"] = row["speedVF"]
-    row["timeStamp"] = row["timeStampVF"]
-return row
+  if not pd.isna(row["longitudeDegrees_y"]):
+      row["longitudeDegrees"] = row["longitudeDegrees_y"]
+      row["latitudeDegrees"] = row["latitudeDegrees_y"]
+      row["heading"] = row["heading_y"]
+      row["speed"] = row["speed_y"]
+      row["timeStamp"] = row["timeStamp_y"]
+  else:
+      row["longitudeDegrees"] = row["longitudeDegreesVF"]
+      row["latitudeDegrees"] = row["latitudeDegreesVF"]
+      row["heading"] = row["headingVF"]
+      row["speed"] = row["speedVF"]
+      row["timeStamp"] = row["timeStampVF"]
+  return row
 
 
 def merged_MPA_VF_df(df2, VF_df, ETA_df):
@@ -56,7 +56,7 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
       },
       inplace=True,
   )
-  pprint(f"filtered_df = {df2}")
+  print(f"filtered_df = {df2}")
   print(f"VF_df = {VF_df}")
   df2["imoNumber"] = df2["imoNumber"].astype(int)
   VF_df["imoNumber"] = VF_df["imoNumber"].astype(int)
