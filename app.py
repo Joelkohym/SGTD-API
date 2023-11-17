@@ -202,22 +202,47 @@ def LBO_data_pull():
                       if VF_ETA_df.empty:
                           df2 = VF_df
                       else:
+                          VF_ETA_df.rename(
+                              columns={
+                                  "duetoArriveTime": "ETA - MPA",
+                                  "dueToDepart": "ETD - MPA",
+                                  "locationTo": "DESTINATION - MPA",
+                                  "DESTINATION": "DESTINATION - VesselFinder",
+                              },
+                              inplace=True,
+                          )
+                          desired_column_order = [
+                              "imoNumber",
+                              "NAME",
+                              "DESTINATION - VesselFinder",
+                              "DESTINATION - MPA",
+                              "ETA - VesselFinder",
+                              "ETA - MPA",
+                              "ETD - MPA",
+                              "callsign",
+                              "speed",
+                              "timeStamp",
+                              "latitudeDegrees",
+                              "longitudeDegrees",
+                              "heading",
+                          ]
+                          VF_ETA_df = VF_ETA_df[desired_column_order]
                           df2 = VF_ETA_df
                     elif VF_df.empty:
                       df2 = merge_df2_ETA_df(df2, ETA_df)
+  
                     else:
                       print(f"All DF are not empty, carrying out merged_MPA_VF_df")
                       merged_df = merged_MPA_VF_df(df2, VF_df, ETA_df)
                       print(f"merged_df LBO MAP == {merged_df}")
                       df2 = merged_df
-              
-                except Exception as e:
+                    except Exception as e:
                     return (
-                        render_template(
-                            "GNSS_request.html",
-                            msg=f"Invalid Vessel IMO. Please ensure Vessel IMO is valid. Error = {e}",
-                        ),
-                        406,
+                      render_template(
+                          "GNSS_request.html",
+                          msg=f"Invalid Vessel IMO. Please ensure Vessel IMO is valid. Error = {e}",
+                      ),
+                      406,
                     )
 
             # Clear all rows in vessel_movement_UCE and vessel_current_position_UCE table
