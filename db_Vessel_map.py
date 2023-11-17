@@ -47,6 +47,44 @@ def update_row(row):
       row["timeStamp"] = row["timeStampVF"]
   return row
 
+def merge_df2_ETA_df(df2, ETA_df):
+  df2_ETA_df = pd.merge(
+      df2,
+      ETA_df,
+      left_on=df2["imoNumber"],
+      right_on=ETA_df["vesselParticulars.imoNumber"],
+      how="left",
+  )
+  print(f"df2 merged ETA_df = {df2_ETA_df}")
+  df2_ETA_df.rename(
+      columns={
+          "vesselName": "NAME",
+          "duetoArriveTime": "ETA - MPA",
+          "dueToDepart": "ETD - MPA",
+          "locationTo": "DESTINATION - MPA",
+      },
+      inplace=True,
+  )
+  # Reorder columns in place
+  desired_column_order = [
+      "NAME",
+      "callsign",
+      "imoNumber",
+      "mmsiNumber",
+      "latitudeDegrees",
+      "longitudeDegrees",
+      "ETA - MPA",
+      "ETD - MPA",
+      "DESTINATION - MPA",
+      "course",
+      "speed",
+      "heading",
+      "timeStamp",
+  ]
+  df2_ETA_df = df2_ETA_df[desired_column_order]
+  return df2_ETA_df
+
+
 
 def merged_MPA_VF_df(df2, VF_df, ETA_df):
   print(f"merged_MPA_VF_df df2 = {df2}")
@@ -65,9 +103,7 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
   ETA_df["vesselParticulars.imoNumber"] = ETA_df[
       "vesselParticulars.imoNumber"
   ].astype(int)
-  # VF_df = VF_df.merge(
-  #     ETA_df, how="outer", left="imoNumber", right="vesselParticulars.imoNumber"
-  # )
+
   VF_ETA_df = pd.merge(
       VF_df,
       ETA_df,
@@ -76,24 +112,13 @@ def merged_MPA_VF_df(df2, VF_df, ETA_df):
       how="left",
   )
   print(f"VF_df merged ETA_df = {VF_ETA_df}")
-  # cols_to_use = df2.columns.difference(VF_df.columns)
-  # cols_to_use = cols_to_use.tolist()
-  # cols_to_use.append("key_column_name")
+
   if not VF_ETA_df.empty:
       VF_df = VF_ETA_df
 
   Final_df = VF_df.merge(df2, how="outer", on="imoNumber", suffixes=("VF", "_y"))
   Final_df = Final_df.apply(update_row, axis=1)
-  # if not Final_df["longitudeDegrees_y"].empty:
-  #     Final_df["longitudeDegrees"] = Final_df["longitudeDegrees_y"]
-  #     Final_df["latitudeDegrees"] = Final_df["latitudeDegrees_y"]
-  #     Final_df["heading"] = Final_df["heading_y"]
-  # else:
-  #     Final_df["longitudeDegrees"] = Final_df["longitudeDegreesVF"]
-  #     Final_df["latitudeDegrees"] = Final_df["latitudeDegreesVF"]
-  #     Final_df["heading"] = Final_df["headingVF"]
 
-  # Final_df.drop(Final_df.filter(regex="_y$").columns, axis=1, inplace=True)
   print(f"Final_df = {Final_df}")
   # Reorder columns in place
   if set(["duetoArriveTime", "dueToDepart"]).issubset(Final_df.columns):
@@ -161,76 +186,13 @@ def get_data_from_VF_vessels(imo_list):
 
   base_url = f"https://api.vesselfinder.com/vessels?userkey={api_key}"
 
-  #VF_ais_response = requests.get(f"{base_url}&imo={imo_list}")
-  # if VF_ais_response.status_code == 200:
-  #   print(f"VF_ais_response.json() = {VF_ais_response.json()}")
-  #   VF_ais_data = VF_ais_response.json()
-  # else:
-  #   VF_ais_data = []
-    
-  VF_ais_data = [
-      {
-          "AIS": {
-              "MMSI": 533131046,
-              "TIMESTAMP": "2023-11-15 11:29:22 UTC",
-              "LATITUDE": 1.27582,
-              "LONGITUDE": 103.585,
-              "COURSE": 270.4,
-              "SPEED": 0.1,
-              "HEADING": 25,
-              "NAVSTAT": 0,
-              "IMO": 9363390,
-              "NAME": "FORTUNE QUEEN",
-              "CALLSIGN": "9MRQ7",
-              "TYPE": 80,
-              "A": 83,
-              "B": 21,
-              "C": 12,
-              "D": 4,
-              "DRAUGHT": 4.3,
-              "DESTINATION": "PTP",
-              "LOCODE": "MYTPP",
-              "ETA_AIS": "11-15 11:10",
-              "ETA": "2023-11-15 11:10:00",
-              "SRC": "TER",
-              "ZONE": "South East Asia",
-              "ECA": False,
-              "DISTANCE_REMAINING": None,
-              "ETA_PREDICTED": None,
-          }
-      },
-      {
-          "AIS": {
-              "MMSI": 533131047,
-              "TIMESTAMP": "2023-11-15 11:29:22 UTC",
-              "LATITUDE": 1.27582,
-              "LONGITUDE": 104.585,
-              "COURSE": 270.4,
-              "SPEED": 0.1,
-              "HEADING": 25,
-              "NAVSTAT": 0,
-              "IMO": 9999999,
-              "NAME": "FORTUNE KING",
-              "CALLSIGN": "9MRQ7",
-              "TYPE": 80,
-              "A": 83,
-              "B": 21,
-              "C": 12,
-              "D": 4,
-              "DRAUGHT": 4.3,
-              "DESTINATION": "SGSIN",
-              "LOCODE": "MYTPP",
-              "ETA_AIS": "11-15 11:10",
-              "ETA": "2023-11-15 11:10:00",
-              "SRC": "TER",
-              "ZONE": "South East Asia",
-              "ECA": False,
-              "DISTANCE_REMAINING": None,
-              "ETA_PREDICTED": None,
-          }
-      },
-  ]
-  VF_ais_data = []
+  VF_ais_response = requests.get(f"{base_url}&imo={imo_list}")
+  if VF_ais_response.status_code == 200:
+    print(f"VF_ais_response.json() = {VF_ais_response.json()}")
+    VF_ais_data = VF_ais_response.json()
+  else:
+    VF_ais_data = []
+
   if len(VF_ais_data) > 1:
     VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
     single_vessel_positions_df = pd.DataFrame(VF_ais_info)

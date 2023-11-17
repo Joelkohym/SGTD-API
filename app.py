@@ -13,7 +13,7 @@ import time
 import pytz 
 import os
 import threading
-from db_Vessel_map import get_map_data, display_map, get_data_from_VF_vessels, merged_MPA_VF_df
+from db_Vessel_map import get_map_data, display_map, get_data_from_VF_vessels, merged_MPA_VF_df, merge_df2_ETA_df
 from db_Vessel_data_pull import delete_all_rows_vessel_location, PULL_GET_VCP_VDA_MPA
 from db_table_pull import (
     delete_all_rows_table_view,
@@ -204,13 +204,7 @@ def LBO_data_pull():
                       else:
                           df2 = VF_ETA_df
                     elif VF_df.empty:
-                      df2 = df2
-                      df2.rename(
-                          columns={
-                              "vesselName": "NAME",
-                          },
-                          inplace=True,
-                      )
+                      df2 = merge_df2_ETA_df(df2, ETA_df)
                     else:
                       print(f"All DF are not empty, carrying out merged_MPA_VF_df")
                       merged_df = merged_MPA_VF_df(df2, VF_df, ETA_df)
