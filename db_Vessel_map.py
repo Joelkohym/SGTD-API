@@ -193,7 +193,7 @@ def get_data_from_VF_vessels(imo_list):
   else:
     VF_ais_data = []
 
-  if len(VF_ais_data) > 1:
+  if len(VF_ais_data) > 0:
     VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
     single_vessel_positions_df = pd.DataFrame(VF_ais_info)
     print(f"single_vessel_positions_df = {single_vessel_positions_df}")
