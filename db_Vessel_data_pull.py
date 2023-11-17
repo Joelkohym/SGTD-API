@@ -84,21 +84,21 @@ def PULL_GET_VCP_VDA_MPA(
             print(r_GET_arrivaldeclaration.text)
         ##################### END Make the GET request for MPA_arrivaldeclaration table ETA   #####################
         ##################### START PULL SGTD VCP and VDA: Threaded  #####################
-        print("Start PULL_SGTD_VCP_VDA thread...")
-        print(datetime.now())
-        threading.Thread(
-            target=PULL_VCP_VDA_SGTD,
-            args=(
-                session_participant_id,
-                vessel_imo,
-                current_datetime,
-                url_vessel_current_position,
-                url_vessel_due_to_arrive,
-                session_api_key,
-            ),
-        ).start()
-        print("End PULL_SGTD_VCP_VDA  thread...")
-        print(datetime.now())
+        # print("Start PULL_SGTD_VCP_VDA thread...")
+        # print(datetime.now())
+        # threading.Thread(
+        #     target=PULL_VCP_VDA_SGTD,
+        #     args=(
+        #         session_participant_id,
+        #         vessel_imo,
+        #         current_datetime,
+        #         url_vessel_current_position,
+        #         url_vessel_due_to_arrive,
+        #         session_api_key,
+        #     ),
+        # ).start()
+        # print("End PULL_SGTD_VCP_VDA  thread...")
+        # print(datetime.now())
         ##################### END PULL SGTD VCP and VDA: Threaded  #####################
 
 def PULL_VCP_VDA_SGTD(
