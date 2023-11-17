@@ -188,6 +188,10 @@ def LBO_data_pull():
                         )
                     if df2.empty:
                         print(f"df2==empty, only display VF_df, no merge....")
+                        VF_df["imoNumber"] = VF_df["imoNumber"].astype(int)
+                        ETA_df["vesselParticulars.imoNumber"] = ETA_df[
+                            "vesselParticulars.imoNumber"
+                        ].astype(int)
                         VF_ETA_df = pd.merge(
                             VF_df,
                             ETA_df,

@@ -162,9 +162,12 @@ def get_data_from_VF_vessels(imo_list):
   base_url = f"https://api.vesselfinder.com/vessels?userkey={api_key}"
 
   #VF_ais_response = requests.get(f"{base_url}&imo={imo_list}")
-  #print(f"VF_ais_response.json() = {VF_ais_response.json()}")
-  #VF_ais_data = VF_ais_response.json()
-
+  # if VF_ais_response.status_code == 200:
+  #   print(f"VF_ais_response.json() = {VF_ais_response.json()}")
+  #   VF_ais_data = VF_ais_response.json()
+  # else:
+  #   VF_ais_data = []
+    
   VF_ais_data = [
       {
           "AIS": {
@@ -227,7 +230,8 @@ def get_data_from_VF_vessels(imo_list):
           }
       },
   ]
-  if not VF_ais_data.empty:
+  VF_ais_data = []
+  if len(VF_ais_data) > 1:
     VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
     single_vessel_positions_df = pd.DataFrame(VF_ais_info)
     print(f"single_vessel_positions_df = {single_vessel_positions_df}")
