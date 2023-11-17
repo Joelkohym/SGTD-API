@@ -179,35 +179,43 @@ def LBO_data_pull():
                     VF_df = get_data_from_VF_vessels(user_vessel_imo)
                     ETA_df = get_data_from_vessel_due_to_arrive_and_depart()
                     if df2.empty and VF_df.empty:
-                        return (
-                            render_template(
-                                "GNSS_request.html",
-                                msg=f"No data found. Please try again.",
-                            ),
-                            406,
-                        )
-                    if df2.empty:
-                        print(f"df2==empty, only display VF_df, no merge....")
-                        VF_df["imoNumber"] = VF_df["imoNumber"].astype(int)
-                        ETA_df["vesselParticulars.imoNumber"] = ETA_df[
-                            "vesselParticulars.imoNumber"
-                        ].astype(int)
-                        VF_ETA_df = pd.merge(
-                            VF_df,
-                            ETA_df,
-                            left_on=VF_df["imoNumber"],
-                            right_on=ETA_df["vesselParticulars.imoNumber"],
-                            how="left",
-                        )
-                        if VF_ETA_df.empty:
-                            df2 = VF_df
-                        else:
-                            df2 = VF_ETA_df
-
+                      return (
+                          render_template(
+                              "GNSS_request.html",
+                              msg=f"No data found. Please try again.",
+                          ),
+                          406,
+                      )
+                    elif df2.empty:
+                      print(f"df2==empty, only display VF_df, no merge....")
+                      VF_df["imoNumber"] = VF_df["imoNumber"].astype(int)
+                      ETA_df["vesselParticulars.imoNumber"] = ETA_df[
+                          "vesselParticulars.imoNumber"
+                      ].astype(int)
+                      VF_ETA_df = pd.merge(
+                          VF_df,
+                          ETA_df,
+                          left_on=VF_df["imoNumber"],
+                          right_on=ETA_df["vesselParticulars.imoNumber"],
+                          how="left",
+                      )
+                      if VF_ETA_df.empty:
+                          df2 = VF_df
+                      else:
+                          df2 = VF_ETA_df
+                    elif VF_df.empty:
+                      df2 = df2
+                      df2.rename(
+                          columns={
+                              "vesselName": "NAME",
+                          },
+                          inplace=True,
+                      )
                     else:
-                        merged_df = merged_MPA_VF_df(df2, VF_df, ETA_df)
-                        print(f"merged_df LBO MAP == {merged_df}")
-                        df2 = merged_df
+                      print(f"All DF are not empty, carrying out merged_MPA_VF_df")
+                      merged_df = merged_MPA_VF_df(df2, VF_df, ETA_df)
+                      print(f"merged_df LBO MAP == {merged_df}")
+                      df2 = merged_df
               
                 except Exception as e:
                     return (
