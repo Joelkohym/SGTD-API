@@ -190,6 +190,11 @@ def get_data_from_VF_vessels(imo_list):
   if VF_ais_response.status_code == 200:
     print(f"VF_ais_response.json() = {VF_ais_response.json()}")
     VF_ais_data = VF_ais_response.json()
+    if VF_ais_data == {"error": "Expired account!"}:
+      VF_ais_data = []
+      return ["VesselFinder Expired"]
+    else:
+      VF_ais_data = VF_ais_response.json()
   else:
     VF_ais_data = []
 
