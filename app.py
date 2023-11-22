@@ -373,17 +373,17 @@ def table_pull():
                 url_vessel_due_to_arrive = (
                     f"{session['pitstop_url']}/api/v1/data/pull/vessel_due_to_arrive"
                 )
-                print("Start PULL_vessel_due_to_arrive thread...")
-                print(datetime.now())
-                threading.Thread(
-                    target=PULL_vessel_due_to_arrive,
-                    args=(
-                        url_vessel_due_to_arrive,
-                        session["participant_id"],
-                        session["api_key"],
-                    ),
-                ).start()
-                print("End PULL_vessel_due_to_arrive thread...")
+                # print("Start PULL_vessel_due_to_arrive thread...")
+                # print(datetime.now())
+                # threading.Thread(
+                #     target=PULL_vessel_due_to_arrive,
+                #     args=(
+                #         url_vessel_due_to_arrive,
+                #         session["participant_id"],
+                #         session["api_key"],
+                #     ),
+                # ).start()
+                # print("End PULL_vessel_due_to_arrive thread...")
                 print(datetime.now())
                 # PULL_vessel_due_to_arrive(
                 #     url_vessel_due_to_arrive,
