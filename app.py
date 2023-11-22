@@ -429,7 +429,14 @@ def table_view_request(imo):
             # ======================== START GET Vessel Finder Vessel Data  =============
             VF_Single_Vessel_Positions_df = get_data_from_single_vessel_positions(imo)
             # ======================== END GET Vessel Finder Vessel Data  =============
-          
+            if VF_Single_Vessel_Positions_df.empty:
+              return (
+                  render_template(
+                      "table_view.html",
+                      msg="VesselFinder Account Expired. Please contact admin.",
+                  ),
+                  406,
+              )
             # Filter the DataFrame based on imoNumbers
             filtered_df_before = MPA_arrive_depart_df[
                 MPA_arrive_depart_df["vesselParticulars.imoNumber"].isin(imo_list)
