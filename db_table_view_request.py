@@ -15,44 +15,43 @@ def get_data_from_single_vessel_positions(imo_list):
   base_url = f"https://api.vesselfinder.com/vessels?userkey={api_key}"
 
   VF_ais_response = requests.get(f"{base_url}&imo={imo_list}")
-  
+  if VF_ais_response.status_code == 200:
+    print(f"VF_ais_response.json() = {VF_ais_response.json()}")
+    VF_ais_data = VF_ais_response.json()
+    if VF_ais_data == {"error": "Expired account!"}:
+      return single_vessel_positions_df
     
-  print(f"VF_ais_response.json() = {VF_ais_response.json()}")
-  VF_ais_data = VF_ais_response.json()
-  if VF_ais_data == {"error": "Expired account!"}:
-    single_vessel_positions_df = pd.dataframe()
-    return single_vessel_positions_df
-  VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
-  single_vessel_positions_df = pd.DataFrame(VF_ais_info)
-  print(f"single_vessel_positions_df = {single_vessel_positions_df}")
-  single_vessel_positions_df.rename(
-      columns={
-          "MMSI": "mmsiNumber",
-          "TIMESTAMP": "timeStamp",
-          "LATITUDE": "latitudeDegrees",
-          "LONGITUDE": "longitudeDegrees",
-          "COURSE": "course",
-          "SPEED": "speed",
-          "HEADING": "heading",
-          "IMO": "imoNumber",
-          "CALLSIGN": "callSign",
-      },
-      inplace=True,
-  )
-  single_vessel_positions_df.drop(
-      columns=[
-          "A",
-          "B",
-          "C",
-          "D",
-          "ECA",
-          "LOCODE",
-          "SRC",
-          "DRAUGHT",
-          "NAVSTAT",
-      ],
-      inplace=True,
-  )
+    VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
+    single_vessel_positions_df = pd.DataFrame(VF_ais_info)
+    print(f"single_vessel_positions_df = {single_vessel_positions_df}")
+    single_vessel_positions_df.rename(
+        columns={
+            "MMSI": "mmsiNumber",
+            "TIMESTAMP": "timeStamp",
+            "LATITUDE": "latitudeDegrees",
+            "LONGITUDE": "longitudeDegrees",
+            "COURSE": "course",
+            "SPEED": "speed",
+            "HEADING": "heading",
+            "IMO": "imoNumber",
+            "CALLSIGN": "callSign",
+        },
+        inplace=True,
+    )
+    single_vessel_positions_df.drop(
+        columns=[
+            "A",
+            "B",
+            "C",
+            "D",
+            "ECA",
+            "LOCODE",
+            "SRC",
+            "DRAUGHT",
+            "NAVSTAT",
+        ],
+        inplace=True,
+    )
 
   # print(VF_ais_info)
   print(single_vessel_positions_df)
