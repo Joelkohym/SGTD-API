@@ -177,11 +177,11 @@ def LBO_data_pull():
   
                     # Get Vessel Finder DF and merge
                     VF_df = get_data_from_VF_vessels(user_vessel_imo)
-                    if VF_df[0] == "VesselFinder Expired":
+                    if VF_df.empty:
                         return (
                             render_template(
                                 "GNSS_request.html",
-                                msg=f"VesselFinder Account Expired. Please contact admin.",
+                                msg=f"VesselFinder Account Expired OR No VesselFinder data found. Please contact admin.",
                             ),
                             406,
                         )
