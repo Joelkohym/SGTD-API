@@ -214,6 +214,7 @@ def LBO_data_pull():
                           print("VF_ETA_df.empty, df2 = VF_df")
                           df2 = VF_df
                       else:
+                          print("VF_ETA_df not empty, renaming VF_ETA_df columns")
                           VF_ETA_df.rename(
                               columns={
                                   "duetoArriveTime": "ETA - MPA",
@@ -241,6 +242,7 @@ def LBO_data_pull():
                           VF_ETA_df = VF_ETA_df[desired_column_order]
                           df2 = VF_ETA_df
                     elif VF_df.empty:
+                      print("VF_df empty, df2 = merge_df2_ETA_df(df2, ETA_df)")
                       df2 = merge_df2_ETA_df(df2, ETA_df)
   
                     else:
