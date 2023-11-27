@@ -211,6 +211,7 @@ def LBO_data_pull():
                           how="left",
                       )
                       if VF_ETA_df.empty:
+                          print("VF_ETA_df.empty, df2 = VF_df")
                           df2 = VF_df
                       else:
                           VF_ETA_df.rename(
