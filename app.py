@@ -188,8 +188,6 @@ def LBO_data_pull():
                             406,
                         )
   
-                    print(f"VF_df VESSEL MAP = {VF_df.to_string(index=False, header=True)}")
-  
                     elif VF_df.empty:
                         return (
                             render_template(
