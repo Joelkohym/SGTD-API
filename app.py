@@ -178,17 +178,28 @@ def LBO_data_pull():
                     # Get Vessel Finder DF and merge
                     VF_df = get_data_from_VF_vessels(user_vessel_imo)
                     #Can add a validation for Account expired.
-                    if VF_df.empty:
+                    if type(VF_df) == "list":
                         return (
                             render_template(
                                 "GNSS_request.html",
-                                msg=f"VesselFinder Account Expired OR No VesselFinder data found. Please contact admin.",
+                                msg=f"VesselFinder Account Expired. Please contact admin.",
                             ),
                             406,
                         )
                     print(
                         f"VF_df VESSEL MAP = {VF_df.to_string(index=False, header=True)}"
                     )
+                    elif VF_df.empty:
+                        return (
+                          render_template(
+                              "GNSS_request.html",
+                              msg=f"No data found in VesselFinder.",
+                          ),
+                          406,
+                        )
+                        print(
+                        f"VF_df VESSEL MAP = {VF_df.to_string(index=False, header=True)}"
+                      
                     ETA_df = get_data_from_vessel_due_to_arrive_and_depart()
                     if df2.empty and VF_df.empty:
                       return (

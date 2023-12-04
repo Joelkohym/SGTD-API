@@ -181,75 +181,142 @@ def get_data_from_VF_vessels(imo_list):
   single_vessel_positions_df = pd.DataFrame()
   print("Start of get_data_from_single_vessel_positions.............")
   print(f"input_list = {imo_list}")
-
+  
   api_key = "WS-00555FCD-8CD037"
-
+  
   base_url = f"https://api.vesselfinder.com/vessels?userkey={api_key}"
-
+  
   VF_ais_response = requests.get(f"{base_url}&imo={imo_list}")
+  VF_ais_data = VF_ais_response.json()
+  # VF_ais_response = [
+  #     {
+  #         "AIS": {
+  #             "MMSI": 477939700,
+  #             "TIMESTAMP": "2023-11-27 06:56:45 UTC",
+  #             "LATITUDE": 1.27948,
+  #             "LONGITUDE": 103.94422,
+  #             "COURSE": 245.5,
+  #             "SPEED": 0.0,
+  #             "HEADING": 233,
+  #             "NAVSTAT": 1,
+  #             "IMO": 9738519,
+  #             "NAME": "GREAT LINK",
+  #             "CALLSIGN": "VRNO6",
+  #             "TYPE": 70,
+  #             "A": 170,
+  #             "B": 30,
+  #             "C": 12,
+  #             "D": 21,
+  #             "DRAUGHT": 10.8,
+  #             "DESTINATION": "ZA DUR>SG SIN",
+  #             "LOCODE": "SGSIN",
+  #             "ETA_AIS": "11-25 23:15",
+  #             "ETA": "2023-11-25 23:15:00",
+  #             "SRC": "TER",
+  #             "ZONE": "South East Asia",
+  #             "ECA": False,
+  #             "DISTANCE_REMAINING": None,
+  #             "ETA_PREDICTED": None,
+  #         }
+  #     }
+  # ]
+  
+  for entry in VF_ais_data:
+      # Access the timestamp and parse it into a datetime object
+      print(f"entry in VF_ais_response = {VF_ais_data}")
+      timestamp_str = entry["AIS"]["TIMESTAMP"]
+      eta_str = entry["AIS"]["ETA"]
+      print(f"timestamp_str = {timestamp_str}")
+      print(f"eta_str = {eta_str}")
+      timestamp = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S UTC")
+      eta = datetime.strptime(eta_str, "%Y-%m-%d %H:%M:%S")
+  
+      # Add 8 hours to the timestamp
+      new_timestamp = timestamp + timedelta(hours=8)
+      new_eta = eta + timedelta(hours=8)
+      print(f"New timestamp = {new_timestamp}")
+      print(f"New ETA = {new_eta}")
+      # Format the new timestamp back into the desired string format
+      new_timestamp_str = new_timestamp.strftime("%Y-%m-%d %H:%M:%S UTC+8")
+      new_eta_str = new_eta.strftime("%Y-%m-%d %H:%M:%S UTC+8")
+      print(f"new_timestamp_str = {new_timestamp_str}")
+      print(f"new_eta_str = {new_eta_str}")
+      # Update the original JSON entry with the new timestamp
+      entry["AIS"]["TIMESTAMP"] = new_timestamp_str
+      entry["AIS"]["ETA"] = new_eta_str
+  
+  # Print the updated JSON response
+  
+  print(f"Changed timestamp version: {VF_ais_data}")
+  print(f"Type of VF_ais_response = {type(VF_ais_data)}")
+  # x = 1
+  # if x == 1:
+  # print(f"VF_ais_response status code == {VF_ais_response.status_code}")
+  
   if VF_ais_response.status_code == 200:
-    print(f"VF_ais_response.json() = {VF_ais_response.json()}")
-    VF_ais_data = VF_ais_response.json()
-    if VF_ais_data == {"error": "Expired account!"}:
-      VF_ais_data = []
-      return ["VesselFinder Expired"]
-    else:
-      VF_ais_data = VF_ais_response.json()
+      # print(f"VF_ais_response.json() = {VF_ais_response.json()}")
+      # VF_ais_data = VF_ais_response.json()
+      print("converted VF_ais_data")
+      if VF_ais_data == {"error": "Expired account!"}:
+          VF_ais_data = []
+          return ["VesselFinder Expired"]
+      else:
+          VF_ais_data = VF_ais_data
   else:
-    VF_ais_data = []
-
+      VF_ais_data = pd.DataFrame()
+  print(f"VF_ais_data = {VF_ais_data}")
   if len(VF_ais_data) > 0:
-    VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
-    single_vessel_positions_df = pd.DataFrame(VF_ais_info)
-    print(f"single_vessel_positions_df = {single_vessel_positions_df}")
-    single_vessel_positions_df.rename(
-        columns={
-            "MMSI": "mmsiNumber",
-            "TIMESTAMP": "timeStamp",
-            "LATITUDE": "latitudeDegrees",
-            "LONGITUDE": "longitudeDegrees",
-            "COURSE": "course",
-            "SPEED": "speed",
-            "HEADING": "heading",
-            "IMO": "imoNumber",
-            "CALLSIGN": "callsign",
-            "ETA": "ETA - VesselFinder"
-        },
-        inplace=True,
-    )
-    single_vessel_positions_df.drop(
-        columns=[
-            "A",
-            "B",
-            "C",
-            "D",
-            "ECA",
-            "LOCODE",
-            "SRC",
-            "DRAUGHT",
-            "NAVSTAT",
-        ],
-        inplace=True,
-    )
-    # Reorder columns in place
-    desired_column_order = [
-      "NAME",
-      "callsign",
-      "imoNumber",
-      "mmsiNumber",
-      "latitudeDegrees",
-      "longitudeDegrees",
-      "ETA - VesselFinder",
-      "DESTINATION",
-      "DISTANCE_REMAINING",
-      "course",
-      "speed",
-      "heading",
-      "timeStamp",
-    ]
-    single_vessel_positions_df = single_vessel_positions_df[desired_column_order]
-    # print(VF_ais_info)
-  print(single_vessel_positions_df)
+      VF_ais_info = [entry["AIS"] for entry in VF_ais_data]
+      single_vessel_positions_df = pd.DataFrame(VF_ais_info)
+      print(f"single_vessel_positions_df = {single_vessel_positions_df}")
+      single_vessel_positions_df.rename(
+          columns={
+              "MMSI": "mmsiNumber",
+              "TIMESTAMP": "timeStamp",
+              "LATITUDE": "latitudeDegrees",
+              "LONGITUDE": "longitudeDegrees",
+              "IMO": "imoNumber",
+              "CALLSIGN": "callsign",
+              "ETA": "ETA - VesselFinder",
+              "HEADING": "heading",
+              "SPEED": "speed",
+              "COURSE": "course",
+          },
+          inplace=True,
+      )
+      single_vessel_positions_df.drop(
+          columns=[
+              "A",
+              "B",
+              "C",
+              "D",
+              "ECA",
+              "LOCODE",
+              "SRC",
+              "DRAUGHT",
+              "NAVSTAT",
+          ],
+          inplace=True,
+      )
+      # Reorder columns in place
+      desired_column_order = [
+          "NAME",
+          "callsign",
+          "imoNumber",
+          "mmsiNumber",
+          "latitudeDegrees",
+          "longitudeDegrees",
+          "ETA - VesselFinder",
+          "DESTINATION",
+          "DISTANCE_REMAINING",
+          "course",
+          "speed",
+          "heading",
+          "timeStamp",
+      ]
+      single_vessel_positions_df = single_vessel_positions_df[desired_column_order]
+      # print(VF_ais_info)
+      print(f"Final single_vessel_positions_df = {single_vessel_positions_df}")
   return single_vessel_positions_df
 
 
