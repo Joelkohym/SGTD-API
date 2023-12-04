@@ -222,28 +222,33 @@ def get_data_from_VF_vessels(imo_list):
   # ]
   
   for entry in VF_ais_data:
-      # Access the timestamp and parse it into a datetime object
-      print(f"entry in VF_ais_response = {VF_ais_data}")
-      timestamp_str = entry["AIS"]["TIMESTAMP"]
-      eta_str = entry["AIS"]["ETA"]
-      print(f"timestamp_str = {timestamp_str}")
-      print(f"eta_str = {eta_str}")
-      timestamp = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S UTC")
-      eta = datetime.strptime(eta_str, "%Y-%m-%d %H:%M:%S")
-  
-      # Add 8 hours to the timestamp
-      new_timestamp = timestamp + timedelta(hours=8)
-      new_eta = eta + timedelta(hours=8)
-      print(f"New timestamp = {new_timestamp}")
-      print(f"New ETA = {new_eta}")
-      # Format the new timestamp back into the desired string format
-      new_timestamp_str = new_timestamp.strftime("%Y-%m-%d %H:%M:%S")
-      new_eta_str = new_eta.strftime("%Y-%m-%d %H:%M:%S")
-      print(f"new_timestamp_str = {new_timestamp_str}")
-      print(f"new_eta_str = {new_eta_str}")
-      # Update the original JSON entry with the new timestamp
-      entry["AIS"]["TIMESTAMP"] = new_timestamp_str
-      entry["AIS"]["ETA"] = new_eta_str
+    # Access the timestamp and parse it into a datetime object
+    print(f"entry in VF_ais_response = {VF_ais_data}")
+    timestamp_str = entry["AIS"]["TIMESTAMP"]
+    eta_str = entry["AIS"]["ETA"]
+    print(f"timestamp_str = {timestamp_str}")
+    print(f"eta_str = {eta_str}")
+    if timestamp_str == "":
+        entry["AIS"]["TIMESTAMP"] = ""
+    else:
+        timestamp = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S UTC")
+        # Add 8 hours to the timestamp
+        new_timestamp = timestamp + timedelta(hours=8)
+        print(f"New timestamp = {new_timestamp}")
+        # Format the new timestamp back into the desired string format
+        new_timestamp_str = new_timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        print(f"new_timestamp_str = {new_timestamp_str}")
+        entry["AIS"]["TIMESTAMP"] = new_timestamp_str
+    if eta_str == "":
+        entry["AIS"]["TIMESTAMP"] = ""
+    else:
+        eta = datetime.strptime(eta_str, "%Y-%m-%d %H:%M:%S")
+        # Add 8 hours to the timestamp
+        new_eta = eta + timedelta(hours=8)
+        print(f"New ETA = {new_eta}")
+        new_eta_str = new_eta.strftime("%Y-%m-%d %H:%M:%S")
+        print(f"new_eta_str = {new_eta_str}")
+        entry["AIS"]["ETA"] = new_eta_str
   
   # Print the updated JSON response
   
