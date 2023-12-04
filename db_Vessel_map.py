@@ -237,8 +237,8 @@ def get_data_from_VF_vessels(imo_list):
       print(f"New timestamp = {new_timestamp}")
       print(f"New ETA = {new_eta}")
       # Format the new timestamp back into the desired string format
-      new_timestamp_str = new_timestamp.strftime("%Y-%m-%d %H:%M:%S UTC+8")
-      new_eta_str = new_eta.strftime("%Y-%m-%d %H:%M:%S UTC+8")
+      new_timestamp_str = new_timestamp.strftime("%Y-%m-%d %H:%M:%S")
+      new_eta_str = new_eta.strftime("%Y-%m-%d %H:%M:%S")
       print(f"new_timestamp_str = {new_timestamp_str}")
       print(f"new_eta_str = {new_eta_str}")
       # Update the original JSON entry with the new timestamp
