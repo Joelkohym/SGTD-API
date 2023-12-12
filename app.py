@@ -91,7 +91,7 @@ def login():
                 msg = f"Login success for {email}, please enter Vessel IMO number(s)"
                 print(f"Login success for {email}, redirect")
                 session["terms_condition"] = True
-                return redirect(url_for("table_view")), 303
+                return redirect(url_for("vessel_request", msg="")), 303
                 # return render_template('vessel_request.html', msg=msg, email=email)
             else:
                 msg = "Invalid credentials, please try again.."
@@ -128,7 +128,7 @@ def LBO_GET_GNSS_TOKEN():
 @app.route("/lbo_request/<msg>", methods=["GET", "POST"])
 def lbo_request(msg):
     if g.user:
-        return render_template("GNSS_request.html", msg=msg, login_status=session["terms_condition"])
+        return render_template("GNSS_request.html", msg=msg)
     else:
         return redirect(url_for("login")), 304
 
@@ -352,7 +352,7 @@ def LBO_data_pull():
 def table_view():
     if g.user:
         email = session["email"]
-        return render_template("table_view.html", email=email)
+        return render_template("table_view.html", email=email, login_status=session["terms_condition"])
     else:
         msg = "Error while getting to table view, redirecting to login"
         print("Error while getting to table view, redirecting to login")
@@ -576,7 +576,7 @@ def Vessel_data_pull():
 def vessel_request(msg):
     if g.user:
         email = session["email"]
-        return render_template("vessel_request.html", msg=msg, email=email)
+        return render_template("vessel_request.html", msg=msg, email=email, login_status=session["terms_condition"])
     else:
         return redirect(url_for("login")), 304
 
