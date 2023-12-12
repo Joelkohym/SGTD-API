@@ -86,9 +86,11 @@ def login():
                 session["IMO_NOTFOUND"] = []
                 session["LBO_ACCESS_TOKEN"] = []
                 session["LBO_REFRESH_TOKEN"] = []
+                session["terms_condition"] = ""
 
                 msg = f"Login success for {email}, please enter Vessel IMO number(s)"
                 print(f"Login success for {email}, redirect")
+                session["terms_condition"] = True
                 return redirect(url_for("table_view")), 303
                 # return render_template('vessel_request.html', msg=msg, email=email)
             else:
@@ -126,7 +128,7 @@ def LBO_GET_GNSS_TOKEN():
 @app.route("/lbo_request/<msg>", methods=["GET", "POST"])
 def lbo_request(msg):
     if g.user:
-        return render_template("GNSS_request.html", msg=msg)
+        return render_template("GNSS_request.html", msg=msg, login_status=session["terms_condition"])
     else:
         return redirect(url_for("login")), 304
 

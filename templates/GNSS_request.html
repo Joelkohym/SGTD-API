@@ -157,6 +157,58 @@
       color: #ffffff;
     }
 
+    #termsPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+        }
+
+        #termsPopup h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        #termsPopup p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        #termsPopup button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001
+        }
+
+        #termsPopup #confirmButton {
+            background-color: #088f72;
+            color: #fff;
+        }
+
+        #termsPopup #exitButton {
+            background-color: #333;
+            color: #fff;
+        }
+      .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      pointer-events: none;
+    }
+
   </style>
 
 </head>
@@ -216,33 +268,97 @@
     <button type="button" id="tokenButton">Get Token</button>
   </form>
 
-  <script>
-    var imeiButton = document.getElementById("imeiButton");
-    var imeiForm = document.getElementById("imeiForm");
-    var tokenButton = document.getElementById("tokenButton");
+  <!-- show popup -->
+  <!-- Popup HTML -->
+  {% if login_status == True %}
+  <div class="overlay"></div>
+  <div id="termsPopup" style="display: none;">
+    <h3>Terms and Conditions</h3>
+    <p>Put your terms and conditions text here.</p>
+    <button id="confirmButton">Agree</button>
+    <button id="exitButton">Exit</button>
+  </div>
+  {% endif %}
+  
+ var overlay = document.querySelector('.overlay');
+var imeiButton = document.getElementById("imeiButton");
+var imeiForm = document.getElementById("imeiForm");
+var tokenButton = document.getElementById("tokenButton");
+var agreeButton = document.getElementById("confirmButton");
+var exitButton = document.getElementById("exitButton");
 
-    imeiButton.addEventListener("click", function() {
-      // Submit the form programmatically
-      imeiForm.submit();
-    });
+// Show popup
+document.getElementById("termsPopup").style.display = "block";
+overlay.style.display = "block";
 
-    // Add a click event listener to the new button
-    tokenButton.addEventListener("click", function() {
-        // Call the custom function via a POST request when the new button is clicked
-        fetch('/api/gnss_token', {
-            method: 'POST',
-        })
-        .then(response => response.text())
-        .then(data => {
-            alert("New button clicked!\nResponse: " + data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });
+// Disable navigation when the popup is displayed
+disableNavigation();
 
-  </script>
+// Function to disable navigation links
+function disableNavigation() {
+  var navLinks = document.querySelectorAll('.navbar-nav a');
+  navLinks.forEach(function(link) {
+    link.style.pointerEvents = 'none';
+  });
+  imeiButton.disabled = true;
+  tokenButton.disabled = true;
+}
+
+// Function to enable navigation links
+function enableNavigation() {
+  var navLinks = document.querySelectorAll('.navbar-nav a');
+  navLinks.forEach(function(link) {
+    link.style.pointerEvents = 'auto';
+  });
+  imeiButton.disabled = false;
+  tokenButton.disabled = false;
+}
+
+
+// Add event listeners 
+agreeButton.addEventListener("click", function() {
+  document.getElementById("termsPopup").style.display = "none";
+  overlay.style.background = "rgba(255, 255, 255, 1)"
+  overlay.style.display = "none"; // Hide the overlay
+  enableNavigation(); // Enable navigation after agreeing
+});
+
+exitButton.addEventListener("click", function() {
+  document.getElementById("termsPopup").style.display = "none";
+  overlay.style.display = "none"; // Hide the overlay
+  window.location.href = "/logout";
+  enableNavigation();
+});
+
+overlay.addEventListener('click', function() {
+  // Disable navigation when the overlay is clicked
+  disableNavigation();
+});
+
+
+imeiButton.addEventListener("click", function() {
+  // Submit the form programmatically
+  imeiForm.submit();
+});
+
+// Add a click event listener to the new button
+tokenButton.addEventListener("click", function() {
+  // Call the custom function via a POST request when the new button is clicked
+  fetch('/api/gnss_token', {
+      method: 'POST',
+  })
+  .then(response => response.text())
+  .then(data => {
+      alert("New button clicked!\nResponse: " + data);
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+});
+
+
+</script>
+
 </body>
 
 </html>
-
