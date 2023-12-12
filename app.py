@@ -91,7 +91,7 @@ def login():
                 msg = f"Login success for {email}, please enter Vessel IMO number(s)"
                 print(f"Login success for {email}, redirect")
                 session["terms_condition"] = True
-                return redirect(url_for("lbo_request", msg="1")), 303
+                return redirect(url_for("lbo_request", msg="1", login_status=session["terms_condition"])), 303
                 # return render_template('vessel_request.html', msg=msg, email=email)
             else:
                 msg = "Invalid credentials, please try again.."
